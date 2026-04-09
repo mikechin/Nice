@@ -133,7 +133,7 @@ func _on_answer_button_pressed(direction: String) -> void:
 	if _is_transitioning:
 		return
 	if _challenge_presenter and _challenge_presenter.is_active():
-		_challenge_presenter._on_swipe(direction)
+		_challenge_presenter.submit_answer(direction)
 
 
 func _on_card_presented(card_data: Dictionary, challenge_type: String) -> void:

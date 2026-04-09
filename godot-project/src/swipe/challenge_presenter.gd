@@ -54,6 +54,10 @@ func present_challenge(card_data: CharacterData, challenge_type: String, loot_ra
 	SignalBus.card_presented.emit(card_data.to_dict(), challenge_type)
 
 
+func submit_answer(direction: String) -> void:
+	_on_swipe(direction)
+
+
 func _on_swipe(direction: String) -> void:
 	if not _is_active:
 		return
