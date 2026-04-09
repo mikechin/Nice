@@ -1,0 +1,7 @@
+[
+  {"character": "吧", "pinyin": "ba", "tone": 0, "meaning": "particle (suggestion)", "hsk_level": 2, "radicals": ["口"], "components": ["口", "巴"], "is_radical": false, "frequency_rank": 95},
+  {"character": "白", "pinyin": "bái", "tone": 2, "meaning": "white, blank", "hsk_level": 2, "radicals": [], "components": [], "is_radical": true, "frequency_rank": 178},
+  {"character": "百", "pinyin": "bǎi", "tone": 3, "meaning": "hundred", "hsk_level": 2, "radicals": ["白"], "components": ["一", "白"], "is_radical": false, "frequency_rank": 234},
+  {"character": "帮", "pinyin": "bāng", "tone": 1, "meaning": "to help", "hsk_level": 2, "radicals": ["巾"], "components": ["邦", "巾"], "is_radical": false, "frequency_rank": 567},
+  {"character": "报", "pinyin": "bào", "tone": 4, "meaning": "newspaper, to report", "hsk_level": 2, "radicals": ["扌"], "components": ["扌", "报"], "is_radical": false, "frequency_rank": 312}
+]

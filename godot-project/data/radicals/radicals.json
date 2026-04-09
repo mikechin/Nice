@@ -1,0 +1,13 @@
+[
+  {"radical": "氵", "meaning": "water", "rarity_tier": "common", "shop_cost": 50, "characters": ["没", "法", "河", "湖", "海", "洗", "清", "活", "流", "深", "温", "满", "游", "注", "泳"], "display_name": "Water (three drops)"},
+  {"radical": "讠", "meaning": "speech", "rarity_tier": "common", "shop_cost": 50, "characters": ["说", "话", "语", "读", "请", "让", "记", "认", "识", "词", "课", "谈", "论", "议"], "display_name": "Speech"},
+  {"radical": "忄", "meaning": "heart, emotion", "rarity_tier": "common", "shop_cost": 50, "characters": ["想", "思", "意", "感", "忙", "快", "慢", "怕", "情", "愿", "忘", "惯", "懂", "态"], "display_name": "Heart (standing)"},
+  {"radical": "扌", "meaning": "hand", "rarity_tier": "common", "shop_cost": 50, "characters": ["打", "找", "把", "拿", "拉", "推", "提", "换", "接", "搬", "报", "按"], "display_name": "Hand"},
+  {"radical": "口", "meaning": "mouth", "rarity_tier": "common", "shop_cost": 40, "characters": ["吃", "吗", "呢", "吧", "听", "喝", "喜", "嘴", "叫", "号", "呼", "哭"], "display_name": "Mouth"},
+  {"radical": "女", "meaning": "woman", "rarity_tier": "common", "shop_cost": 40, "characters": ["妈", "姐", "妹", "她", "好", "如", "姓", "婚", "嫁"], "display_name": "Woman"},
+  {"radical": "木", "meaning": "wood, tree", "rarity_tier": "common", "shop_cost": 45, "characters": ["树", "林", "森", "桌", "椅", "板", "根", "校", "样", "梦"], "display_name": "Wood"},
+  {"radical": "钅", "meaning": "metal, gold", "rarity_tier": "rare", "shop_cost": 120, "characters": ["钱", "铁", "银", "锻", "错", "钟", "锁", "镜"], "display_name": "Metal"},
+  {"radical": "食", "meaning": "food, eat", "rarity_tier": "rare", "shop_cost": 100, "characters": ["饭", "饿", "饮", "馆", "饼", "饺", "饱"], "display_name": "Food"},
+  {"radical": "鬼", "meaning": "ghost, demon", "rarity_tier": "epic", "shop_cost": 300, "characters": ["魂", "魔", "魅"], "display_name": "Ghost"},
+  {"radical": "龙", "meaning": "dragon", "rarity_tier": "epic", "shop_cost": 350, "characters": ["龙", "聋", "笼", "垄"], "display_name": "Dragon"}
+]

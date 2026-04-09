@@ -1,0 +1,5 @@
+[
+  {"id": "weekly_hsk2_001", "grammar_pattern": "SVO", "description": "Build 3 sentences using Subject-Verb-Object pattern", "hsk_level": 2, "required_sentences": 3, "type": "weekly"},
+  {"id": "weekly_hsk3_001", "grammar_pattern": "time_duration", "description": "Build 2 sentences describing how long an activity takes", "hsk_level": 3, "required_sentences": 2, "type": "weekly"},
+  {"id": "weekly_hsk4_001", "grammar_pattern": "ba_construction", "description": "Build 2 sentences using the 把 construction to describe actions on objects", "hsk_level": 4, "required_sentences": 2, "type": "weekly"}
+]

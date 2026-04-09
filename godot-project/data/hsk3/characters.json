@@ -1,0 +1,5 @@
+[
+  {"character": "般", "pinyin": "bān", "tone": 1, "meaning": "sort, kind", "hsk_level": 3, "radicals": ["舟"], "components": ["舟", "殳"], "is_radical": false, "frequency_rank": 445},
+  {"character": "搬", "pinyin": "bān", "tone": 1, "meaning": "to move", "hsk_level": 3, "radicals": ["扌"], "components": ["扌", "般"], "is_radical": false, "frequency_rank": 1023},
+  {"character": "办", "pinyin": "bàn", "tone": 4, "meaning": "to handle, to do", "hsk_level": 3, "radicals": ["力"], "components": ["力"], "is_radical": false, "frequency_rank": 187}
+]

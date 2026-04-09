@@ -1,0 +1,3 @@
+[
+  {"id": "daily_hsk3_001", "sentence": "他每天早上跑步半个小时", "meaning": "He runs for half an hour every morning", "characters": ["他", "每", "天", "早", "上", "跑", "步", "半", "个", "小", "时"], "hsk_level": 3, "grammar_pattern": "time_duration", "tile_count": 11, "type": "daily"}
+]
