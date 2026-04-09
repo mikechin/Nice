@@ -6,7 +6,7 @@ extends RefCounted
 var char_db: CharacterDatabase
 
 const DIRECTIONS: Array[String] = ["up", "down", "left", "right"]
-const TONE_MARKS: Array[String] = ["ˉ (1st)", "ˊ (2nd)", "ˇ (3rd)", "ˋ (4th)", "· (neutral)"]
+const TONE_MARKS: Array[String] = ["· (neutral)", "ˉ (1st)", "ˊ (2nd)", "ˇ (3rd)", "ˋ (4th)"]
 
 
 func _init(db: CharacterDatabase = null) -> void:
