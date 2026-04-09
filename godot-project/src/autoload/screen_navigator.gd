@@ -1,0 +1,29 @@
+## ScreenNavigator — Autoload that listens to screen_transition_requested
+## and swaps the current scene to the requested screen.
+class_name ScreenNavigatorClass
+extends Node
+
+const SCREEN_PATHS: Dictionary = {
+	"main_menu": "res://scenes/screens/main_menu.tscn",
+	"run_select": "res://scenes/screens/run_select.tscn",
+	"game": "res://scenes/screens/game_screen.tscn",
+	"results": "res://scenes/screens/results_screen.tscn",
+	"collection": "res://scenes/screens/collection_screen.tscn",
+	"shop": "res://scenes/screens/shop_screen.tscn",
+	"profile": "res://scenes/screens/profile_screen.tscn",
+	"settings": "res://scenes/screens/settings_screen.tscn",
+	"boss_round": "res://scenes/screens/boss_round_screen.tscn",
+	"daily_weekly": "res://scenes/screens/daily_weekly_screen.tscn",
+}
+
+
+func _ready() -> void:
+	SignalBus.screen_transition_requested.connect(_on_screen_transition_requested)
+
+
+func _on_screen_transition_requested(screen_name: String) -> void:
+	var path: String = SCREEN_PATHS.get(screen_name, "")
+	if path.is_empty():
+		push_error("ScreenNavigator: Unknown screen '%s'" % screen_name)
+		return
+	get_tree().change_scene_to_file(path)
