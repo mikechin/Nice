@@ -15,6 +15,7 @@ extends Control
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	_connect_buttons()
 	_update_displays()
 	GameState.check_daily_reset()
@@ -91,3 +92,24 @@ func _on_coins_changed(_amount: int, total: int) -> void:
 func _on_streak_updated(days: int) -> void:
 	if _streak_display and _streak_display.has_method("set_streak"):
 		_streak_display.set_streak(days)
+
+
+func _warn_missing_nodes() -> void:
+	if _play_button == null:
+		push_warning("main_menu.gd: missing node _play_button")
+	if _collection_button == null:
+		push_warning("main_menu.gd: missing node _collection_button")
+	if _shop_button == null:
+		push_warning("main_menu.gd: missing node _shop_button")
+	if _profile_button == null:
+		push_warning("main_menu.gd: missing node _profile_button")
+	if _settings_button == null:
+		push_warning("main_menu.gd: missing node _settings_button")
+	if _daily_button == null:
+		push_warning("main_menu.gd: missing node _daily_button")
+	if _title_label == null:
+		push_warning("main_menu.gd: missing node _title_label")
+	if _coin_display == null:
+		push_warning("main_menu.gd: missing node _coin_display")
+	if _streak_display == null:
+		push_warning("main_menu.gd: missing node _streak_display")

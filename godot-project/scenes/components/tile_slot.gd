@@ -20,6 +20,7 @@ const DEPLETED_COLOR := Color(0.3, 0.3, 0.3, 0.3)
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	custom_minimum_size = TILE_SIZE
 	gui_input.connect(_on_gui_input)
 	_update_display()
@@ -85,3 +86,12 @@ func _animate_tap() -> void:
 	var tween := create_tween()
 	tween.tween_property(self, "scale", Vector2(0.9, 0.9), 0.05)
 	tween.tween_property(self, "scale", Vector2.ONE, 0.08).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+
+
+func _warn_missing_nodes() -> void:
+	if _character_label == null:
+		push_warning("tile_slot.gd: missing node _character_label")
+	if _count_label == null:
+		push_warning("tile_slot.gd: missing node _count_label")
+	if _background == null:
+		push_warning("tile_slot.gd: missing node _background")

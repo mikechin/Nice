@@ -15,6 +15,7 @@ var _item_card_scene: PackedScene
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	_shop_manager = ShopManager.new()
 
 	if _back_button:
@@ -174,3 +175,18 @@ func _on_item_purchased(_item_data: Dictionary) -> void:
 func _on_back_pressed() -> void:
 	SignalBus.shop_closed.emit()
 	SignalBus.screen_transition_requested.emit("main_menu")
+
+
+func _warn_missing_nodes() -> void:
+	if _item_container == null:
+		push_warning("shop_screen.gd: missing node _item_container")
+	if _coin_label == null:
+		push_warning("shop_screen.gd: missing node _coin_label")
+	if _refresh_button == null:
+		push_warning("shop_screen.gd: missing node _refresh_button")
+	if _refresh_cost_label == null:
+		push_warning("shop_screen.gd: missing node _refresh_cost_label")
+	if _back_button == null:
+		push_warning("shop_screen.gd: missing node _back_button")
+	if _title_label == null:
+		push_warning("shop_screen.gd: missing node _title_label")

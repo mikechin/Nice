@@ -17,6 +17,10 @@ var _rarity: SrsEnums.LootRarity = SrsEnums.LootRarity.COMMON
 var _current_answers: Dictionary = {}
 
 
+func _ready() -> void:
+	_warn_missing_nodes()
+
+
 func setup(card_data: CharacterData, rarity: SrsEnums.LootRarity = SrsEnums.LootRarity.COMMON) -> void:
 	_card_data = card_data
 	_rarity = rarity
@@ -116,3 +120,18 @@ func _flash_color(color: Color) -> void:
 	var tween := create_tween()
 	modulate = color
 	tween.tween_property(self, "modulate", Color.WHITE, 0.3)
+
+
+func _warn_missing_nodes() -> void:
+	if _card_display == null:
+		push_warning("card_component.gd: missing node _card_display")
+	if _character_label == null:
+		push_warning("card_component.gd: missing node _character_label")
+	if _pinyin_label == null:
+		push_warning("card_component.gd: missing node _pinyin_label")
+	if _meaning_label == null:
+		push_warning("card_component.gd: missing node _meaning_label")
+	if _rarity_panel == null:
+		push_warning("card_component.gd: missing node _rarity_panel")
+	if _tier_label == null:
+		push_warning("card_component.gd: missing node _tier_label")

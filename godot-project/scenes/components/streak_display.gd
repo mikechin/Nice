@@ -17,6 +17,7 @@ const COUNT_INACTIVE_COLOR := Color(0.5, 0.5, 0.5)
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	SignalBus.streak_updated.connect(_on_streak_updated)
 	SignalBus.streak_broken.connect(_on_streak_broken)
 	_current_streak = GameState.daily_streak
@@ -102,3 +103,12 @@ func _on_streak_broken() -> void:
 func _kill_tween() -> void:
 	if _tween and _tween.is_valid():
 		_tween.kill()
+
+
+func _warn_missing_nodes() -> void:
+	if _flame_label == null:
+		push_warning("streak_display.gd: missing node _flame_label")
+	if _count_label == null:
+		push_warning("streak_display.gd: missing node _count_label")
+	if _days_label == null:
+		push_warning("streak_display.gd: missing node _days_label")

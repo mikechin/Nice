@@ -15,6 +15,7 @@ extends Control
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	_load_current_settings()
 	_connect_controls()
 
@@ -131,3 +132,24 @@ func _save_settings() -> void:
 
 func _on_back_pressed() -> void:
 	SignalBus.screen_transition_requested.emit("main_menu")
+
+
+func _warn_missing_nodes() -> void:
+	if _music_slider == null:
+		push_warning("settings_screen.gd: missing node _music_slider")
+	if _sfx_slider == null:
+		push_warning("settings_screen.gd: missing node _sfx_slider")
+	if _music_label == null:
+		push_warning("settings_screen.gd: missing node _music_label")
+	if _sfx_label == null:
+		push_warning("settings_screen.gd: missing node _sfx_label")
+	if _hsk_selector == null:
+		push_warning("settings_screen.gd: missing node _hsk_selector")
+	if _music_toggle == null:
+		push_warning("settings_screen.gd: missing node _music_toggle")
+	if _sfx_toggle == null:
+		push_warning("settings_screen.gd: missing node _sfx_toggle")
+	if _back_button == null:
+		push_warning("settings_screen.gd: missing node _back_button")
+	if _reset_button == null:
+		push_warning("settings_screen.gd: missing node _reset_button")

@@ -32,6 +32,7 @@ const TYPE_ICONS: Dictionary = {
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	if _buy_button:
 		_buy_button.pressed.connect(_on_buy_pressed)
 
@@ -102,3 +103,20 @@ func _animate_insufficient() -> void:
 	tween.tween_property(self, "position", orig_pos + Vector2(5, 0), 0.04)
 	tween.tween_property(self, "position", orig_pos - Vector2(5, 0), 0.04)
 	tween.tween_property(self, "position", orig_pos, 0.04)
+
+
+func _warn_missing_nodes() -> void:
+	if _name_label == null:
+		push_warning("shop_item_card.gd: missing node _name_label")
+	if _description_label == null:
+		push_warning("shop_item_card.gd: missing node _description_label")
+	if _cost_label == null:
+		push_warning("shop_item_card.gd: missing node _cost_label")
+	if _buy_button == null:
+		push_warning("shop_item_card.gd: missing node _buy_button")
+	if _icon_label == null:
+		push_warning("shop_item_card.gd: missing node _icon_label")
+	if _background == null:
+		push_warning("shop_item_card.gd: missing node _background")
+	if _sold_overlay == null:
+		push_warning("shop_item_card.gd: missing node _sold_overlay")

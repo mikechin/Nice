@@ -15,6 +15,7 @@ extends Control
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	if _easy_button:
 		_easy_button.pressed.connect(_on_easy_pressed)
 	if _challenge_button:
@@ -85,3 +86,24 @@ func _start_run(run_type: String) -> void:
 
 func _on_back_pressed() -> void:
 	SignalBus.screen_transition_requested.emit("main_menu")
+
+
+func _warn_missing_nodes() -> void:
+	if _easy_button == null:
+		push_warning("run_select.gd: missing node _easy_button")
+	if _challenge_button == null:
+		push_warning("run_select.gd: missing node _challenge_button")
+	if _easy_description == null:
+		push_warning("run_select.gd: missing node _easy_description")
+	if _challenge_description == null:
+		push_warning("run_select.gd: missing node _challenge_description")
+	if _easy_hearts_label == null:
+		push_warning("run_select.gd: missing node _easy_hearts_label")
+	if _challenge_hearts_label == null:
+		push_warning("run_select.gd: missing node _challenge_hearts_label")
+	if _due_count_label == null:
+		push_warning("run_select.gd: missing node _due_count_label")
+	if _back_button == null:
+		push_warning("run_select.gd: missing node _back_button")
+	if _title_label == null:
+		push_warning("run_select.gd: missing node _title_label")

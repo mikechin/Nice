@@ -16,6 +16,7 @@ var _tween: Tween
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	if display_text.is_empty():
 		display_text = "%d Combo!" % combo_count if combo_count > 0 else ""
 	_setup_label()
@@ -83,3 +84,8 @@ func _setup_label() -> void:
 
 func _on_finished() -> void:
 	queue_free()
+
+
+func _warn_missing_nodes() -> void:
+	if _label == null:
+		push_warning("combo_text.gd: missing node _label")

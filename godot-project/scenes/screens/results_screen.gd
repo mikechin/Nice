@@ -18,6 +18,7 @@ var _result_data: Dictionary = {}
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	if _play_again_button:
 		_play_again_button.pressed.connect(_on_play_again_pressed)
 	if _main_menu_button:
@@ -118,3 +119,26 @@ func _on_play_again_pressed() -> void:
 func _on_main_menu_pressed() -> void:
 	AudioManager.play_sfx("button_tap")
 	SignalBus.screen_transition_requested.emit("main_menu")
+
+
+func _warn_missing_nodes() -> void:
+	if _accuracy_label == null:
+		push_warning("results_screen.gd: missing node _accuracy_label")
+	if _combo_label == null:
+		push_warning("results_screen.gd: missing node _combo_label")
+	if _coins_label == null:
+		push_warning("results_screen.gd: missing node _coins_label")
+	if _tiles_label == null:
+		push_warning("results_screen.gd: missing node _tiles_label")
+	if _rounds_label == null:
+		push_warning("results_screen.gd: missing node _rounds_label")
+	if _hearts_label == null:
+		push_warning("results_screen.gd: missing node _hearts_label")
+	if _title_label == null:
+		push_warning("results_screen.gd: missing node _title_label")
+	if _play_again_button == null:
+		push_warning("results_screen.gd: missing node _play_again_button")
+	if _main_menu_button == null:
+		push_warning("results_screen.gd: missing node _main_menu_button")
+	if _tile_grid == null:
+		push_warning("results_screen.gd: missing node _tile_grid")

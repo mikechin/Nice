@@ -29,6 +29,7 @@ var _run_manager: RunManager
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	_answer_generator = AnswerGenerator.new(GameState.character_db)
 	_drop_calculator = DropCalculator.new(null, null, GameState.radical_db)
 
@@ -303,3 +304,20 @@ func _on_back_pressed() -> void:
 			_run_manager.end_run()
 		GameState.end_run(_run_manager.get_run_summary() if _run_manager else {})
 	SignalBus.screen_transition_requested.emit("main_menu")
+
+
+func _warn_missing_nodes() -> void:
+	if _challenge_presenter == null:
+		push_warning("game_screen.gd: missing node _challenge_presenter")
+	if _heart_display == null:
+		push_warning("game_screen.gd: missing node _heart_display")
+	if _combo_counter == null:
+		push_warning("game_screen.gd: missing node _combo_counter")
+	if _coin_counter == null:
+		push_warning("game_screen.gd: missing node _coin_counter")
+	if _progress_bar == null:
+		push_warning("game_screen.gd: missing node _progress_bar")
+	if _card_prompt_label == null:
+		push_warning("game_screen.gd: missing node _card_prompt_label")
+	if _challenge_type_label == null:
+		push_warning("game_screen.gd: missing node _challenge_type_label")

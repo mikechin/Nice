@@ -13,6 +13,7 @@ var _tween: Tween
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	SignalBus.coins_changed.connect(_on_coins_changed)
 	_displayed_count = GameState.total_coins
 
@@ -90,3 +91,12 @@ func _on_coins_changed(amount: int, total: int) -> void:
 func _kill_tween() -> void:
 	if _tween and _tween.is_valid():
 		_tween.kill()
+
+
+func _warn_missing_nodes() -> void:
+	if _count_label == null:
+		push_warning("coin_counter.gd: missing node _count_label")
+	if _icon_label == null:
+		push_warning("coin_counter.gd: missing node _icon_label")
+	if _change_label == null:
+		push_warning("coin_counter.gd: missing node _change_label")

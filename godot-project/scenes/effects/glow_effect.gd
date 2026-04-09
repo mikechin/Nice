@@ -18,6 +18,7 @@ var _loop_iteration: int = 0
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	_setup_glow_rect()
 	if auto_play:
 		play()
@@ -97,3 +98,8 @@ func _on_finished() -> void:
 	if _glow_rect:
 		_tween.tween_property(_glow_rect, "modulate:a", 0.0, 0.3)
 	_tween.tween_callback(queue_free)
+
+
+func _warn_missing_nodes() -> void:
+	if _glow_rect == null:
+		push_warning("glow_effect.gd: missing node _glow_rect")

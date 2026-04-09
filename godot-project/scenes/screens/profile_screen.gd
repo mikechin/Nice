@@ -17,6 +17,7 @@ extends Control
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	if _back_button:
 		_back_button.pressed.connect(_on_back_pressed)
 
@@ -127,3 +128,28 @@ func _on_streak_updated(_days: int) -> void:
 
 func _on_back_pressed() -> void:
 	SignalBus.screen_transition_requested.emit("main_menu")
+
+
+func _warn_missing_nodes() -> void:
+	if _hsk_label == null:
+		push_warning("profile_screen.gd: missing node _hsk_label")
+	if _mastery_label == null:
+		push_warning("profile_screen.gd: missing node _mastery_label")
+	if _streak_label == null:
+		push_warning("profile_screen.gd: missing node _streak_label")
+	if _mastered_label == null:
+		push_warning("profile_screen.gd: missing node _mastered_label")
+	if _accuracy_label == null:
+		push_warning("profile_screen.gd: missing node _accuracy_label")
+	if _coins_label == null:
+		push_warning("profile_screen.gd: missing node _coins_label")
+	if _tiles_label == null:
+		push_warning("profile_screen.gd: missing node _tiles_label")
+	if _radicals_label == null:
+		push_warning("profile_screen.gd: missing node _radicals_label")
+	if _tier_breakdown == null:
+		push_warning("profile_screen.gd: missing node _tier_breakdown")
+	if _back_button == null:
+		push_warning("profile_screen.gd: missing node _back_button")
+	if _title_label == null:
+		push_warning("profile_screen.gd: missing node _title_label")

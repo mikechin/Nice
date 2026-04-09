@@ -19,6 +19,7 @@ var _cell_scene: PackedScene
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	_collection_grid = CollectionGrid.new()
 
 	if _back_button:
@@ -153,3 +154,18 @@ func _on_srs_state_updated(_card_id: String, _new_state: Dictionary) -> void:
 
 func _on_back_pressed() -> void:
 	SignalBus.screen_transition_requested.emit("main_menu")
+
+
+func _warn_missing_nodes() -> void:
+	if _grid_container == null:
+		push_warning("collection_screen.gd: missing node _grid_container")
+	if _sort_button == null:
+		push_warning("collection_screen.gd: missing node _sort_button")
+	if _filter_button == null:
+		push_warning("collection_screen.gd: missing node _filter_button")
+	if _completion_label == null:
+		push_warning("collection_screen.gd: missing node _completion_label")
+	if _count_label == null:
+		push_warning("collection_screen.gd: missing node _count_label")
+	if _back_button == null:
+		push_warning("collection_screen.gd: missing node _back_button")

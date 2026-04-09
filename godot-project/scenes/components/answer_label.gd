@@ -19,6 +19,7 @@ const DIMMED_COLOR := Color(0.5, 0.5, 0.5)
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	_update_display()
 
 
@@ -119,3 +120,10 @@ func _dim() -> void:
 func _kill_tween() -> void:
 	if _tween and _tween.is_valid():
 		_tween.kill()
+
+
+func _warn_missing_nodes() -> void:
+	if _text_label == null:
+		push_warning("answer_label.gd: missing node _text_label")
+	if _background == null:
+		push_warning("answer_label.gd: missing node _background")

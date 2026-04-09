@@ -17,6 +17,7 @@ const HEART_SIZE := Vector2(32, 32)
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	SignalBus.hearts_changed.connect(_on_hearts_changed)
 	SignalBus.heart_lost.connect(_on_heart_lost)
 
@@ -126,3 +127,10 @@ func _animate_heart_loss(heart_node: Control) -> void:
 func _kill_tween() -> void:
 	if _tween and _tween.is_valid():
 		_tween.kill()
+
+
+func _warn_missing_nodes() -> void:
+	if _hearts_container == null:
+		push_warning("heart_display.gd: missing node _hearts_container")
+	if _count_label == null:
+		push_warning("heart_display.gd: missing node _count_label")

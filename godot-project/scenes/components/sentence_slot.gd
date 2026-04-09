@@ -19,6 +19,7 @@ const EMPTY_COLOR := Color(0.3, 0.3, 0.3, 0.15)
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	custom_minimum_size = SLOT_SIZE
 	gui_input.connect(_on_gui_input)
 	_update_display()
@@ -84,3 +85,12 @@ func _animate_remove() -> void:
 	var tween := create_tween()
 	tween.tween_property(self, "scale", Vector2(0.8, 0.8), 0.08)
 	tween.tween_property(self, "modulate:a", 0.3, 0.1)
+
+
+func _warn_missing_nodes() -> void:
+	if _character_label == null:
+		push_warning("sentence_slot.gd: missing node _character_label")
+	if _background == null:
+		push_warning("sentence_slot.gd: missing node _background")
+	if _index_label == null:
+		push_warning("sentence_slot.gd: missing node _index_label")

@@ -12,6 +12,7 @@ var _tween: Tween
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	SignalBus.combo_incremented.connect(_on_combo_incremented)
 	SignalBus.combo_broken.connect(_on_combo_broken)
 	SignalBus.combo_milestone.connect(_on_combo_milestone)
@@ -115,3 +116,12 @@ func _on_combo_milestone(milestone: int) -> void:
 func _kill_tween() -> void:
 	if _tween and _tween.is_valid():
 		_tween.kill()
+
+
+func _warn_missing_nodes() -> void:
+	if _count_label == null:
+		push_warning("combo_counter.gd: missing node _count_label")
+	if _combo_label == null:
+		push_warning("combo_counter.gd: missing node _combo_label")
+	if _milestone_label == null:
+		push_warning("combo_counter.gd: missing node _milestone_label")

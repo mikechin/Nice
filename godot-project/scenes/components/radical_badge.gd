@@ -27,6 +27,7 @@ const BADGE_SIZE := Vector2(56, 56)
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	custom_minimum_size = BADGE_SIZE
 	gui_input.connect(_on_gui_input)
 
@@ -90,3 +91,14 @@ func _animate_tap() -> void:
 	var tween := create_tween()
 	tween.tween_property(self, "scale", Vector2(0.85, 0.85), 0.05)
 	tween.tween_property(self, "scale", Vector2.ONE, 0.1)
+
+
+func _warn_missing_nodes() -> void:
+	if _radical_label == null:
+		push_warning("radical_badge.gd: missing node _radical_label")
+	if _name_label == null:
+		push_warning("radical_badge.gd: missing node _name_label")
+	if _background == null:
+		push_warning("radical_badge.gd: missing node _background")
+	if _equipped_indicator == null:
+		push_warning("radical_badge.gd: missing node _equipped_indicator")

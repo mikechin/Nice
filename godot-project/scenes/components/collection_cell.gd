@@ -19,6 +19,7 @@ const CELL_SIZE := Vector2(72, 72)
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	custom_minimum_size = CELL_SIZE
 	gui_input.connect(_on_gui_input)
 
@@ -85,3 +86,16 @@ func _animate_tap() -> void:
 	var tween := create_tween()
 	tween.tween_property(self, "scale", Vector2(0.9, 0.9), 0.05)
 	tween.tween_property(self, "scale", Vector2.ONE, 0.1)
+
+
+func _warn_missing_nodes() -> void:
+	if _character_label == null:
+		push_warning("collection_cell.gd: missing node _character_label")
+	if _tier_label == null:
+		push_warning("collection_cell.gd: missing node _tier_label")
+	if _background == null:
+		push_warning("collection_cell.gd: missing node _background")
+	if _border == null:
+		push_warning("collection_cell.gd: missing node _border")
+	if _lock_icon == null:
+		push_warning("collection_cell.gd: missing node _lock_icon")

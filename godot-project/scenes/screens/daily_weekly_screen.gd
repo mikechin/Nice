@@ -22,6 +22,7 @@ var _weekly_manager: WeeklyTrialManager
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	_daily_manager = DailyGoalManager.new(GameState.sentence_db)
 	_weekly_manager = WeeklyTrialManager.new(GameState.sentence_db)
 
@@ -145,3 +146,32 @@ func _on_daily_complete_pressed() -> void:
 
 func _on_back_pressed() -> void:
 	SignalBus.screen_transition_requested.emit("main_menu")
+
+
+func _warn_missing_nodes() -> void:
+	if _title_label == null:
+		push_warning("daily_weekly_screen.gd: missing node _title_label")
+	if _daily_section == null:
+		push_warning("daily_weekly_screen.gd: missing node _daily_section")
+	if _daily_sentence_label == null:
+		push_warning("daily_weekly_screen.gd: missing node _daily_sentence_label")
+	if _daily_meaning_label == null:
+		push_warning("daily_weekly_screen.gd: missing node _daily_meaning_label")
+	if _daily_tiles_label == null:
+		push_warning("daily_weekly_screen.gd: missing node _daily_tiles_label")
+	if _daily_status_label == null:
+		push_warning("daily_weekly_screen.gd: missing node _daily_status_label")
+	if _daily_complete_button == null:
+		push_warning("daily_weekly_screen.gd: missing node _daily_complete_button")
+	if _weekly_section == null:
+		push_warning("daily_weekly_screen.gd: missing node _weekly_section")
+	if _weekly_title_label == null:
+		push_warning("daily_weekly_screen.gd: missing node _weekly_title_label")
+	if _weekly_progress_label == null:
+		push_warning("daily_weekly_screen.gd: missing node _weekly_progress_label")
+	if _weekly_days_label == null:
+		push_warning("daily_weekly_screen.gd: missing node _weekly_days_label")
+	if _weekly_reward_label == null:
+		push_warning("daily_weekly_screen.gd: missing node _weekly_reward_label")
+	if _back_button == null:
+		push_warning("daily_weekly_screen.gd: missing node _back_button")

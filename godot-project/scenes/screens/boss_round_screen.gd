@@ -25,6 +25,7 @@ var _tile_scene: PackedScene
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	_boss_manager = BossRoundManager.new(GameState.sentence_db)
 	_sentence_builder = SentenceBuilder.new()
 	_sentence_builder.set_available_tiles(GameState.tile_inventory.duplicate())
@@ -257,3 +258,28 @@ func _on_clear_pressed() -> void:
 func _on_continue_pressed() -> void:
 	# Return to game flow
 	SignalBus.screen_transition_requested.emit("game")
+
+
+func _warn_missing_nodes() -> void:
+	if _title_label == null:
+		push_warning("boss_round_screen.gd: missing node _title_label")
+	if _type_label == null:
+		push_warning("boss_round_screen.gd: missing node _type_label")
+	if _prompt_label == null:
+		push_warning("boss_round_screen.gd: missing node _prompt_label")
+	if _hint_label == null:
+		push_warning("boss_round_screen.gd: missing node _hint_label")
+	if _sentence_container == null:
+		push_warning("boss_round_screen.gd: missing node _sentence_container")
+	if _tile_container == null:
+		push_warning("boss_round_screen.gd: missing node _tile_container")
+	if _submit_button == null:
+		push_warning("boss_round_screen.gd: missing node _submit_button")
+	if _clear_button == null:
+		push_warning("boss_round_screen.gd: missing node _clear_button")
+	if _result_label == null:
+		push_warning("boss_round_screen.gd: missing node _result_label")
+	if _score_label == null:
+		push_warning("boss_round_screen.gd: missing node _score_label")
+	if _continue_button == null:
+		push_warning("boss_round_screen.gd: missing node _continue_button")

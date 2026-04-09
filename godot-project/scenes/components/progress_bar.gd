@@ -20,6 +20,7 @@ var _tween: Tween
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	if _bar_background:
 		_bar_background.color = background_color
 	if _bar_fill:
@@ -88,3 +89,14 @@ func _animate_fill(target_ratio: float) -> void:
 func _kill_tween() -> void:
 	if _tween and _tween.is_valid():
 		_tween.kill()
+
+
+func _warn_missing_nodes() -> void:
+	if _bar_background == null:
+		push_warning("progress_bar.gd: missing node _bar_background")
+	if _bar_fill == null:
+		push_warning("progress_bar.gd: missing node _bar_fill")
+	if _fraction_label == null:
+		push_warning("progress_bar.gd: missing node _fraction_label")
+	if _percentage_label == null:
+		push_warning("progress_bar.gd: missing node _percentage_label")

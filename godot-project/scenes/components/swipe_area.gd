@@ -31,6 +31,7 @@ const ACTIVE_ALPHA: float = 1.0
 
 
 func _ready() -> void:
+	_warn_missing_nodes()
 	_swipe_detector = SwipeDetector.new()
 	add_child(_swipe_detector)
 	_swipe_detector.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -143,3 +144,22 @@ func _reset_arrow_colors() -> void:
 	for arrow in arrows:
 		if arrow:
 			arrow.modulate.a = IDLE_ALPHA
+
+
+func _warn_missing_nodes() -> void:
+	if _up_arrow == null:
+		push_warning("swipe_area.gd: missing node _up_arrow")
+	if _down_arrow == null:
+		push_warning("swipe_area.gd: missing node _down_arrow")
+	if _left_arrow == null:
+		push_warning("swipe_area.gd: missing node _left_arrow")
+	if _right_arrow == null:
+		push_warning("swipe_area.gd: missing node _right_arrow")
+	if _up_label == null:
+		push_warning("swipe_area.gd: missing node _up_label")
+	if _down_label == null:
+		push_warning("swipe_area.gd: missing node _down_label")
+	if _left_label == null:
+		push_warning("swipe_area.gd: missing node _left_label")
+	if _right_label == null:
+		push_warning("swipe_area.gd: missing node _right_label")
