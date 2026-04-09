@@ -1,0 +1,59 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
+[application]
+
+config/name="ChineseCardGame"
+config/description="SRS-powered Chinese character learning game"
+run/main_scene="res://scenes/screens/main_menu.tscn"
+config/features=PackedStringArray("4.6", "Mobile")
+
+[autoload]
+
+SignalBus="*res://src/autoload/signal_bus.gd"
+GameState="*res://src/autoload/game_state.gd"
+SaveManager="*res://src/autoload/save_manager.gd"
+AudioManager="*res://src/autoload/audio_manager.gd"
+ScreenNavigator="*res://src/autoload/screen_navigator.gd"
+
+[display]
+
+window/size/viewport_width=1080
+window/size/viewport_height=1920
+window/stretch/mode="viewport"
+window/stretch/aspect="keep_width"
+window/handheld/orientation=1
+
+[input]
+
+swipe_up={
+"deadzone": 0.2,
+"events": []
+}
+swipe_down={
+"deadzone": 0.2,
+"events": []
+}
+swipe_left={
+"deadzone": 0.2,
+"events": []
+}
+swipe_right={
+"deadzone": 0.2,
+"events": []
+}
+
+[rendering]
+
+renderer/rendering_method="mobile"
