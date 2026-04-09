@@ -37,22 +37,14 @@ func _exit_tree() -> void:
 
 
 func _load_result_from_state() -> void:
-	# Build result data from GameState's session stats
-	var answered: int = GameState.cards_answered_today
-	var correct: int = GameState.correct_answers_today
-	var accuracy: float = (float(correct) / float(answered) * 100.0) if answered > 0 else 0.0
-
-	_result_data = {
-		"run_type": GameState.current_run_type if GameState.current_run_type != "" else "easy",
-		"coins": GameState.run_coins_earned,
-		"tiles": GameState.run_tiles_earned.duplicate(),
-		"best_combo": GameState.best_combo,
-		"rounds": GameState.current_round,
-		"hearts_remaining": GameState.current_hearts,
-		"accuracy": accuracy,
-		"total_answered": answered,
-		"correct_count": correct,
-	}
+	# Use the summary stored by GameState.end_run()
+	if not GameState.last_run_summary.is_empty():
+		_result_data = GameState.last_run_summary.duplicate()
+		# Ensure accuracy is present
+		if not _result_data.has("accuracy"):
+			var total: int = _result_data.get("total_cards", 0)
+			var correct: int = _result_data.get("correct_count", 0)
+			_result_data["accuracy"] = (float(correct) / float(total) * 100.0) if total > 0 else 0.0
 
 
 func _on_run_ended(result: Dictionary) -> void:

@@ -49,6 +49,7 @@ func start_run(type: String, pack: PackData) -> void:
 	_session.started_at = Time.get_unix_time_from_system()
 	_session.run_type = type
 
+	SignalBus.hearts_changed.emit(_hearts.current_hearts, _hearts.max_hearts)
 	start_next_round()
 
 
@@ -82,11 +83,23 @@ func on_card_answered(card_id: String, challenge_type: String, correct: bool, ra
 	if correct:
 		_combo.increment()
 		_difficulty.on_combo_changed(_combo.current_combo)
+		SignalBus.combo_incremented.emit(_combo.current_combo)
+		for milestone in SrsConfig.COMBO_MILESTONES:
+			if _combo.current_combo == milestone:
+				SignalBus.combo_milestone.emit(milestone)
+				break
 	else:
+		var old_combo := _combo.current_combo
 		_combo.break_combo()
 		_difficulty.on_combo_changed(0)
+		if old_combo > 0:
+			SignalBus.combo_broken.emit(old_combo)
 		if run_type == "challenge":
 			_hearts.lose_heart()
+			SignalBus.heart_lost.emit()
+			SignalBus.hearts_changed.emit(_hearts.current_hearts, _hearts.max_hearts)
+			if _hearts.is_game_over():
+				SignalBus.all_hearts_lost.emit()
 
 	_round.on_card_answered(correct)
 

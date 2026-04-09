@@ -25,6 +25,7 @@ var _correct_count: int = 0
 var _is_transitioning: bool = false
 var _answer_generator: AnswerGenerator
 var _drop_calculator: DropCalculator
+var _run_manager: RunManager
 
 
 func _ready() -> void:
@@ -86,6 +87,10 @@ func _start_session() -> void:
 	print("[GameScreen] presentation_order size = ", _total_cards)
 	if _total_cards > 0:
 		print("[GameScreen] first few cards: ", _pack.presentation_order.slice(0, mini(5, _total_cards)))
+
+	# Create RunManager for this session
+	_run_manager = RunManager.new()
+	_run_manager.start_run(GameState.current_run_type if GameState.current_run_type != "" else "easy", _pack)
 
 	_update_progress()
 	AudioManager.play_music("gameplay")
@@ -170,8 +175,9 @@ func _on_challenge_completed(card_id: String, challenge_type: String, correct: b
 	if _is_transitioning:
 		return
 
-	# Record the answer in GameState
-	GameState.record_answer(correct)
+	# Record in RunManager (emits combo/hearts signals)
+	if _run_manager:
+		_run_manager.on_card_answered(card_id, challenge_type, correct, rating)
 
 	# Record in SRS scheduler
 	var now := Time.get_unix_time_from_system()
@@ -187,10 +193,11 @@ func _on_challenge_completed(card_id: String, challenge_type: String, correct: b
 			var loot_rarity: SrsEnums.LootRarity = GameState.review_scheduler.get_loot_rarity(
 				card_id, challenge_type, now
 			)
+			var combo: int = _run_manager.get_combo_manager().current_combo if _run_manager else 0
 			var drops: Dictionary = _drop_calculator.calculate_drops(
 				card_data,
 				loot_rarity,
-				GameState.current_combo,
+				combo,
 				GameState.player_hsk_level,
 				GameState.equipped_radicals
 			)
@@ -239,14 +246,18 @@ func _apply_drops(drops: Dictionary) -> void:
 
 
 func _on_pack_complete() -> void:
-	GameState.end_run()
+	if _run_manager:
+		_run_manager.end_run()
+	GameState.end_run(_run_manager.get_run_summary() if _run_manager else {})
 	SignalBus.screen_transition_requested.emit("results")
 
 
 func _on_all_hearts_lost() -> void:
 	# Game over -- transition to results
 	_is_transitioning = true
-	GameState.end_run()
+	if _run_manager:
+		_run_manager.end_run()
+	GameState.end_run(_run_manager.get_run_summary() if _run_manager else {})
 	SignalBus.screen_transition_requested.emit("results")
 
 
@@ -288,5 +299,7 @@ func _clear_answer_labels() -> void:
 func _on_back_pressed() -> void:
 	# Confirm exit mid-run
 	if GameState.is_in_run:
-		GameState.end_run()
+		if _run_manager:
+			_run_manager.end_run()
+		GameState.end_run(_run_manager.get_run_summary() if _run_manager else {})
 	SignalBus.screen_transition_requested.emit("main_menu")

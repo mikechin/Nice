@@ -14,6 +14,9 @@ var _scheduler_label: Label
 
 var _update_interval: float = 0.25
 var _time_since_update: float = 0.0
+var _debug_combo: int = 0
+var _debug_hearts: int = 0
+var _debug_max_hearts: int = 0
 
 
 func _ready() -> void:
@@ -127,12 +130,12 @@ func _update_srs_label() -> void:
 
 
 func _update_combo_label() -> void:
-	_combo_label.text = "Combo: %d (best: %d)" % [GameState.current_combo, GameState.best_combo]
+	_combo_label.text = "Combo: %d" % _debug_combo
 
 
 func _update_hearts_label() -> void:
 	if GameState.is_in_run:
-		_hearts_label.text = "Hearts: %d / %d (%s)" % [GameState.current_hearts, GameState.max_hearts, GameState.current_run_type]
+		_hearts_label.text = "Hearts: %d / %d (%s)" % [_debug_hearts, _debug_max_hearts, GameState.current_run_type]
 	else:
 		_hearts_label.text = "Hearts: not in run"
 
@@ -160,18 +163,22 @@ func _update_scheduler_label() -> void:
 # --- Signal handlers ---
 
 func _on_combo_incremented(combo_count: int) -> void:
+	_debug_combo = combo_count
 	if visible:
-		_combo_label.text = "Combo: %d (best: %d)" % [combo_count, GameState.best_combo]
+		_update_combo_label()
 
 
 func _on_combo_broken(_final_count: int) -> void:
+	_debug_combo = 0
 	if visible:
-		_combo_label.text = "Combo: 0 (best: %d)" % GameState.best_combo
+		_update_combo_label()
 
 
 func _on_hearts_changed(current: int, max_h: int) -> void:
+	_debug_hearts = current
+	_debug_max_hearts = max_h
 	if visible:
-		_hearts_label.text = "Hearts: %d / %d" % [current, max_h]
+		_update_hearts_label()
 
 
 func _on_card_answered(_card_data: Dictionary, _challenge_type: String, _correct: bool, _rating: int) -> void:

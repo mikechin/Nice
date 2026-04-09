@@ -118,7 +118,7 @@ func _on_purchase_requested(item: ShopItem) -> void:
 			if character != "":
 				GameState.add_tiles(character)
 		ShopItem.ItemType.EXTRA_HEART:
-			GameState.max_hearts += 1
+			pass  # Applied at next run start via RunManager
 		ShopItem.ItemType.PACK_REFRESH:
 			pass  # Applied at next pack curation
 

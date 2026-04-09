@@ -20,14 +20,10 @@ var tile_inventory: Dictionary = {}
 # --- Current Run State ---
 var is_in_run: bool = false
 var current_run_type: String = ""  # "easy" or "challenge"
-var current_hearts: int = 0
-var max_hearts: int = 3
-var current_combo: int = 0
-var best_combo: int = 0
 var run_coins_earned: int = 0
 var run_tiles_earned: Dictionary = {}
-var current_round: int = 0
 var current_pack: PackData = null
+var last_run_summary: Dictionary = {}
 
 # --- Session Stats ---
 var cards_answered_today: int = 0
@@ -47,10 +43,7 @@ func _ready() -> void:
 	radical_db = RadicalDatabase.new()
 	sentence_db = SentenceDatabase.new()
 	review_scheduler = ReviewScheduler.new()
-	# Note: initialize_databases() is called AFTER SaveManager.load_game()
-	# to avoid SaveManager.deserialize_all() clearing the registered cards.
-	# SaveManager._ready() calls load_game() then emits load_completed.
-	# We defer initialization to ensure proper ordering.
+	SignalBus.card_answered.connect(_on_card_answered)
 
 
 func initialize_databases() -> void:
@@ -68,45 +61,28 @@ func initialize_databases() -> void:
 func start_run(run_type: String) -> void:
 	is_in_run = true
 	current_run_type = run_type
-	current_combo = 0
-	best_combo = 0
 	run_coins_earned = 0
 	run_tiles_earned.clear()
-	current_round = 0
-
-	match run_type:
-		"easy":
-			max_hearts = SrsConfig.HEARTS_EASY_RUN
-		"challenge":
-			max_hearts = SrsConfig.HEARTS_CHALLENGE_RUN
-		_:
-			max_hearts = SrsConfig.DEFAULT_MAX_HEARTS
-
-	current_hearts = max_hearts
+	last_run_summary.clear()
 	SignalBus.run_started.emit(run_type)
-	SignalBus.hearts_changed.emit(current_hearts, max_hearts)
 
 
-func end_run() -> void:
+func end_run(summary: Dictionary = {}) -> void:
 	# Bank earned tiles into inventory
 	for ch in run_tiles_earned:
 		add_tiles(ch, run_tiles_earned[ch])
 
 	total_coins += run_coins_earned
 
-	var result := {
-		"run_type": current_run_type,
-		"coins": run_coins_earned,
-		"tiles": run_tiles_earned.duplicate(),
-		"best_combo": best_combo,
-		"rounds": current_round,
-		"hearts_remaining": current_hearts,
-	}
+	last_run_summary = summary.duplicate()
+	last_run_summary["run_type"] = current_run_type
+	last_run_summary["coins"] = run_coins_earned
+	last_run_summary["tiles"] = run_tiles_earned.duplicate()
 
 	is_in_run = false
 	current_run_type = ""
 	current_pack = null
-	SignalBus.run_ended.emit(result)
+	SignalBus.run_ended.emit(last_run_summary)
 
 
 func add_tiles(character: String, count: int = 1) -> void:
@@ -150,39 +126,10 @@ func spend_coins(amount: int) -> bool:
 	return true
 
 
-func lose_heart() -> void:
-	current_hearts = maxi(0, current_hearts - 1)
-	SignalBus.heart_lost.emit()
-	SignalBus.hearts_changed.emit(current_hearts, max_hearts)
-	if current_hearts <= 0:
-		SignalBus.all_hearts_lost.emit()
-
-
-func reset_combo() -> void:
-	if current_combo > 0:
-		SignalBus.combo_broken.emit(current_combo)
-	current_combo = 0
-
-
-func increment_combo() -> void:
-	current_combo += 1
-	best_combo = maxi(best_combo, current_combo)
-	SignalBus.combo_incremented.emit(current_combo)
-	for milestone in SrsConfig.COMBO_MILESTONES:
-		if current_combo == milestone:
-			SignalBus.combo_milestone.emit(milestone)
-			break
-
-
-func record_answer(correct: bool) -> void:
+func _on_card_answered(_card_data: Dictionary, _challenge_type: String, correct: bool, _rating: int) -> void:
 	cards_answered_today += 1
 	if correct:
 		correct_answers_today += 1
-		increment_combo()
-	else:
-		reset_combo()
-		if is_in_run and current_run_type == "challenge":
-			lose_heart()
 
 
 func get_today_date() -> String:

@@ -32,7 +32,7 @@ func test_to_save_dict_default_values() -> void:
 func test_initial_run_state() -> void:
 	assert_bool(state.is_in_run).is_false()
 	assert_str(state.current_run_type).is_equal("")
-	assert_int(state.current_combo).is_equal(0)
+	assert_int(state.run_coins_earned).is_equal(0)
 
 
 func test_load_from_dict_restores_state() -> void:
