@@ -1,3 +1,1673 @@
 [
-  {"character": "熬", "pinyin": "áo", "tone": 2, "meaning": "to endure, to boil", "hsk_level": 5, "radicals": ["灬"], "components": ["敖", "灬"], "is_radical": false, "frequency_rank": 1834}
+  {
+    "character": "哎",
+    "pinyin": "āi",
+    "tone": 1,
+    "meaning": "alas, hey",
+    "hsk_level": 5,
+    "radicals": [
+      "口"
+    ],
+    "components": [
+      "口",
+      "艾"
+    ],
+    "is_radical": false,
+    "frequency_rank": 678
+  },
+  {
+    "character": "矮",
+    "pinyin": "ǎi",
+    "tone": 3,
+    "meaning": "short (height)",
+    "hsk_level": 5,
+    "radicals": [
+      "矢"
+    ],
+    "components": [
+      "矢",
+      "委"
+    ],
+    "is_radical": false,
+    "frequency_rank": 789
+  },
+  {
+    "character": "案",
+    "pinyin": "àn",
+    "tone": 4,
+    "meaning": "case, desk",
+    "hsk_level": 5,
+    "radicals": [
+      "木"
+    ],
+    "components": [
+      "安",
+      "木"
+    ],
+    "is_radical": false,
+    "frequency_rank": 345
+  },
+  {
+    "character": "熬",
+    "pinyin": "áo",
+    "tone": 2,
+    "meaning": "to endure, stew",
+    "hsk_level": 5,
+    "radicals": [
+      "灬"
+    ],
+    "components": [
+      "敖",
+      "灬"
+    ],
+    "is_radical": false,
+    "frequency_rank": 789
+  },
+  {
+    "character": "悲",
+    "pinyin": "bēi",
+    "tone": 1,
+    "meaning": "sad, sorrowful",
+    "hsk_level": 5,
+    "radicals": [
+      "忄"
+    ],
+    "components": [
+      "非",
+      "心"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "背",
+    "pinyin": "bèi",
+    "tone": 4,
+    "meaning": "back, to carry",
+    "hsk_level": 5,
+    "radicals": [
+      "月"
+    ],
+    "components": [
+      "北",
+      "月"
+    ],
+    "is_radical": false,
+    "frequency_rank": 345
+  },
+  {
+    "character": "辈",
+    "pinyin": "bèi",
+    "tone": 4,
+    "meaning": "generation",
+    "hsk_level": 5,
+    "radicals": [
+      "车"
+    ],
+    "components": [
+      "非",
+      "车"
+    ],
+    "is_radical": false,
+    "frequency_rank": 567
+  },
+  {
+    "character": "逼",
+    "pinyin": "bī",
+    "tone": 1,
+    "meaning": "to force, compel",
+    "hsk_level": 5,
+    "radicals": [
+      "辶"
+    ],
+    "components": [
+      "辶",
+      "畐"
+    ],
+    "is_radical": false,
+    "frequency_rank": 678
+  },
+  {
+    "character": "臂",
+    "pinyin": "bì",
+    "tone": 4,
+    "meaning": "arm",
+    "hsk_level": 5,
+    "radicals": [
+      "月"
+    ],
+    "components": [
+      "辟",
+      "月"
+    ],
+    "is_radical": false,
+    "frequency_rank": 789
+  },
+  {
+    "character": "避",
+    "pinyin": "bì",
+    "tone": 4,
+    "meaning": "to avoid",
+    "hsk_level": 5,
+    "radicals": [
+      "辶"
+    ],
+    "components": [
+      "辶",
+      "辟"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "编",
+    "pinyin": "biān",
+    "tone": 1,
+    "meaning": "to edit, weave",
+    "hsk_level": 5,
+    "radicals": [
+      "纟"
+    ],
+    "components": [
+      "纟",
+      "扁"
+    ],
+    "is_radical": false,
+    "frequency_rank": 345
+  },
+  {
+    "character": "辩",
+    "pinyin": "biàn",
+    "tone": 4,
+    "meaning": "to debate",
+    "hsk_level": 5,
+    "radicals": [
+      "讠"
+    ],
+    "components": [
+      "辛",
+      "讠"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "彼",
+    "pinyin": "bǐ",
+    "tone": 3,
+    "meaning": "that, those",
+    "hsk_level": 5,
+    "radicals": [
+      "彳"
+    ],
+    "components": [
+      "彳",
+      "皮"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "冰",
+    "pinyin": "bīng",
+    "tone": 1,
+    "meaning": "ice",
+    "hsk_level": 5,
+    "radicals": [
+      "冫"
+    ],
+    "components": [
+      "冫",
+      "水"
+    ],
+    "is_radical": false,
+    "frequency_rank": 345
+  },
+  {
+    "character": "播",
+    "pinyin": "bō",
+    "tone": 1,
+    "meaning": "to broadcast",
+    "hsk_level": 5,
+    "radicals": [
+      "扌"
+    ],
+    "components": [
+      "扌",
+      "番"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "脖",
+    "pinyin": "bó",
+    "tone": 2,
+    "meaning": "neck",
+    "hsk_level": 5,
+    "radicals": [
+      "月"
+    ],
+    "components": [
+      "月",
+      "孛"
+    ],
+    "is_radical": false,
+    "frequency_rank": 789
+  },
+  {
+    "character": "财",
+    "pinyin": "cái",
+    "tone": 2,
+    "meaning": "wealth, fortune",
+    "hsk_level": 5,
+    "radicals": [
+      "贝"
+    ],
+    "components": [
+      "贝",
+      "才"
+    ],
+    "is_radical": false,
+    "frequency_rank": 345
+  },
+  {
+    "character": "采",
+    "pinyin": "cǎi",
+    "tone": 3,
+    "meaning": "to pick, gather",
+    "hsk_level": 5,
+    "radicals": [],
+    "components": [],
+    "is_radical": true,
+    "frequency_rank": 345
+  },
+  {
+    "character": "彩",
+    "pinyin": "cǎi",
+    "tone": 3,
+    "meaning": "colorful",
+    "hsk_level": 5,
+    "radicals": [
+      "彡"
+    ],
+    "components": [
+      "采",
+      "彡"
+    ],
+    "is_radical": false,
+    "frequency_rank": 345
+  },
+  {
+    "character": "操",
+    "pinyin": "cāo",
+    "tone": 1,
+    "meaning": "to operate, drill",
+    "hsk_level": 5,
+    "radicals": [
+      "扌"
+    ],
+    "components": [
+      "扌",
+      "品",
+      "木"
+    ],
+    "is_radical": false,
+    "frequency_rank": 345
+  },
+  {
+    "character": "册",
+    "pinyin": "cè",
+    "tone": 4,
+    "meaning": "book, MW",
+    "hsk_level": 5,
+    "radicals": [],
+    "components": [],
+    "is_radical": true,
+    "frequency_rank": 567
+  },
+  {
+    "character": "测",
+    "pinyin": "cè",
+    "tone": 4,
+    "meaning": "to measure, test",
+    "hsk_level": 5,
+    "radicals": [
+      "氵"
+    ],
+    "components": [
+      "氵",
+      "则"
+    ],
+    "is_radical": false,
+    "frequency_rank": 345
+  },
+  {
+    "character": "插",
+    "pinyin": "chā",
+    "tone": 1,
+    "meaning": "to insert",
+    "hsk_level": 5,
+    "radicals": [
+      "扌"
+    ],
+    "components": [
+      "扌",
+      "臿"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "拆",
+    "pinyin": "chāi",
+    "tone": 1,
+    "meaning": "to tear down",
+    "hsk_level": 5,
+    "radicals": [
+      "扌"
+    ],
+    "components": [
+      "扌",
+      "斥"
+    ],
+    "is_radical": false,
+    "frequency_rank": 567
+  },
+  {
+    "character": "产",
+    "pinyin": "chǎn",
+    "tone": 3,
+    "meaning": "to produce",
+    "hsk_level": 5,
+    "radicals": [],
+    "components": [],
+    "is_radical": false,
+    "frequency_rank": 56
+  },
+  {
+    "character": "尝",
+    "pinyin": "cháng",
+    "tone": 2,
+    "meaning": "to taste, try",
+    "hsk_level": 5,
+    "radicals": [
+      "口"
+    ],
+    "components": [
+      "尚",
+      "口"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "常",
+    "pinyin": "cháng",
+    "tone": 2,
+    "meaning": "often, common",
+    "hsk_level": 5,
+    "radicals": [
+      "巾"
+    ],
+    "components": [
+      "尚",
+      "巾"
+    ],
+    "is_radical": false,
+    "frequency_rank": 78
+  },
+  {
+    "character": "吵",
+    "pinyin": "chǎo",
+    "tone": 3,
+    "meaning": "noisy, quarrel",
+    "hsk_level": 5,
+    "radicals": [
+      "口"
+    ],
+    "components": [
+      "口",
+      "少"
+    ],
+    "is_radical": false,
+    "frequency_rank": 567
+  },
+  {
+    "character": "沉",
+    "pinyin": "chén",
+    "tone": 2,
+    "meaning": "to sink, deep",
+    "hsk_level": 5,
+    "radicals": [
+      "氵"
+    ],
+    "components": [
+      "氵",
+      "冗"
+    ],
+    "is_radical": false,
+    "frequency_rank": 345
+  },
+  {
+    "character": "趁",
+    "pinyin": "chèn",
+    "tone": 4,
+    "meaning": "to take advantage",
+    "hsk_level": 5,
+    "radicals": [
+      "走"
+    ],
+    "components": [
+      "走",
+      "珍"
+    ],
+    "is_radical": false,
+    "frequency_rank": 567
+  },
+  {
+    "character": "承",
+    "pinyin": "chéng",
+    "tone": 2,
+    "meaning": "to bear, accept",
+    "hsk_level": 5,
+    "radicals": [],
+    "components": [],
+    "is_radical": false,
+    "frequency_rank": 178
+  },
+  {
+    "character": "程",
+    "pinyin": "chéng",
+    "tone": 2,
+    "meaning": "journey, process",
+    "hsk_level": 5,
+    "radicals": [
+      "禾"
+    ],
+    "components": [
+      "禾",
+      "呈"
+    ],
+    "is_radical": false,
+    "frequency_rank": 145
+  },
+  {
+    "character": "吃",
+    "pinyin": "chī",
+    "tone": 1,
+    "meaning": "to eat",
+    "hsk_level": 5,
+    "radicals": [
+      "口"
+    ],
+    "components": [
+      "口",
+      "乞"
+    ],
+    "is_radical": false,
+    "frequency_rank": 89
+  },
+  {
+    "character": "冲",
+    "pinyin": "chōng",
+    "tone": 1,
+    "meaning": "to rush, rinse",
+    "hsk_level": 5,
+    "radicals": [
+      "冫"
+    ],
+    "components": [
+      "冫",
+      "中"
+    ],
+    "is_radical": false,
+    "frequency_rank": 345
+  },
+  {
+    "character": "宠",
+    "pinyin": "chǒng",
+    "tone": 3,
+    "meaning": "to spoil, pet",
+    "hsk_level": 5,
+    "radicals": [
+      "宀"
+    ],
+    "components": [
+      "宀",
+      "龙"
+    ],
+    "is_radical": false,
+    "frequency_rank": 678
+  },
+  {
+    "character": "愁",
+    "pinyin": "chóu",
+    "tone": 2,
+    "meaning": "to worry, sad",
+    "hsk_level": 5,
+    "radicals": [
+      "忄"
+    ],
+    "components": [
+      "秋",
+      "心"
+    ],
+    "is_radical": false,
+    "frequency_rank": 567
+  },
+  {
+    "character": "臭",
+    "pinyin": "chòu",
+    "tone": 4,
+    "meaning": "smelly, stinky",
+    "hsk_level": 5,
+    "radicals": [],
+    "components": [],
+    "is_radical": false,
+    "frequency_rank": 678
+  },
+  {
+    "character": "创",
+    "pinyin": "chuàng",
+    "tone": 4,
+    "meaning": "to create",
+    "hsk_level": 5,
+    "radicals": [
+      "刂"
+    ],
+    "components": [
+      "仓",
+      "刂"
+    ],
+    "is_radical": false,
+    "frequency_rank": 234
+  },
+  {
+    "character": "纯",
+    "pinyin": "chún",
+    "tone": 2,
+    "meaning": "pure",
+    "hsk_level": 5,
+    "radicals": [
+      "纟"
+    ],
+    "components": [
+      "纟",
+      "屯"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "辞",
+    "pinyin": "cí",
+    "tone": 2,
+    "meaning": "to resign, word",
+    "hsk_level": 5,
+    "radicals": [
+      "辛"
+    ],
+    "components": [
+      "舌",
+      "辛"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "刺",
+    "pinyin": "cì",
+    "tone": 4,
+    "meaning": "to stab, thorn",
+    "hsk_level": 5,
+    "radicals": [
+      "刂"
+    ],
+    "components": [
+      "朿",
+      "刂"
+    ],
+    "is_radical": false,
+    "frequency_rank": 567
+  },
+  {
+    "character": "匆",
+    "pinyin": "cōng",
+    "tone": 1,
+    "meaning": "hurried",
+    "hsk_level": 5,
+    "radicals": [
+      "勹"
+    ],
+    "components": [
+      "勹",
+      "丿"
+    ],
+    "is_radical": false,
+    "frequency_rank": 678
+  },
+  {
+    "character": "催",
+    "pinyin": "cuī",
+    "tone": 1,
+    "meaning": "to urge, press",
+    "hsk_level": 5,
+    "radicals": [
+      "亻"
+    ],
+    "components": [
+      "亻",
+      "崔"
+    ],
+    "is_radical": false,
+    "frequency_rank": 567
+  },
+  {
+    "character": "脆",
+    "pinyin": "cuì",
+    "tone": 4,
+    "meaning": "crispy, brittle",
+    "hsk_level": 5,
+    "radicals": [
+      "月"
+    ],
+    "components": [
+      "月",
+      "危"
+    ],
+    "is_radical": false,
+    "frequency_rank": 678
+  },
+  {
+    "character": "措",
+    "pinyin": "cuò",
+    "tone": 4,
+    "meaning": "to arrange, measure",
+    "hsk_level": 5,
+    "radicals": [
+      "扌"
+    ],
+    "components": [
+      "扌",
+      "昔"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "答",
+    "pinyin": "dā",
+    "tone": 1,
+    "meaning": "to respond",
+    "hsk_level": 5,
+    "radicals": [
+      "竹"
+    ],
+    "components": [
+      "竹",
+      "合"
+    ],
+    "is_radical": false,
+    "frequency_rank": 234
+  },
+  {
+    "character": "呆",
+    "pinyin": "dāi",
+    "tone": 1,
+    "meaning": "foolish, stunned",
+    "hsk_level": 5,
+    "radicals": [
+      "口"
+    ],
+    "components": [
+      "口",
+      "木"
+    ],
+    "is_radical": false,
+    "frequency_rank": 678
+  },
+  {
+    "character": "贷",
+    "pinyin": "dài",
+    "tone": 4,
+    "meaning": "to lend, loan",
+    "hsk_level": 5,
+    "radicals": [
+      "贝"
+    ],
+    "components": [
+      "代",
+      "贝"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "胆",
+    "pinyin": "dǎn",
+    "tone": 3,
+    "meaning": "gall, courage",
+    "hsk_level": 5,
+    "radicals": [
+      "月"
+    ],
+    "components": [
+      "月",
+      "旦"
+    ],
+    "is_radical": false,
+    "frequency_rank": 567
+  },
+  {
+    "character": "淡",
+    "pinyin": "dàn",
+    "tone": 4,
+    "meaning": "bland, light",
+    "hsk_level": 5,
+    "radicals": [
+      "氵"
+    ],
+    "components": [
+      "氵",
+      "炎"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "弹",
+    "pinyin": "dàn",
+    "tone": 4,
+    "meaning": "bullet, to play",
+    "hsk_level": 5,
+    "radicals": [
+      "弓"
+    ],
+    "components": [
+      "弓",
+      "单"
+    ],
+    "is_radical": false,
+    "frequency_rank": 345
+  },
+  {
+    "character": "盗",
+    "pinyin": "dào",
+    "tone": 4,
+    "meaning": "to steal, thief",
+    "hsk_level": 5,
+    "radicals": [
+      "皿"
+    ],
+    "components": [
+      "次",
+      "皿"
+    ],
+    "is_radical": false,
+    "frequency_rank": 567
+  },
+  {
+    "character": "递",
+    "pinyin": "dì",
+    "tone": 4,
+    "meaning": "to pass, deliver",
+    "hsk_level": 5,
+    "radicals": [
+      "辶"
+    ],
+    "components": [
+      "辶",
+      "弟"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "典",
+    "pinyin": "diǎn",
+    "tone": 3,
+    "meaning": "dictionary, classic",
+    "hsk_level": 5,
+    "radicals": [],
+    "components": [],
+    "is_radical": false,
+    "frequency_rank": 345
+  },
+  {
+    "character": "电",
+    "pinyin": "diàn",
+    "tone": 4,
+    "meaning": "electricity",
+    "hsk_level": 5,
+    "radicals": [],
+    "components": [],
+    "is_radical": true,
+    "frequency_rank": 34
+  },
+  {
+    "character": "钓",
+    "pinyin": "diào",
+    "tone": 4,
+    "meaning": "to fish (with rod)",
+    "hsk_level": 5,
+    "radicals": [
+      "钅"
+    ],
+    "components": [
+      "钅",
+      "勺"
+    ],
+    "is_radical": false,
+    "frequency_rank": 789
+  },
+  {
+    "character": "冻",
+    "pinyin": "dòng",
+    "tone": 4,
+    "meaning": "to freeze",
+    "hsk_level": 5,
+    "radicals": [
+      "冫"
+    ],
+    "components": [
+      "冫",
+      "东"
+    ],
+    "is_radical": false,
+    "frequency_rank": 567
+  },
+  {
+    "character": "洞",
+    "pinyin": "dòng",
+    "tone": 4,
+    "meaning": "hole, cave",
+    "hsk_level": 5,
+    "radicals": [
+      "氵"
+    ],
+    "components": [
+      "氵",
+      "同"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "豆",
+    "pinyin": "dòu",
+    "tone": 4,
+    "meaning": "bean",
+    "hsk_level": 5,
+    "radicals": [],
+    "components": [],
+    "is_radical": true,
+    "frequency_rank": 567
+  },
+  {
+    "character": "逗",
+    "pinyin": "dòu",
+    "tone": 4,
+    "meaning": "to tease, amuse",
+    "hsk_level": 5,
+    "radicals": [
+      "辶"
+    ],
+    "components": [
+      "辶",
+      "豆"
+    ],
+    "is_radical": false,
+    "frequency_rank": 678
+  },
+  {
+    "character": "独",
+    "pinyin": "dú",
+    "tone": 2,
+    "meaning": "alone, single",
+    "hsk_level": 5,
+    "radicals": [
+      "犭"
+    ],
+    "components": [
+      "犭",
+      "虫"
+    ],
+    "is_radical": false,
+    "frequency_rank": 234
+  },
+  {
+    "character": "端",
+    "pinyin": "duān",
+    "tone": 1,
+    "meaning": "end, to hold",
+    "hsk_level": 5,
+    "radicals": [
+      "立"
+    ],
+    "components": [
+      "立",
+      "耑"
+    ],
+    "is_radical": false,
+    "frequency_rank": 345
+  },
+  {
+    "character": "兑",
+    "pinyin": "duì",
+    "tone": 4,
+    "meaning": "to exchange",
+    "hsk_level": 5,
+    "radicals": [],
+    "components": [],
+    "is_radical": false,
+    "frequency_rank": 567
+  },
+  {
+    "character": "吨",
+    "pinyin": "dūn",
+    "tone": 1,
+    "meaning": "ton",
+    "hsk_level": 5,
+    "radicals": [
+      "口"
+    ],
+    "components": [
+      "口",
+      "屯"
+    ],
+    "is_radical": false,
+    "frequency_rank": 789
+  },
+  {
+    "character": "蹲",
+    "pinyin": "dūn",
+    "tone": 1,
+    "meaning": "to squat",
+    "hsk_level": 5,
+    "radicals": [
+      "足"
+    ],
+    "components": [
+      "足",
+      "尊"
+    ],
+    "is_radical": false,
+    "frequency_rank": 789
+  },
+  {
+    "character": "顿",
+    "pinyin": "dùn",
+    "tone": 4,
+    "meaning": "MW for meals",
+    "hsk_level": 5,
+    "radicals": [
+      "页"
+    ],
+    "components": [
+      "屯",
+      "页"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "夺",
+    "pinyin": "duó",
+    "tone": 2,
+    "meaning": "to seize, compete",
+    "hsk_level": 5,
+    "radicals": [],
+    "components": [],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "恶",
+    "pinyin": "è",
+    "tone": 4,
+    "meaning": "evil, bad",
+    "hsk_level": 5,
+    "radicals": [
+      "忄"
+    ],
+    "components": [
+      "亚",
+      "心"
+    ],
+    "is_radical": false,
+    "frequency_rank": 345
+  },
+  {
+    "character": "耳",
+    "pinyin": "ěr",
+    "tone": 3,
+    "meaning": "ear",
+    "hsk_level": 5,
+    "radicals": [],
+    "components": [],
+    "is_radical": true,
+    "frequency_rank": 345
+  },
+  {
+    "character": "罚",
+    "pinyin": "fá",
+    "tone": 2,
+    "meaning": "to punish, fine",
+    "hsk_level": 5,
+    "radicals": [
+      "罒"
+    ],
+    "components": [
+      "罒",
+      "言"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "法",
+    "pinyin": "fǎ",
+    "tone": 3,
+    "meaning": "law, method",
+    "hsk_level": 5,
+    "radicals": [
+      "氵"
+    ],
+    "components": [
+      "氵",
+      "去"
+    ],
+    "is_radical": false,
+    "frequency_rank": 23
+  },
+  {
+    "character": "翻",
+    "pinyin": "fān",
+    "tone": 1,
+    "meaning": "to turn over",
+    "hsk_level": 5,
+    "radicals": [
+      "羽"
+    ],
+    "components": [
+      "番",
+      "羽"
+    ],
+    "is_radical": false,
+    "frequency_rank": 345
+  },
+  {
+    "character": "繁",
+    "pinyin": "fán",
+    "tone": 2,
+    "meaning": "complex, numerous",
+    "hsk_level": 5,
+    "radicals": [
+      "纟"
+    ],
+    "components": [
+      "敏",
+      "糸"
+    ],
+    "is_radical": false,
+    "frequency_rank": 345
+  },
+  {
+    "character": "烦",
+    "pinyin": "fán",
+    "tone": 2,
+    "meaning": "annoyed, bother",
+    "hsk_level": 5,
+    "radicals": [
+      "火"
+    ],
+    "components": [
+      "火",
+      "页"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "犯",
+    "pinyin": "fàn",
+    "tone": 4,
+    "meaning": "to commit (crime)",
+    "hsk_level": 5,
+    "radicals": [
+      "犭"
+    ],
+    "components": [
+      "犭",
+      "㔾"
+    ],
+    "is_radical": false,
+    "frequency_rank": 345
+  },
+  {
+    "character": "泛",
+    "pinyin": "fàn",
+    "tone": 4,
+    "meaning": "to float, general",
+    "hsk_level": 5,
+    "radicals": [
+      "氵"
+    ],
+    "components": [
+      "氵",
+      "乏"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "肺",
+    "pinyin": "fèi",
+    "tone": 4,
+    "meaning": "lung",
+    "hsk_level": 5,
+    "radicals": [
+      "月"
+    ],
+    "components": [
+      "月",
+      "巿"
+    ],
+    "is_radical": false,
+    "frequency_rank": 678
+  },
+  {
+    "character": "废",
+    "pinyin": "fèi",
+    "tone": 4,
+    "meaning": "waste, useless",
+    "hsk_level": 5,
+    "radicals": [
+      "广"
+    ],
+    "components": [
+      "广",
+      "发"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "纷",
+    "pinyin": "fēn",
+    "tone": 1,
+    "meaning": "numerous, confused",
+    "hsk_level": 5,
+    "radicals": [
+      "纟"
+    ],
+    "components": [
+      "纟",
+      "分"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "愤",
+    "pinyin": "fèn",
+    "tone": 4,
+    "meaning": "angry, indignant",
+    "hsk_level": 5,
+    "radicals": [
+      "忄"
+    ],
+    "components": [
+      "忄",
+      "贲"
+    ],
+    "is_radical": false,
+    "frequency_rank": 567
+  },
+  {
+    "character": "缝",
+    "pinyin": "féng",
+    "tone": 2,
+    "meaning": "to sew, seam",
+    "hsk_level": 5,
+    "radicals": [
+      "纟"
+    ],
+    "components": [
+      "纟",
+      "逢"
+    ],
+    "is_radical": false,
+    "frequency_rank": 567
+  },
+  {
+    "character": "佛",
+    "pinyin": "fó",
+    "tone": 2,
+    "meaning": "Buddha",
+    "hsk_level": 5,
+    "radicals": [
+      "亻"
+    ],
+    "components": [
+      "亻",
+      "弗"
+    ],
+    "is_radical": false,
+    "frequency_rank": 567
+  },
+  {
+    "character": "扶",
+    "pinyin": "fú",
+    "tone": 2,
+    "meaning": "to support",
+    "hsk_level": 5,
+    "radicals": [
+      "扌"
+    ],
+    "components": [
+      "扌",
+      "夫"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "符",
+    "pinyin": "fú",
+    "tone": 2,
+    "meaning": "symbol, talisman",
+    "hsk_level": 5,
+    "radicals": [
+      "竹"
+    ],
+    "components": [
+      "竹",
+      "付"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "幅",
+    "pinyin": "fú",
+    "tone": 2,
+    "meaning": "MW for paintings",
+    "hsk_level": 5,
+    "radicals": [
+      "巾"
+    ],
+    "components": [
+      "巾",
+      "畐"
+    ],
+    "is_radical": false,
+    "frequency_rank": 567
+  },
+  {
+    "character": "辅",
+    "pinyin": "fǔ",
+    "tone": 3,
+    "meaning": "to assist",
+    "hsk_level": 5,
+    "radicals": [
+      "车"
+    ],
+    "components": [
+      "车",
+      "甫"
+    ],
+    "is_radical": false,
+    "frequency_rank": 567
+  },
+  {
+    "character": "妇",
+    "pinyin": "fù",
+    "tone": 4,
+    "meaning": "woman, wife",
+    "hsk_level": 5,
+    "radicals": [
+      "女"
+    ],
+    "components": [
+      "女",
+      "彐"
+    ],
+    "is_radical": false,
+    "frequency_rank": 345
+  },
+  {
+    "character": "赴",
+    "pinyin": "fù",
+    "tone": 4,
+    "meaning": "to go to",
+    "hsk_level": 5,
+    "radicals": [
+      "走"
+    ],
+    "components": [
+      "走",
+      "卜"
+    ],
+    "is_radical": false,
+    "frequency_rank": 567
+  },
+  {
+    "character": "覆",
+    "pinyin": "fù",
+    "tone": 4,
+    "meaning": "to cover, overturn",
+    "hsk_level": 5,
+    "radicals": [
+      "覀"
+    ],
+    "components": [
+      "覀",
+      "复"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "甘",
+    "pinyin": "gān",
+    "tone": 1,
+    "meaning": "sweet, willing",
+    "hsk_level": 5,
+    "radicals": [],
+    "components": [],
+    "is_radical": true,
+    "frequency_rank": 567
+  },
+  {
+    "character": "赶",
+    "pinyin": "gǎn",
+    "tone": 3,
+    "meaning": "to hurry, catch up",
+    "hsk_level": 5,
+    "radicals": [
+      "走"
+    ],
+    "components": [
+      "走",
+      "干"
+    ],
+    "is_radical": false,
+    "frequency_rank": 234
+  },
+  {
+    "character": "岗",
+    "pinyin": "gǎng",
+    "tone": 3,
+    "meaning": "hill, post",
+    "hsk_level": 5,
+    "radicals": [
+      "山"
+    ],
+    "components": [
+      "山",
+      "冈"
+    ],
+    "is_radical": false,
+    "frequency_rank": 567
+  },
+  {
+    "character": "搞",
+    "pinyin": "gǎo",
+    "tone": 3,
+    "meaning": "to do, make",
+    "hsk_level": 5,
+    "radicals": [
+      "扌"
+    ],
+    "components": [
+      "扌",
+      "高"
+    ],
+    "is_radical": false,
+    "frequency_rank": 234
+  },
+  {
+    "character": "告",
+    "pinyin": "gào",
+    "tone": 4,
+    "meaning": "to tell, accuse",
+    "hsk_level": 5,
+    "radicals": [
+      "口"
+    ],
+    "components": [
+      "牛",
+      "口"
+    ],
+    "is_radical": false,
+    "frequency_rank": 178
+  },
+  {
+    "character": "隔",
+    "pinyin": "gé",
+    "tone": 2,
+    "meaning": "to separate",
+    "hsk_level": 5,
+    "radicals": [
+      "阝"
+    ],
+    "components": [
+      "阝",
+      "鬲"
+    ],
+    "is_radical": false,
+    "frequency_rank": 345
+  },
+  {
+    "character": "个",
+    "pinyin": "gè",
+    "tone": 4,
+    "meaning": "MW (general)",
+    "hsk_level": 5,
+    "radicals": [],
+    "components": [],
+    "is_radical": false,
+    "frequency_rank": 6
+  },
+  {
+    "character": "根",
+    "pinyin": "gēn",
+    "tone": 1,
+    "meaning": "root, MW",
+    "hsk_level": 5,
+    "radicals": [
+      "木"
+    ],
+    "components": [
+      "木",
+      "艮"
+    ],
+    "is_radical": false,
+    "frequency_rank": 178
+  },
+  {
+    "character": "耕",
+    "pinyin": "gēng",
+    "tone": 1,
+    "meaning": "to plow",
+    "hsk_level": 5,
+    "radicals": [
+      "耒"
+    ],
+    "components": [
+      "耒",
+      "井"
+    ],
+    "is_radical": false,
+    "frequency_rank": 678
+  },
+  {
+    "character": "贡",
+    "pinyin": "gòng",
+    "tone": 4,
+    "meaning": "to tribute",
+    "hsk_level": 5,
+    "radicals": [
+      "贝"
+    ],
+    "components": [
+      "工",
+      "贝"
+    ],
+    "is_radical": false,
+    "frequency_rank": 567
+  },
+  {
+    "character": "沟",
+    "pinyin": "gōu",
+    "tone": 1,
+    "meaning": "ditch, groove",
+    "hsk_level": 5,
+    "radicals": [
+      "氵"
+    ],
+    "components": [
+      "氵",
+      "勾"
+    ],
+    "is_radical": false,
+    "frequency_rank": 567
+  },
+  {
+    "character": "构",
+    "pinyin": "gòu",
+    "tone": 4,
+    "meaning": "to construct",
+    "hsk_level": 5,
+    "radicals": [
+      "木"
+    ],
+    "components": [
+      "木",
+      "勾"
+    ],
+    "is_radical": false,
+    "frequency_rank": 234
+  },
+  {
+    "character": "鼓",
+    "pinyin": "gǔ",
+    "tone": 3,
+    "meaning": "drum, to beat",
+    "hsk_level": 5,
+    "radicals": [],
+    "components": [],
+    "is_radical": true,
+    "frequency_rank": 456
+  },
+  {
+    "character": "骨",
+    "pinyin": "gǔ",
+    "tone": 3,
+    "meaning": "bone",
+    "hsk_level": 5,
+    "radicals": [],
+    "components": [],
+    "is_radical": true,
+    "frequency_rank": 345
+  },
+  {
+    "character": "固",
+    "pinyin": "gù",
+    "tone": 4,
+    "meaning": "solid, firm",
+    "hsk_level": 5,
+    "radicals": [
+      "囗"
+    ],
+    "components": [
+      "囗",
+      "古"
+    ],
+    "is_radical": false,
+    "frequency_rank": 234
+  },
+  {
+    "character": "拐",
+    "pinyin": "guǎi",
+    "tone": 3,
+    "meaning": "to turn, abduct",
+    "hsk_level": 5,
+    "radicals": [
+      "扌"
+    ],
+    "components": [
+      "扌",
+      "另"
+    ],
+    "is_radical": false,
+    "frequency_rank": 678
+  },
+  {
+    "character": "冠",
+    "pinyin": "guān",
+    "tone": 1,
+    "meaning": "crown, hat",
+    "hsk_level": 5,
+    "radicals": [
+      "冖"
+    ],
+    "components": [
+      "冖",
+      "元",
+      "寸"
+    ],
+    "is_radical": false,
+    "frequency_rank": 456
+  },
+  {
+    "character": "灌",
+    "pinyin": "guàn",
+    "tone": 4,
+    "meaning": "to pour, irrigate",
+    "hsk_level": 5,
+    "radicals": [
+      "氵"
+    ],
+    "components": [
+      "氵",
+      "雚"
+    ],
+    "is_radical": false,
+    "frequency_rank": 567
+  },
+  {
+    "character": "棍",
+    "pinyin": "gùn",
+    "tone": 4,
+    "meaning": "stick, rod",
+    "hsk_level": 5,
+    "radicals": [
+      "木"
+    ],
+    "components": [
+      "木",
+      "昆"
+    ],
+    "is_radical": false,
+    "frequency_rank": 789
+  },
+  {
+    "character": "锅",
+    "pinyin": "guō",
+    "tone": 1,
+    "meaning": "pot, pan",
+    "hsk_level": 5,
+    "radicals": [
+      "钅"
+    ],
+    "components": [
+      "钅",
+      "呙"
+    ],
+    "is_radical": false,
+    "frequency_rank": 567
+  }
 ]

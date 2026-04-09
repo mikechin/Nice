@@ -1,13 +1,720 @@
 [
-  {"radical": "氵", "meaning": "water", "rarity_tier": "common", "shop_cost": 50, "characters": ["没", "法", "河", "湖", "海", "洗", "清", "活", "流", "深", "温", "满", "游", "注", "泳"], "display_name": "Water (three drops)"},
-  {"radical": "讠", "meaning": "speech", "rarity_tier": "common", "shop_cost": 50, "characters": ["说", "话", "语", "读", "请", "让", "记", "认", "识", "词", "课", "谈", "论", "议"], "display_name": "Speech"},
-  {"radical": "忄", "meaning": "heart, emotion", "rarity_tier": "common", "shop_cost": 50, "characters": ["想", "思", "意", "感", "忙", "快", "慢", "怕", "情", "愿", "忘", "惯", "懂", "态"], "display_name": "Heart (standing)"},
-  {"radical": "扌", "meaning": "hand", "rarity_tier": "common", "shop_cost": 50, "characters": ["打", "找", "把", "拿", "拉", "推", "提", "换", "接", "搬", "报", "按"], "display_name": "Hand"},
-  {"radical": "口", "meaning": "mouth", "rarity_tier": "common", "shop_cost": 40, "characters": ["吃", "吗", "呢", "吧", "听", "喝", "喜", "嘴", "叫", "号", "呼", "哭"], "display_name": "Mouth"},
-  {"radical": "女", "meaning": "woman", "rarity_tier": "common", "shop_cost": 40, "characters": ["妈", "姐", "妹", "她", "好", "如", "姓", "婚", "嫁"], "display_name": "Woman"},
-  {"radical": "木", "meaning": "wood, tree", "rarity_tier": "common", "shop_cost": 45, "characters": ["树", "林", "森", "桌", "椅", "板", "根", "校", "样", "梦"], "display_name": "Wood"},
-  {"radical": "钅", "meaning": "metal, gold", "rarity_tier": "rare", "shop_cost": 120, "characters": ["钱", "铁", "银", "锻", "错", "钟", "锁", "镜"], "display_name": "Metal"},
-  {"radical": "食", "meaning": "food, eat", "rarity_tier": "rare", "shop_cost": 100, "characters": ["饭", "饿", "饮", "馆", "饼", "饺", "饱"], "display_name": "Food"},
-  {"radical": "鬼", "meaning": "ghost, demon", "rarity_tier": "epic", "shop_cost": 300, "characters": ["魂", "魔", "魅"], "display_name": "Ghost"},
-  {"radical": "龙", "meaning": "dragon", "rarity_tier": "epic", "shop_cost": 350, "characters": ["龙", "聋", "笼", "垄"], "display_name": "Dragon"}
+  {
+    "radical": "氵",
+    "meaning": "water",
+    "rarity_tier": "common",
+    "shop_cost": 50,
+    "characters": [
+      "清",
+      "洗",
+      "游",
+      "汉",
+      "河",
+      "满",
+      "海",
+      "活",
+      "测",
+      "沉",
+      "淡",
+      "洞",
+      "法",
+      "泛",
+      "沟",
+      "灌"
+    ],
+    "display_name": "Water (three drops)"
+  },
+  {
+    "radical": "讠",
+    "meaning": "speech",
+    "rarity_tier": "common",
+    "shop_cost": 50,
+    "characters": [
+      "该",
+      "课",
+      "请",
+      "让",
+      "说",
+      "词",
+      "调",
+      "记",
+      "认",
+      "试",
+      "诚",
+      "辩"
+    ],
+    "display_name": "Speech"
+  },
+  {
+    "radical": "忄",
+    "meaning": "heart, emotion",
+    "rarity_tier": "common",
+    "shop_cost": 50,
+    "characters": [
+      "懂",
+      "快",
+      "慢",
+      "忙",
+      "您",
+      "意",
+      "感",
+      "怪",
+      "惯",
+      "恨",
+      "怀",
+      "急",
+      "恐",
+      "悲",
+      "愁",
+      "恶",
+      "愤"
+    ],
+    "display_name": "Heart (standing)"
+  },
+  {
+    "radical": "扌",
+    "meaning": "hand",
+    "rarity_tier": "common",
+    "shop_cost": 50,
+    "characters": [
+      "报",
+      "打",
+      "找",
+      "把",
+      "搬",
+      "担",
+      "护",
+      "换",
+      "接",
+      "拿",
+      "提",
+      "按",
+      "抽",
+      "掉",
+      "挂",
+      "技",
+      "据",
+      "播",
+      "操",
+      "插",
+      "拆",
+      "措",
+      "扶",
+      "搞",
+      "拐"
+    ],
+    "display_name": "Hand"
+  },
+  {
+    "radical": "口",
+    "meaning": "mouth",
+    "rarity_tier": "common",
+    "shop_cost": 40,
+    "characters": [
+      "吧",
+      "唱",
+      "告",
+      "哥",
+      "号",
+      "后",
+      "可",
+      "同",
+      "问",
+      "啊",
+      "句",
+      "啤",
+      "听",
+      "尝",
+      "哎",
+      "尝",
+      "吵",
+      "吃",
+      "呆",
+      "吨",
+      "告"
+    ],
+    "display_name": "Mouth"
+  },
+  {
+    "radical": "女",
+    "meaning": "woman",
+    "rarity_tier": "common",
+    "shop_cost": 40,
+    "characters": [
+      "好",
+      "姐",
+      "妈",
+      "妹",
+      "妻",
+      "姓",
+      "奶",
+      "如",
+      "好",
+      "妇"
+    ],
+    "display_name": "Woman"
+  },
+  {
+    "radical": "木",
+    "meaning": "wood, tree",
+    "rarity_tier": "common",
+    "shop_cost": 45,
+    "characters": [
+      "机",
+      "条",
+      "根",
+      "果",
+      "极",
+      "检",
+      "李",
+      "林",
+      "楼",
+      "树",
+      "本",
+      "标",
+      "材",
+      "朵",
+      "概",
+      "格",
+      "案",
+      "根",
+      "构",
+      "棍"
+    ],
+    "display_name": "Wood"
+  },
+  {
+    "radical": "辶",
+    "meaning": "walk, movement",
+    "rarity_tier": "common",
+    "shop_cost": 45,
+    "characters": [
+      "过",
+      "还",
+      "进",
+      "近",
+      "送",
+      "远",
+      "运",
+      "迟",
+      "遍",
+      "达",
+      "逼",
+      "避",
+      "递",
+      "逗"
+    ],
+    "display_name": "Walk"
+  },
+  {
+    "radical": "亻",
+    "meaning": "person",
+    "rarity_tier": "common",
+    "shop_cost": 40,
+    "characters": [
+      "件",
+      "便",
+      "体",
+      "休",
+      "做",
+      "健",
+      "伞",
+      "傲",
+      "传",
+      "促",
+      "代",
+      "倒",
+      "估",
+      "假",
+      "价",
+      "催",
+      "佛"
+    ],
+    "display_name": "Person (standing)"
+  },
+  {
+    "radical": "日",
+    "meaning": "sun, day",
+    "rarity_tier": "common",
+    "shop_cost": 40,
+    "characters": [
+      "时",
+      "晚",
+      "早",
+      "最",
+      "春",
+      "旧",
+      "明",
+      "暗"
+    ],
+    "display_name": "Sun"
+  },
+  {
+    "radical": "月",
+    "meaning": "moon, flesh",
+    "rarity_tier": "common",
+    "shop_cost": 45,
+    "characters": [
+      "服",
+      "脚",
+      "胖",
+      "肯",
+      "背",
+      "臂",
+      "脖",
+      "脆",
+      "胆",
+      "肺"
+    ],
+    "display_name": "Moon / Flesh"
+  },
+  {
+    "radical": "土",
+    "meaning": "earth",
+    "rarity_tier": "common",
+    "shop_cost": 40,
+    "characters": [
+      "城",
+      "地",
+      "坏",
+      "场",
+      "堵",
+      "坚",
+      "均"
+    ],
+    "display_name": "Earth"
+  },
+  {
+    "radical": "纟",
+    "meaning": "silk, thread",
+    "rarity_tier": "common",
+    "shop_cost": 50,
+    "characters": [
+      "给",
+      "红",
+      "结",
+      "经",
+      "练",
+      "绿",
+      "继",
+      "编",
+      "纯",
+      "繁",
+      "纷",
+      "缝"
+    ],
+    "display_name": "Silk"
+  },
+  {
+    "radical": "竹",
+    "meaning": "bamboo",
+    "rarity_tier": "common",
+    "shop_cost": 45,
+    "characters": [
+      "等",
+      "第",
+      "笑",
+      "答",
+      "管",
+      "简",
+      "筷",
+      "算",
+      "笔",
+      "答",
+      "符"
+    ],
+    "display_name": "Bamboo"
+  },
+  {
+    "radical": "宀",
+    "meaning": "roof, shelter",
+    "rarity_tier": "common",
+    "shop_cost": 45,
+    "characters": [
+      "宾",
+      "它",
+      "完",
+      "安",
+      "害",
+      "客",
+      "容",
+      "富",
+      "宠"
+    ],
+    "display_name": "Roof"
+  },
+  {
+    "radical": "火",
+    "meaning": "fire",
+    "rarity_tier": "common",
+    "shop_cost": 50,
+    "characters": [
+      "灯",
+      "烦",
+      "烦"
+    ],
+    "display_name": "Fire"
+  },
+  {
+    "radical": "灬",
+    "meaning": "fire (dots)",
+    "rarity_tier": "common",
+    "shop_cost": 50,
+    "characters": [
+      "然",
+      "热",
+      "点",
+      "熬"
+    ],
+    "display_name": "Fire (four dots)"
+  },
+  {
+    "radical": "足",
+    "meaning": "foot",
+    "rarity_tier": "common",
+    "shop_cost": 45,
+    "characters": [
+      "路",
+      "跑",
+      "踢",
+      "蹲"
+    ],
+    "display_name": "Foot"
+  },
+  {
+    "radical": "目",
+    "meaning": "eye",
+    "rarity_tier": "common",
+    "shop_cost": 45,
+    "characters": [
+      "眼",
+      "真",
+      "看"
+    ],
+    "display_name": "Eye"
+  },
+  {
+    "radical": "刂",
+    "meaning": "knife",
+    "rarity_tier": "common",
+    "shop_cost": 40,
+    "characters": [
+      "别",
+      "到",
+      "分",
+      "刚",
+      "刻",
+      "初",
+      "创",
+      "刺"
+    ],
+    "display_name": "Knife (right)"
+  },
+  {
+    "radical": "力",
+    "meaning": "strength",
+    "rarity_tier": "common",
+    "shop_cost": 40,
+    "characters": [
+      "动",
+      "努",
+      "功",
+      "加"
+    ],
+    "display_name": "Strength"
+  },
+  {
+    "radical": "攵",
+    "meaning": "strike, tap",
+    "rarity_tier": "common",
+    "shop_cost": 45,
+    "characters": [
+      "教",
+      "放",
+      "改",
+      "敢",
+      "故"
+    ],
+    "display_name": "Strike"
+  },
+  {
+    "radical": "禾",
+    "meaning": "grain",
+    "rarity_tier": "common",
+    "shop_cost": 45,
+    "characters": [
+      "秋",
+      "称",
+      "积",
+      "科",
+      "程"
+    ],
+    "display_name": "Grain"
+  },
+  {
+    "radical": "艹",
+    "meaning": "grass, plant",
+    "rarity_tier": "common",
+    "shop_cost": 40,
+    "characters": [
+      "花",
+      "菜",
+      "草",
+      "节",
+      "苦",
+      "蓝",
+      "范"
+    ],
+    "display_name": "Grass"
+  },
+  {
+    "radical": "冫",
+    "meaning": "ice",
+    "rarity_tier": "common",
+    "shop_cost": 45,
+    "characters": [
+      "准",
+      "冰",
+      "冬",
+      "决",
+      "冷",
+      "减",
+      "冰",
+      "冲",
+      "冻"
+    ],
+    "display_name": "Ice"
+  },
+  {
+    "radical": "穴",
+    "meaning": "cave, hole",
+    "rarity_tier": "rare",
+    "shop_cost": 100,
+    "characters": [
+      "穿",
+      "空",
+      "窗",
+      "究"
+    ],
+    "display_name": "Cave"
+  },
+  {
+    "radical": "衤",
+    "meaning": "clothing",
+    "rarity_tier": "rare",
+    "shop_cost": 100,
+    "characters": [
+      "被",
+      "裤",
+      "裙",
+      "补"
+    ],
+    "display_name": "Clothing"
+  },
+  {
+    "radical": "见",
+    "meaning": "to see",
+    "rarity_tier": "rare",
+    "shop_cost": 100,
+    "characters": [
+      "觉",
+      "观",
+      "规"
+    ],
+    "display_name": "See"
+  },
+  {
+    "radical": "贝",
+    "meaning": "shell, money",
+    "rarity_tier": "rare",
+    "shop_cost": 100,
+    "characters": [
+      "贵",
+      "费",
+      "财",
+      "贷",
+      "贡"
+    ],
+    "display_name": "Shell"
+  },
+  {
+    "radical": "车",
+    "meaning": "vehicle",
+    "rarity_tier": "rare",
+    "shop_cost": 100,
+    "characters": [
+      "辆",
+      "轻",
+      "辈",
+      "辅"
+    ],
+    "display_name": "Vehicle"
+  },
+  {
+    "radical": "阝",
+    "meaning": "hill, city wall",
+    "rarity_tier": "rare",
+    "shop_cost": 100,
+    "characters": [
+      "阴",
+      "除",
+      "附",
+      "部",
+      "队",
+      "降",
+      "隔"
+    ],
+    "display_name": "Hill / City"
+  },
+  {
+    "radical": "页",
+    "meaning": "page, head",
+    "rarity_tier": "rare",
+    "shop_cost": 100,
+    "characters": [
+      "题",
+      "顿",
+      "顾",
+      "顿"
+    ],
+    "display_name": "Page / Head"
+  },
+  {
+    "radical": "钅",
+    "meaning": "metal, gold",
+    "rarity_tier": "rare",
+    "shop_cost": 120,
+    "characters": [
+      "错",
+      "铅",
+      "锻",
+      "钢",
+      "镜",
+      "钓",
+      "锅"
+    ],
+    "display_name": "Metal"
+  },
+  {
+    "radical": "食",
+    "meaning": "food, eat",
+    "rarity_tier": "rare",
+    "shop_cost": 100,
+    "characters": [
+      "饿",
+      "餐",
+      "饺"
+    ],
+    "display_name": "Food"
+  },
+  {
+    "radical": "犭",
+    "meaning": "animal",
+    "rarity_tier": "rare",
+    "shop_cost": 100,
+    "characters": [
+      "狗",
+      "猜",
+      "获",
+      "独",
+      "犯"
+    ],
+    "display_name": "Animal"
+  },
+  {
+    "radical": "疒",
+    "meaning": "sickness",
+    "rarity_tier": "rare",
+    "shop_cost": 120,
+    "characters": [
+      "病",
+      "瘦",
+      "瘦",
+      "疼"
+    ],
+    "display_name": "Sickness"
+  },
+  {
+    "radical": "走",
+    "meaning": "to run",
+    "rarity_tier": "rare",
+    "shop_cost": 100,
+    "characters": [
+      "起",
+      "超",
+      "趁",
+      "赴",
+      "赶"
+    ],
+    "display_name": "Run"
+  },
+  {
+    "radical": "囗",
+    "meaning": "enclosure",
+    "rarity_tier": "rare",
+    "shop_cost": 100,
+    "characters": [
+      "回",
+      "因",
+      "回",
+      "国",
+      "固"
+    ],
+    "display_name": "Enclosure"
+  },
+  {
+    "radical": "广",
+    "meaning": "wide, shelter",
+    "rarity_tier": "rare",
+    "shop_cost": 100,
+    "characters": [
+      "底",
+      "度",
+      "废"
+    ],
+    "display_name": "Wide Shelter"
+  },
+  {
+    "radical": "彳",
+    "meaning": "step (left)",
+    "rarity_tier": "rare",
+    "shop_cost": 100,
+    "characters": [
+      "往",
+      "德",
+      "彼"
+    ],
+    "display_name": "Step"
+  },
+  {
+    "radical": "舟",
+    "meaning": "boat",
+    "rarity_tier": "rare",
+    "shop_cost": 120,
+    "characters": [
+      "船",
+      "航"
+    ],
+    "display_name": "Boat"
+  },
+  {
+    "radical": "鸟",
+    "meaning": "bird",
+    "rarity_tier": "epic",
+    "shop_cost": 250,
+    "characters": [
+      "鸡"
+    ],
+    "display_name": "Bird"
+  },
+  {
+    "radical": "马",
+    "meaning": "horse",
+    "rarity_tier": "epic",
+    "shop_cost": 250,
+    "characters": [
+      "骑"
+    ],
+    "display_name": "Horse"
+  }
 ]
