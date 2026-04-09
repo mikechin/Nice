@@ -16,14 +16,22 @@ const SCREEN_PATHS: Dictionary = {
 	"daily_weekly": "res://scenes/screens/daily_weekly_screen.tscn",
 }
 
+var _is_transitioning: bool = false
+
 
 func _ready() -> void:
 	SignalBus.screen_transition_requested.connect(_on_screen_transition_requested)
 
 
 func _on_screen_transition_requested(screen_name: String) -> void:
+	if _is_transitioning:
+		return
 	var path: String = SCREEN_PATHS.get(screen_name, "")
 	if path.is_empty():
 		push_error("ScreenNavigator: Unknown screen '%s'" % screen_name)
 		return
+	_is_transitioning = true
 	get_tree().change_scene_to_file(path)
+	# change_scene_to_file is deferred — reset on next frame
+	await get_tree().process_frame
+	_is_transitioning = false
