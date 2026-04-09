@@ -27,7 +27,7 @@ func curate_pack(now: float, pack_size: int = SrsConfig.PACK_SIZE_DEFAULT, avail
 		roundi(pack_size * SrsConfig.PACK_NEW_RATIO),
 		SrsConfig.MAX_NEW_CARDS_PER_SESSION
 	)
-	var n_returning := pack_size - n_common - n_struggling - n_new
+	var n_returning := maxi(0, pack_size - n_common - n_struggling - n_new)
 
 	# Categorize existing cards
 	var due_cards: Array[String] = []
