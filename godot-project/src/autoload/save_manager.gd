@@ -27,6 +27,7 @@ func save_game() -> void:
 		"version": SAVE_VERSION,
 		"timestamp": Time.get_unix_time_from_system(),
 		"game_state": GameState.to_save_dict(),
+		"accessibility": AccessibilityManager.to_dict(),
 	}
 
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
@@ -70,6 +71,10 @@ func load_game() -> bool:
 
 	var game_data: Dictionary = data.get("game_state", {})
 	GameState.load_from_dict(game_data)
+
+	var accessibility_data: Dictionary = data.get("accessibility", {})
+	if not accessibility_data.is_empty():
+		AccessibilityManager.load_from_dict(accessibility_data)
 
 	# Load SRS data
 	load_srs_data()

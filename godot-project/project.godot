@@ -26,6 +26,7 @@ GameState="*res://src/autoload/game_state.gd"
 SaveManager="*res://src/autoload/save_manager.gd"
 AudioManager="*res://src/autoload/audio_manager.gd"
 ScreenNavigator="*res://src/autoload/screen_navigator.gd"
+AccessibilityManager="*res://src/autoload/accessibility_manager.gd"
 
 [display]
 
