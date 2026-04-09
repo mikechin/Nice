@@ -26,6 +26,11 @@ func _ready() -> void:
 	SignalBus.streak_updated.connect(_on_streak_updated)
 
 
+func _exit_tree() -> void:
+	SignalBus.character_mastered.disconnect(_on_character_mastered)
+	SignalBus.streak_updated.disconnect(_on_streak_updated)
+
+
 func _update_stats() -> void:
 	if _title_label:
 		_title_label.text = "Profile"

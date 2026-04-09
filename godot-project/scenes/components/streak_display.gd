@@ -20,6 +20,11 @@ func _ready() -> void:
 	SignalBus.streak_updated.connect(_on_streak_updated)
 	SignalBus.streak_broken.connect(_on_streak_broken)
 	_current_streak = GameState.daily_streak
+
+
+func _exit_tree() -> void:
+	SignalBus.streak_updated.disconnect(_on_streak_updated)
+	SignalBus.streak_broken.disconnect(_on_streak_broken)
 	_update_display()
 
 

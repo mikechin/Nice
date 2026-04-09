@@ -21,6 +21,11 @@ func _ready() -> void:
 	SignalBus.heart_lost.connect(_on_heart_lost)
 
 
+func _exit_tree() -> void:
+	SignalBus.hearts_changed.disconnect(_on_hearts_changed)
+	SignalBus.heart_lost.disconnect(_on_heart_lost)
+
+
 func set_hearts(current: int, max_hearts: int) -> void:
 	_current_hearts = current
 	_max_hearts = max_hearts

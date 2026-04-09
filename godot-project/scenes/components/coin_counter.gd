@@ -15,6 +15,10 @@ var _tween: Tween
 func _ready() -> void:
 	SignalBus.coins_changed.connect(_on_coins_changed)
 	_displayed_count = GameState.total_coins
+
+
+func _exit_tree() -> void:
+	SignalBus.coins_changed.disconnect(_on_coins_changed)
 	_target_count = _displayed_count
 	_update_label()
 

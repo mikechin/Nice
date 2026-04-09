@@ -41,6 +41,10 @@ func _ready() -> void:
 	SignalBus.srs_state_updated.connect(_on_srs_state_updated)
 
 
+func _exit_tree() -> void:
+	SignalBus.srs_state_updated.disconnect(_on_srs_state_updated)
+
+
 func _setup_sort_options() -> void:
 	if _sort_button == null:
 		return

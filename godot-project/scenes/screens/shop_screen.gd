@@ -29,6 +29,11 @@ func _ready() -> void:
 	SignalBus.item_purchased.connect(_on_item_purchased)
 	SignalBus.shop_opened.emit()
 
+
+func _exit_tree() -> void:
+	SignalBus.coins_changed.disconnect(_on_coins_changed)
+	SignalBus.item_purchased.disconnect(_on_item_purchased)
+
 	_generate_shop()
 	_update_coin_display()
 

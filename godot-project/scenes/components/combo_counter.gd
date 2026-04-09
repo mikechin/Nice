@@ -18,6 +18,12 @@ func _ready() -> void:
 	_update_display()
 
 
+func _exit_tree() -> void:
+	SignalBus.combo_incremented.disconnect(_on_combo_incremented)
+	SignalBus.combo_broken.disconnect(_on_combo_broken)
+	SignalBus.combo_milestone.disconnect(_on_combo_milestone)
+
+
 func set_combo(count: int) -> void:
 	_current_combo = count
 	_update_display()

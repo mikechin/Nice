@@ -44,6 +44,14 @@ func _ready() -> void:
 	_start_session()
 
 
+func _exit_tree() -> void:
+	SignalBus.hearts_changed.disconnect(_on_hearts_changed)
+	SignalBus.combo_incremented.disconnect(_on_combo_incremented)
+	SignalBus.combo_broken.disconnect(_on_combo_broken)
+	SignalBus.all_hearts_lost.disconnect(_on_all_hearts_lost)
+	SignalBus.card_presented.disconnect(_on_card_presented)
+
+
 func _start_session() -> void:
 	print("[GameScreen] _start_session called")
 	print("[GameScreen] GameState.is_in_run = ", GameState.is_in_run)

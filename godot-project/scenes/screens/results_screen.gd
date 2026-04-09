@@ -26,6 +26,10 @@ func _ready() -> void:
 	SignalBus.run_ended.connect(_on_run_ended)
 
 	# If we already have result data from the run that just ended, use it
+
+
+func _exit_tree() -> void:
+	SignalBus.run_ended.disconnect(_on_run_ended)
 	_load_result_from_state()
 	_display_results()
 

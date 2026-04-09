@@ -24,6 +24,11 @@ func _ready() -> void:
 	SignalBus.streak_updated.connect(_on_streak_updated)
 
 
+func _exit_tree() -> void:
+	SignalBus.coins_changed.disconnect(_on_coins_changed)
+	SignalBus.streak_updated.disconnect(_on_streak_updated)
+
+
 func _connect_buttons() -> void:
 	if _play_button:
 		_play_button.pressed.connect(_on_play_pressed)
