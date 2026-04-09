@@ -1,0 +1,88 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/screens/settings_screen.gd" id="1_script"]
+
+[node name="SettingsScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 1
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 96.0
+offset_bottom = 48.0
+text = "Back"
+
+[node name="SettingsContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -200.0
+offset_right = 200.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="MusicLabel" type="Label" parent="SettingsContainer"]
+layout_mode = 2
+text = "Music: 70%"
+
+[node name="MusicSlider" type="HSlider" parent="SettingsContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 28)
+min_value = 0.0
+max_value = 1.0
+step = 0.05
+value = 0.7
+
+[node name="MusicToggle" type="CheckButton" parent="SettingsContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Music Enabled"
+
+[node name="SfxLabel" type="Label" parent="SettingsContainer"]
+layout_mode = 2
+text = "SFX: 100%"
+
+[node name="SfxSlider" type="HSlider" parent="SettingsContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 28)
+min_value = 0.0
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="SfxToggle" type="CheckButton" parent="SettingsContainer"]
+layout_mode = 2
+button_pressed = true
+text = "SFX Enabled"
+
+[node name="HskSelector" type="OptionButton" parent="SettingsContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 36)
+
+[node name="ResetButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -80.0
+offset_top = -64.0
+offset_right = 80.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Reset Defaults"

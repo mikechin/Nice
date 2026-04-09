@@ -1,0 +1,110 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/screens/results_screen.gd" id="1_script"]
+
+[node name="ResultsScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="TitleLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 80.0
+offset_right = 200.0
+offset_bottom = 130.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 32
+text = "Run Complete!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StatsContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = -160.0
+offset_right = 180.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="AccuracyLabel" type="Label" parent="StatsContainer"]
+layout_mode = 2
+text = "Accuracy: --"
+
+[node name="ComboLabel" type="Label" parent="StatsContainer"]
+layout_mode = 2
+text = "Best Combo: --"
+
+[node name="CoinsLabel" type="Label" parent="StatsContainer"]
+layout_mode = 2
+text = "Coins Earned: --"
+
+[node name="TilesLabel" type="Label" parent="StatsContainer"]
+layout_mode = 2
+text = "Tiles Earned: --"
+
+[node name="RoundsLabel" type="Label" parent="StatsContainer"]
+layout_mode = 2
+text = "Rounds: --"
+
+[node name="HeartsLabel" type="Label" parent="StatsContainer"]
+layout_mode = 2
+text = "Hearts Left: --"
+
+[node name="TileGrid" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = 60.0
+offset_right = 180.0
+offset_bottom = 160.0
+grow_horizontal = 2
+grow_vertical = 2
+columns = 5
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="ButtonContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -180.0
+offset_top = -80.0
+offset_right = 180.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 24
+
+[node name="PlayAgainButton" type="Button" parent="ButtonContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+text = "Play Again"
+
+[node name="MainMenuButton" type="Button" parent="ButtonContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+text = "Main Menu"

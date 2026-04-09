@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/components/heart_display.gd" id="1_script"]
+
+[node name="HeartDisplay" type="Control"]
+custom_minimum_size = Vector2(160, 36)
+script = ExtResource("1_script")
+
+[node name="HeartsContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+offset_right = 160.0
+offset_bottom = 36.0
+
+[node name="CountLabel" type="Label" parent="."]
+layout_mode = 1
+offset_left = 164.0
+offset_right = 240.0
+offset_bottom = 36.0
+vertical_alignment = 1

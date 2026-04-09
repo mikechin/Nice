@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/components/coin_counter.gd" id="1_script"]
+
+[node name="CoinCounter" type="Control"]
+custom_minimum_size = Vector2(120, 36)
+script = ExtResource("1_script")
+
+[node name="IconLabel" type="Label" parent="."]
+layout_mode = 1
+offset_right = 24.0
+offset_bottom = 36.0
+text = "C"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CountLabel" type="Label" parent="."]
+layout_mode = 1
+offset_left = 28.0
+offset_right = 100.0
+offset_bottom = 36.0
+text = "0"
+vertical_alignment = 1
+
+[node name="ChangeLabel" type="Label" parent="."]
+layout_mode = 1
+offset_left = 100.0
+offset_right = 160.0
+offset_bottom = 36.0
+visible = false
+vertical_alignment = 1
