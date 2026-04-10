@@ -33,7 +33,7 @@ func _update_descriptions() -> void:
 		_easy_description.text = "Relaxed pace. More known cards, fewer new ones. Great for daily review."
 
 	if _challenge_description:
-		_challenge_description.text = "High stakes. More new and due cards. Boss rounds every 3 rounds."
+		_challenge_description.text = "High stakes. More new and due cards."
 
 
 func _update_due_count() -> void:

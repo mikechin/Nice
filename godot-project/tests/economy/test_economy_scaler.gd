@@ -1,4 +1,4 @@
-## Tests for EconomyScaler — word drop eligibility and boss reward multipliers.
+## Tests for EconomyScaler — word drop eligibility.
 extends GdUnitTestSuite
 
 var _scaler: EconomyScaler
@@ -21,15 +21,3 @@ func test_word_drop_no_db_always_false() -> void:
 	assert_bool(_scaler.should_drop_word(4, card)).is_false()
 
 
-# -- boss reward multiplier --
-
-func test_boss_reward_hsk2() -> void:
-	assert_float(_scaler.get_boss_reward_multiplier(2)).is_equal(1.0)
-
-
-func test_boss_reward_hsk5() -> void:
-	assert_float(_scaler.get_boss_reward_multiplier(5)).is_equal(3.0)
-
-
-func test_boss_reward_unknown_level() -> void:
-	assert_float(_scaler.get_boss_reward_multiplier(1)).is_equal(1.0)

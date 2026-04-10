@@ -80,10 +80,6 @@ func play_srs_rare_reveal() -> void:
 	play_sfx("rare_reveal")
 
 
-func play_boss_start() -> void:
-	play_sfx("boss_start")
-
-
 func play_purchase() -> void:
 	play_sfx("purchase")
 

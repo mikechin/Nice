@@ -5,8 +5,6 @@ extends RefCounted
 
 const WORD_DROP_MIN_LEVEL: int = 4
 const WORD_DROP_CHANCE: float = 0.15
-const BOSS_REWARD_MULTIPLIERS: Dictionary = {2: 1.0, 3: 1.5, 4: 2.0, 5: 3.0}
-
 var _word_db: WordDatabase
 
 
@@ -36,5 +34,3 @@ func get_word_drop(card_data: CharacterData) -> Dictionary:
 	return words[0]
 
 
-func get_boss_reward_multiplier(hsk_level: int) -> float:
-	return BOSS_REWARD_MULTIPLIERS.get(hsk_level, 1.0)
