@@ -85,8 +85,3 @@ text = "Profile"
 layout_mode = 2
 custom_minimum_size = Vector2(0, 56)
 text = "Settings"
-
-[node name="DailyButton" type="Button" parent="VBoxContainer"]
-layout_mode = 2
-custom_minimum_size = Vector2(0, 56)
-text = "Daily / Weekly"

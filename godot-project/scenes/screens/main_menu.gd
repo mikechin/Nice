@@ -8,7 +8,6 @@ extends Control
 @onready var _shop_button: Button = $VBoxContainer/ShopButton if has_node("VBoxContainer/ShopButton") else null
 @onready var _profile_button: Button = $VBoxContainer/ProfileButton if has_node("VBoxContainer/ProfileButton") else null
 @onready var _settings_button: Button = $VBoxContainer/SettingsButton if has_node("VBoxContainer/SettingsButton") else null
-@onready var _daily_button: Button = $VBoxContainer/DailyButton if has_node("VBoxContainer/DailyButton") else null
 @onready var _title_label: Label = $TitleLabel if has_node("TitleLabel") else null
 @onready var _coin_display: Control = $CoinCounter if has_node("CoinCounter") else null
 @onready var _streak_display: Control = $StreakDisplay if has_node("StreakDisplay") else null
@@ -41,8 +40,6 @@ func _connect_buttons() -> void:
 		_profile_button.pressed.connect(_on_profile_pressed)
 	if _settings_button:
 		_settings_button.pressed.connect(_on_settings_pressed)
-	if _daily_button:
-		_daily_button.pressed.connect(_on_daily_pressed)
 
 
 func _update_displays() -> void:
@@ -77,11 +74,6 @@ func _on_profile_pressed() -> void:
 func _on_settings_pressed() -> void:
 	AudioManager.play_sfx("button_tap")
 	SignalBus.screen_transition_requested.emit("settings")
-
-
-func _on_daily_pressed() -> void:
-	AudioManager.play_sfx("button_tap")
-	SignalBus.screen_transition_requested.emit("daily_weekly")
 
 
 func _on_coins_changed(_amount: int, total: int) -> void:

@@ -12,8 +12,6 @@ const SCREEN_PATHS: Dictionary = {
 	"shop": "res://scenes/screens/shop_screen.tscn",
 	"profile": "res://scenes/screens/profile_screen.tscn",
 	"settings": "res://scenes/screens/settings_screen.tscn",
-	"boss_round": "res://scenes/screens/boss_round_screen.tscn",
-	"daily_weekly": "res://scenes/screens/daily_weekly_screen.tscn",
 }
 
 var _is_transitioning: bool = false

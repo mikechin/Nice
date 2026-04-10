@@ -37,14 +37,6 @@ signal shop_closed()
 signal item_purchased(item_data: Dictionary)
 signal shop_refreshed(items: Array)
 
-# --- Sentence Signals ---
-signal boss_round_started(boss_type: String)
-signal boss_round_completed(score: int)
-signal boss_round_failed()
-signal daily_sentence_completed(sentence_id: String, score: int)
-signal weekly_trial_completed(trial_id: String, score: int)
-signal sentence_validated(sentence: String, is_valid: bool, score: int)
-
 # --- Progression Signals ---
 signal hsk_level_changed(old_level: int, new_level: int)
 signal character_mastered(character: String)

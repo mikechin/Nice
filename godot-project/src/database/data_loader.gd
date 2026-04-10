@@ -82,28 +82,6 @@ static func load_radical_character_map() -> Dictionary:
 	return raw
 
 
-## Load sentence data for a specific HSK level.
-static func load_sentences(hsk_level: int) -> Array[Dictionary]:
-	var path := DATA_BASE_PATH + "sentences/hsk%d_daily.json" % hsk_level
-	var raw: Variant = load_json(path)
-	if raw == null or not raw is Array:
-		return []
-	var result: Array[Dictionary] = []
-	result.assign(raw)
-	return result
-
-
-## Load weekly trial data.
-static func load_weekly_trials() -> Array[Dictionary]:
-	var path := DATA_BASE_PATH + "sentences/weekly_trials.json"
-	var raw: Variant = load_json(path)
-	if raw == null or not raw is Array:
-		return []
-	var result: Array[Dictionary] = []
-	result.assign(raw)
-	return result
-
-
 ## Check if a data file exists.
 static func file_exists(relative_path: String) -> bool:
 	return FileAccess.file_exists(DATA_BASE_PATH + relative_path)

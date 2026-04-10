@@ -37,20 +37,6 @@ func test_load_characters_nonexistent_level_returns_empty() -> void:
 
 # -- load_radicals when file missing --
 
-func test_load_sentences_nonexistent_level_returns_empty() -> void:
-	var sentences := DataLoader.load_sentences(99)
-	assert_int(sentences.size()).is_equal(0)
-
-
-# -- load_weekly_trials when file missing --
-
-func test_load_weekly_trials_missing_returns_empty() -> void:
-	# This may return empty if the file does not exist in the test environment
-	var trials := DataLoader.load_weekly_trials()
-	# We just verify it returns an array (possibly empty)
-	assert_bool(trials is Array).is_true()
-
-
 # -- load_radical_character_map when file missing --
 
 func test_load_radical_character_map_missing_returns_empty() -> void:

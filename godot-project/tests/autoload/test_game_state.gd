@@ -46,7 +46,6 @@ func test_load_from_dict_restores_state() -> void:
 		"unlocked_characters": {},
 		"cards_answered_today": 10,
 		"correct_answers_today": 8,
-		"daily_sentence_completed_today": true,
 		"session_history": [],
 	}
 	state.load_from_dict(data)

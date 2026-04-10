@@ -1,5 +1,0 @@
-[
-  {"id": "daily_hsk2_001", "sentence": "我喜欢吃中国菜", "meaning": "I like eating Chinese food", "characters": ["我", "喜", "欢", "吃", "中", "国", "菜"], "hsk_level": 2, "grammar_pattern": "SVO", "character_count": 7, "type": "daily"},
-  {"id": "daily_hsk2_002", "sentence": "今天天气很好", "meaning": "Today's weather is very good", "characters": ["今", "天", "天", "气", "很", "好"], "hsk_level": 2, "grammar_pattern": "topic_comment", "character_count": 6, "type": "daily"},
-  {"id": "daily_hsk2_003", "sentence": "他在学校工作", "meaning": "He works at school", "characters": ["他", "在", "学", "校", "工", "作"], "hsk_level": 2, "grammar_pattern": "location", "character_count": 6, "type": "daily"}
-]

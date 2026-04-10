@@ -344,10 +344,11 @@ Cards progress through SRS mastery alone — no separate upgrade mechanic. Visua
 
 Fusing two mastered character cards into a multi-character word card (电 + 影 = 电影) is a strong candidate for the maxed-card spend mechanic. It teaches vocabulary composition and creates a satisfying collection moment. Details depend on the spend mechanic decision.
 
-### Daily & Weekly Goals (likely retained)
+### Daily & Weekly Goals (removed — revisit later)
 
 - **Daily Goal:** SRS-curated pack with a themed focus. Completing awards streak increment.
 - **Weekly Challenge:** Larger goal revealed Monday. Gives the week structure and direction. Significantly larger reward.
+- **Status:** Source code removed. Revisit when session flow is finalized.
 
 ---
 
@@ -468,7 +469,7 @@ Add the core interaction that makes reviewing cards feel like a game.
 7. Card tier promotion animation — visual evolution when SRS upgrades a card
 8. Foil variant system — random chance on any card, visual treatment, collection tracking
 9. Streak tracking and UI
-10. Daily/weekly goal system
+10. Daily/weekly goal system (code removed — revisit when session flow is decided)
 
 **Phase 2 makes it a game, not just flashcards.**
 
@@ -536,7 +537,7 @@ File inventory will be updated once the core game mechanic is decided. Phase 1 s
 
 **Tests (~40+):** mirrors src/ structure + integration tests
 
-**Data (12+):** HSK 2-5 character JSONs, radical map, word fusion rules, daily goals, weekly challenges
+**Data (12+):** HSK 2-5 character JSONs, radical map, word fusion rules (daily goals and weekly challenge data removed)
 
 **Python Tools (6+):** parse_hsk_data.py, build_radical_map.py, build_word_fusion_map.py, generate_goals.py, validate_data.py, analyze_economy.py
 
@@ -609,9 +610,9 @@ These were built based on the previous iteration's design. They'll need rethinki
 ### Phase 2+ systems (built early)
 These are directionally correct but premature for Phase 1.
 
-- **`src/sentences/`** — SentenceBuilder, SentenceValidator, BossRoundManager, DailyGoalManager, WeeklyTrialManager. Sentence building and boss rounds belong to Phase 2+ when the session flow is fleshed out.
+- **`src/sentences/`** — **Removed.** Was: SentenceBuilder, SentenceValidator, BossRoundManager, DailyGoalManager, WeeklyTrialManager. Sentence building and boss rounds belong to Phase 2+ when the session flow is fleshed out. Rebuild from scratch when needed.
 - **`src/swipe/swipe_detector.gd`, `card_display.gd`** — Swipe-based interaction. The core challenge mechanic is TBD (might be swipe, might be something else). AnswerGenerator and ChallengePresenter are usable regardless of mechanic.
-- **`scenes/screens/boss_round_screen.gd`, `daily_weekly_screen.gd`, `run_select.gd`** — Screen scripts for features not in Phase 1.
+- **`scenes/screens/run_select.gd`** — Screen script for features not in Phase 1. (boss_round_screen and daily_weekly_screen removed.)
 
 ### Scene scripts with JRPG assumptions
 These screen/component scripts reference combos and coins in ways that assume the JRPG flow. They'll need updates when their .tscn files are created:
@@ -620,6 +621,7 @@ These screen/component scripts reference combos and coins in ways that assume th
 - `scenes/screens/shop_screen.gd` — References ShopManager and coin spending
 - `scenes/screens/results_screen.gd` — Shows combo and coins earned
 - `scenes/components/combo_counter.gd`, `coin_counter.gd`
+- `scenes/components/sentence_slot.gd`, `tile_slot.gd` — **Removed.** Were sentence builder UI components.
 
 ### What IS Phase 1 (wired and working)
 - FSRS algorithm (`src/srs/`) — full FSRS-6 port

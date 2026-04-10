@@ -23,20 +23,17 @@ var last_run_summary: Dictionary = {}
 # --- Session Stats ---
 var cards_answered_today: int = 0
 var correct_answers_today: int = 0
-var daily_sentence_completed_today: bool = false
 var session_history: Array[Dictionary] = []
 
 # --- Databases (loaded once) ---
 var character_db: CharacterDatabase
 var radical_db: RadicalDatabase
-var sentence_db: SentenceDatabase
 var review_scheduler: ReviewScheduler
 
 
 func _ready() -> void:
 	character_db = CharacterDatabase.new()
 	radical_db = RadicalDatabase.new()
-	sentence_db = SentenceDatabase.new()
 	review_scheduler = ReviewScheduler.new()
 	SignalBus.card_answered.connect(_on_card_answered)
 
@@ -46,7 +43,6 @@ func initialize_databases() -> void:
 	character_db.load_all(2, player_hsk_level)
 	print("[GameState] character_db loaded: %d characters" % character_db.get_count())
 	radical_db.load_all()
-	sentence_db.load_all(2, mini(player_hsk_level, 4))
 	# Register all characters with the review scheduler
 	for cd in character_db.get_all():
 		review_scheduler.register_card(cd.character, cd.character)
@@ -106,7 +102,6 @@ func check_daily_reset() -> void:
 	if today != last_play_date:
 		cards_answered_today = 0
 		correct_answers_today = 0
-		daily_sentence_completed_today = false
 		last_play_date = today
 
 
@@ -122,7 +117,6 @@ func to_save_dict() -> Dictionary:
 		"unlocked_characters": unlocked_characters,
 		"cards_answered_today": cards_answered_today,
 		"correct_answers_today": correct_answers_today,
-		"daily_sentence_completed_today": daily_sentence_completed_today,
 		"session_history": session_history,
 	}
 
@@ -138,5 +132,4 @@ func load_from_dict(data: Dictionary) -> void:
 	unlocked_characters = data.get("unlocked_characters", {})
 	cards_answered_today = data.get("cards_answered_today", 0)
 	correct_answers_today = data.get("correct_answers_today", 0)
-	daily_sentence_completed_today = data.get("daily_sentence_completed_today", false)
 	session_history.assign(data.get("session_history", []))

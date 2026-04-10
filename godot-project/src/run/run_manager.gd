@@ -1,12 +1,10 @@
 ## RunManager — Controls the flow of a complete run session.
-## Manages rounds, transitions between swipe phase and boss phase.
+## Manages rounds, combos, difficulty scaling, and session tracking.
 class_name RunManager
 extends RefCounted
 
 signal run_completed(summary: Dictionary)
 signal round_ready(card_ids: Array)
-signal boss_round_triggered()
-
 var run_type: String = ""
 var round_count: int = 0
 var max_rounds: int = 5
@@ -93,15 +91,8 @@ func on_card_answered(card_id: String, challenge_type: String, correct: bool, ra
 func on_round_completed() -> void:
 	if round_count >= max_rounds:
 		end_run()
-	elif _should_trigger_boss():
-		boss_round_triggered.emit()
 	else:
 		start_next_round()
-
-
-func _should_trigger_boss() -> bool:
-	# Boss round every 3 rounds in challenge mode
-	return run_type == "challenge" and round_count % 3 == 0
 
 
 func _get_cards_for_round(count: int) -> Array[String]:
