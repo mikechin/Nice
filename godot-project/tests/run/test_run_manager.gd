@@ -17,16 +17,15 @@ func before_test() -> void:
 # -- start_run --
 
 func test_start_run_initializes_state() -> void:
-	_run.start_run("challenge", _pack)
+	_run.start_run(_pack)
 	assert_bool(_run.is_active).is_true()
-	assert_str(_run.run_type).is_equal("challenge")
 	assert_int(_run.round_count).is_equal(1)
 
 
 # -- session tracking --
 
 func test_session_records_answers() -> void:
-	_run.start_run("challenge", _pack)
+	_run.start_run(_pack)
 	_run.on_card_answered("char_a", "meaning", true, 3)
 	_run.on_card_answered("char_b", "pinyin", false, 1)
 	var session := _run.get_session_data()
@@ -37,13 +36,28 @@ func test_session_records_answers() -> void:
 # -- run summary --
 
 func test_run_summary_accuracy() -> void:
-	_run.start_run("easy", _pack)
+	_run.start_run(_pack)
 	_run.on_card_answered("char_a", "meaning", true, 3)
 	_run.on_card_answered("char_b", "meaning", true, 4)
 	_run.on_card_answered("char_c", "meaning", false, 1)
 	var summary := _run.get_run_summary()
 	assert_int(summary["total_cards"]).is_equal(3)
 	assert_int(summary["correct_count"]).is_equal(2)
+
+
+# -- hand cards (carried into board game) --
+
+func test_run_summary_includes_hand_cards_for_correct_answers() -> void:
+	_run.start_run(_pack)
+	_run.on_card_answered("char_a", "meaning", true, 3)
+	_run.on_card_answered("char_b", "meaning", false, 1)
+	_run.on_card_answered("char_c", "meaning", true, 4)
+	var summary := _run.get_run_summary()
+	var hand: Array = summary["hand_cards"]
+	assert_int(hand.size()).is_equal(2)
+	assert_bool(hand.has("char_a")).is_true()
+	assert_bool(hand.has("char_c")).is_true()
+	assert_bool(hand.has("char_b")).is_false()
 
 
 # -- inactive run ignores answers --

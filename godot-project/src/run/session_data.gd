@@ -5,10 +5,13 @@ extends Resource
 @export var session_id: String = ""
 @export var started_at: float = 0.0
 @export var ended_at: float = 0.0
-@export var run_type: String = ""
 
 ## Per-card results: Array of { card_id, challenge_type, correct, rating, time_ms }
 var card_results: Array[Dictionary] = []
+
+## Cards the player answered correctly this run.
+## These get carried forward into the player's hand for the future board-game phase.
+var hand_cards: Array[String] = []
 
 @export var total_cards: int = 0
 @export var correct_count: int = 0
@@ -34,14 +37,16 @@ func record_answer(card_id: String, challenge_type: String, correct: bool, ratin
 	total_cards += 1
 	if correct:
 		correct_count += 1
+		if card_id not in hand_cards:
+			hand_cards.append(card_id)
 
 func to_dict() -> Dictionary:
 	return {
 		"session_id": session_id,
 		"started_at": started_at,
 		"ended_at": ended_at,
-		"run_type": run_type,
 		"card_results": card_results,
+		"hand_cards": hand_cards,
 		"total_cards": total_cards,
 		"correct_count": correct_count,
 		"new_cards_seen": new_cards_seen,
@@ -53,8 +58,9 @@ static func from_dict(data: Dictionary) -> SessionData:
 	sd.session_id = data.get("session_id", "")
 	sd.started_at = data.get("started_at", 0.0)
 	sd.ended_at = data.get("ended_at", 0.0)
-	sd.run_type = data.get("run_type", "")
 	sd.card_results = data.get("card_results", [])
+	var hand: Array = data.get("hand_cards", [])
+	sd.hand_cards.assign(hand)
 	sd.total_cards = data.get("total_cards", 0)
 	sd.correct_count = data.get("correct_count", 0)
 	sd.new_cards_seen = data.get("new_cards_seen", 0)

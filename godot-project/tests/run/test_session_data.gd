@@ -9,7 +9,6 @@ func before_test() -> void:
 	session.session_id = "test_session_001"
 	session.started_at = 1700000000.0
 	session.ended_at = 1700000300.0
-	session.run_type = "easy"
 
 
 func test_record_answer_increments_total() -> void:
@@ -45,10 +44,29 @@ func test_to_dict_has_expected_keys() -> void:
 	session.record_answer("wo3", "meaning", true, FsrsAlgorithm.Rating.GOOD, 1500)
 	var d := session.to_dict()
 	assert_str(d["session_id"]).is_equal("test_session_001")
-	assert_str(d["run_type"]).is_equal("easy")
 	assert_int(d["total_cards"]).is_equal(1)
 	assert_int(d["correct_count"]).is_equal(1)
 	assert_bool(d.has("card_results")).is_true()
+	assert_bool(d.has("hand_cards")).is_true()
+
+
+# -- hand cards (carried into board game) --
+
+func test_correct_answers_added_to_hand() -> void:
+	session.record_answer("wo3", "meaning", true, FsrsAlgorithm.Rating.GOOD, 1500)
+	session.record_answer("ni3", "meaning", false, FsrsAlgorithm.Rating.AGAIN, 3000)
+	session.record_answer("hao3", "meaning", true, FsrsAlgorithm.Rating.GOOD, 1200)
+	assert_int(session.hand_cards.size()).is_equal(2)
+	assert_bool(session.hand_cards.has("wo3")).is_true()
+	assert_bool(session.hand_cards.has("hao3")).is_true()
+	assert_bool(session.hand_cards.has("ni3")).is_false()
+
+
+func test_hand_cards_dedupe_across_challenges() -> void:
+	# Same card answered correctly on two different challenge types should appear once.
+	session.record_answer("wo3", "meaning", true, FsrsAlgorithm.Rating.GOOD, 1500)
+	session.record_answer("wo3", "pinyin", true, FsrsAlgorithm.Rating.GOOD, 1500)
+	assert_int(session.hand_cards.size()).is_equal(1)
 
 
 func test_from_dict_round_trip() -> void:

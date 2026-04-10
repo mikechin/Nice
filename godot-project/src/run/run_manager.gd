@@ -5,7 +5,6 @@ extends RefCounted
 
 signal run_completed(summary: Dictionary)
 signal round_ready(card_ids: Array)
-var run_type: String = ""
 var round_count: int = 0
 var max_rounds: int = 5
 var is_active: bool = false
@@ -21,8 +20,7 @@ func _init() -> void:
 	_round = RoundManager.new()
 
 
-func start_run(type: String, pack: PackData) -> void:
-	run_type = type
+func start_run(pack: PackData) -> void:
 	_pack = pack
 	round_count = 0
 	is_active = true
@@ -32,7 +30,6 @@ func start_run(type: String, pack: PackData) -> void:
 	_session = SessionData.new()
 	_session.session_id = str(roundi(Time.get_unix_time_from_system()))
 	_session.started_at = Time.get_unix_time_from_system()
-	_session.run_type = type
 
 	start_next_round()
 
@@ -90,13 +87,13 @@ func _get_cards_for_round(count: int) -> Array[String]:
 
 func get_run_summary() -> Dictionary:
 	return {
-		"run_type": run_type,
 		"rounds_completed": round_count,
 		"total_cards": _session.total_cards,
 		"correct_count": _session.correct_count,
 		"accuracy": _session.get_accuracy(),
 		"duration_seconds": _session.get_duration_seconds(),
 		"new_cards_seen": _session.new_cards_seen,
+		"hand_cards": _session.hand_cards.duplicate(),
 	}
 
 
