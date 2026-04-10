@@ -18,22 +18,6 @@ signal round_ended(round_number: int)
 signal swipe_detected(direction: Vector2)
 signal answer_selected(direction: String, answer: String)
 
-# --- Economy Signals ---
-signal coins_changed(amount: int, total: int)
-signal word_drop(word: String, characters: Array)
-
-# --- Radical Signals ---
-signal radical_activated(radical: String, character: String, bonus_coins: int)
-signal radical_attach_triggered(base: String, radical: String, result: String)
-signal radical_equipped(radical: String)
-signal radical_unequipped(radical: String)
-
-# --- Shop Signals ---
-signal shop_opened()
-signal shop_closed()
-signal item_purchased(item_data: Dictionary)
-signal shop_refreshed(items: Array)
-
 # --- Progression Signals ---
 signal hsk_level_changed(old_level: int, new_level: int)
 signal character_mastered(character: String)

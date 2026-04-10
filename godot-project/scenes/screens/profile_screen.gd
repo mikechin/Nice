@@ -8,8 +8,6 @@ extends Control
 @onready var _streak_label: Label = $StatsContainer/StreakLabel if has_node("StatsContainer/StreakLabel") else null
 @onready var _mastered_label: Label = $StatsContainer/MasteredLabel if has_node("StatsContainer/MasteredLabel") else null
 @onready var _accuracy_label: Label = $StatsContainer/AccuracyLabel if has_node("StatsContainer/AccuracyLabel") else null
-@onready var _coins_label: Label = $StatsContainer/CoinsLabel if has_node("StatsContainer/CoinsLabel") else null
-@onready var _radicals_label: Label = $StatsContainer/RadicalsLabel if has_node("StatsContainer/RadicalsLabel") else null
 @onready var _tier_breakdown: VBoxContainer = $TierBreakdown if has_node("TierBreakdown") else null
 @onready var _back_button: Button = $BackButton if has_node("BackButton") else null
 @onready var _title_label: Label = $TitleLabel if has_node("TitleLabel") else null
@@ -67,17 +65,6 @@ func _update_stats() -> void:
 	if _accuracy_label:
 		_accuracy_label.text = "Today's Accuracy: %.0f%%" % accuracy
 
-	# Coins
-	if _coins_label:
-		_coins_label.text = "Coins: %d" % GameState.total_coins
-
-	# Radicals owned
-	if _radicals_label:
-		_radicals_label.text = "Radicals: %d owned, %d equipped" % [
-			GameState.owned_radicals.size(),
-			GameState.equipped_radicals.size(),
-		]
-
 	# Tier breakdown
 	_update_tier_breakdown(grid)
 
@@ -133,10 +120,6 @@ func _warn_missing_nodes() -> void:
 		push_warning("profile_screen.gd: missing node _mastered_label")
 	if _accuracy_label == null:
 		push_warning("profile_screen.gd: missing node _accuracy_label")
-	if _coins_label == null:
-		push_warning("profile_screen.gd: missing node _coins_label")
-	if _radicals_label == null:
-		push_warning("profile_screen.gd: missing node _radicals_label")
 	if _tier_breakdown == null:
 		push_warning("profile_screen.gd: missing node _tier_breakdown")
 	if _back_button == null:

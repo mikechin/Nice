@@ -600,12 +600,13 @@ This project follows Godot-idiomatic component-based architecture:
 The following systems were implemented during the initial Phase 1 build but belong to later phases or the previous JRPG iteration (Appendix A). They exist in the codebase, compile, and have tests — but are **not wired into the Phase 1 core loop**. They can be adapted or replaced when their phase arrives.
 
 ### From Appendix A (JRPG battler artifacts)
-These were built based on the previous iteration's design. They'll need rethinking to fit the current draft + board game direction.
+These were built based on the previous iteration's design. Most have been removed to keep Phase 1 lean. They'll be rebuilt when their phase arrives.
 
-- **`src/economy/`** — CoinManager, EconomyScaler, DropCalculator. Coin-based economy from the JRPG iteration. Economy design is TBD per planning doc.
-- **`src/shop/`** — ShopManager, ShopRotation, ShopItem. Rotating shop selling radicals. Shop design is TBD.
+- **`src/economy/`** — **Removed.** Was: CoinManager, EconomyScaler, DropCalculator. Coin-based economy from the JRPG iteration. Economy design is TBD per planning doc.
+- **`src/shop/`** — **Removed.** Was: ShopManager, ShopRotation, ShopItem. Rotating shop selling radicals. Shop design is TBD.
 - **`src/run/`** — RunManager, DifficultyManager, RoundManager. Difficulty scaling. Maps to the JRPG battle flow, not the pack-opening flow. (ComboManager removed — combos no longer fit the design.)
-- **`src/radicals/radical_activator.gd`, `radical_bonus_calculator.gd`** — Radical equip/activate/bonus system from the battler. Radicals' actual role is as the board game's strategic axis (Phase 3).
+- **`src/radicals/`** — **Removed.** Was: RadicalActivator, RadicalBonusCalculator, RadicalManager. Radical equip/activate/bonus system from the battler. Radicals' actual Phase 3 role is as the board game's strategic axis. Radical *data* (`src/database/radical_data.gd`, `radical_database.gd`) is retained.
+- **`src/database/word_database.gd`** — **Removed.** Was an unused word lookup for future fusion. Rebuild when word fusion lands in Phase 3+.
 
 ### Phase 2+ systems (built early)
 These are directionally correct but premature for Phase 1.
@@ -614,13 +615,11 @@ These are directionally correct but premature for Phase 1.
 - **`src/swipe/swipe_detector.gd`, `card_display.gd`** — Swipe-based interaction. The core challenge mechanic is TBD (might be swipe, might be something else). AnswerGenerator and ChallengePresenter are usable regardless of mechanic.
 - **`scenes/screens/run_select.gd`** — Screen script for features not in Phase 1. (boss_round_screen and daily_weekly_screen removed.)
 
-### Scene scripts with JRPG assumptions
-These screen/component scripts reference coins in ways that assume the JRPG flow. They'll need updates when their .tscn files are created:
-
-- `scenes/screens/game_screen.gd` — Built around swipe-based challenge + drops loop, not pack opening
-- `scenes/screens/shop_screen.gd` — References ShopManager and coin spending
-- `scenes/screens/results_screen.gd` — Shows coins earned
-- `scenes/components/coin_counter.gd`
+### Removed scene scripts and components
+- `scenes/screens/shop_screen.gd` — **Removed** with shop system.
+- `scenes/components/coin_counter.gd` — **Removed** with coin system.
+- `scenes/components/shop_item_card.gd` — **Removed** with shop system.
+- `scenes/components/radical_badge.gd` — **Removed.** Was a rarity-tinted equipped-state UI badge tied to the equip system.
 - `scenes/components/combo_counter.gd` — **Removed.** Combo system no longer fits the design.
 - `scenes/components/sentence_slot.gd`, `tile_slot.gd` — **Removed.** Were sentence builder UI components.
 

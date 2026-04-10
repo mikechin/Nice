@@ -12,7 +12,6 @@ var card_results: Array[Dictionary] = []
 
 @export var total_cards: int = 0
 @export var correct_count: int = 0
-@export var coins_earned: int = 0
 @export var new_cards_seen: int = 0
 @export var cards_promoted: int = 0
 
@@ -45,7 +44,6 @@ func to_dict() -> Dictionary:
 		"card_results": card_results,
 		"total_cards": total_cards,
 		"correct_count": correct_count,
-		"coins_earned": coins_earned,
 		"new_cards_seen": new_cards_seen,
 		"cards_promoted": cards_promoted,
 	}
@@ -59,7 +57,6 @@ static func from_dict(data: Dictionary) -> SessionData:
 	sd.card_results = data.get("card_results", [])
 	sd.total_cards = data.get("total_cards", 0)
 	sd.correct_count = data.get("correct_count", 0)
-	sd.coins_earned = data.get("coins_earned", 0)
 	sd.new_cards_seen = data.get("new_cards_seen", 0)
 	sd.cards_promoted = data.get("cards_promoted", 0)
 	return sd

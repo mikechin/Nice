@@ -9,7 +9,6 @@ const SCREEN_PATHS: Dictionary = {
 	"game": "res://scenes/screens/game_screen.tscn",
 	"results": "res://scenes/screens/results_screen.tscn",
 	"collection": "res://scenes/screens/collection_screen.tscn",
-	"shop": "res://scenes/screens/shop_screen.tscn",
 	"profile": "res://scenes/screens/profile_screen.tscn",
 	"settings": "res://scenes/screens/settings_screen.tscn",
 }

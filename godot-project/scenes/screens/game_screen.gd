@@ -5,7 +5,6 @@ class_name GameScreen
 extends Control
 
 @onready var _challenge_presenter: ChallengePresenter = $ChallengePresenter if has_node("ChallengePresenter") else null
-@onready var _coin_counter: Control = $CoinCounter if has_node("CoinCounter") else null
 @onready var _progress_bar: Control = $ProgressBar if has_node("ProgressBar") else null
 @onready var _card_prompt_label: Label = $CardPromptLabel if has_node("CardPromptLabel") else null
 @onready var _challenge_type_label: Label = $ChallengeTypeLabel if has_node("ChallengeTypeLabel") else null
@@ -22,14 +21,12 @@ var _total_cards: int = 0
 var _correct_count: int = 0
 var _is_transitioning: bool = false
 var _answer_generator: AnswerGenerator
-var _drop_calculator: DropCalculator
 var _run_manager: RunManager
 
 
 func _ready() -> void:
 	_warn_missing_nodes()
 	_answer_generator = AnswerGenerator.new(GameState.character_db)
-	_drop_calculator = DropCalculator.new(null, null, GameState.radical_db)
 
 	if _challenge_presenter:
 		_challenge_presenter.challenge_completed.connect(_on_challenge_completed)
@@ -176,21 +173,8 @@ func _on_challenge_completed(card_id: String, challenge_type: String, correct: b
 		card_id, challenge_type, rating, now
 	)
 
-	# Process drops on correct answer
 	if correct:
 		_correct_count += 1
-		var card_data: CharacterData = GameState.character_db.get_character(card_id)
-		if card_data:
-			var loot_rarity: SrsEnums.LootRarity = GameState.review_scheduler.get_loot_rarity(
-				card_id, challenge_type, now
-			)
-			var drops: Dictionary = _drop_calculator.calculate_drops(
-				card_data,
-				loot_rarity,
-				GameState.player_hsk_level,
-				GameState.equipped_radicals
-			)
-			_apply_drops(drops)
 
 		# Check for tier promotion
 		var promotion: Dictionary = review_result.get("promotion", {})
@@ -224,13 +208,6 @@ func _on_transition_timeout() -> void:
 	_present_next_card()
 
 
-func _apply_drops(drops: Dictionary) -> void:
-	var coins: int = drops.get("coins", 0)
-	if coins > 0:
-		GameState.add_coins(coins)
-
-
-
 func _on_pack_complete() -> void:
 	if _run_manager:
 		_run_manager.end_run()
@@ -241,9 +218,6 @@ func _on_pack_complete() -> void:
 func _update_progress() -> void:
 	if _progress_bar and _progress_bar.has_method("set_progress"):
 		_progress_bar.set_progress(_card_index, _total_cards)
-	if _coin_counter and _coin_counter.has_method("set_count"):
-		var display_coins: int = GameState.run_coins_earned if GameState.is_in_run else GameState.total_coins
-		_coin_counter.set_count(display_coins)
 
 
 func _clear_answer_labels() -> void:
@@ -270,8 +244,6 @@ func _on_back_pressed() -> void:
 func _warn_missing_nodes() -> void:
 	if _challenge_presenter == null:
 		push_warning("game_screen.gd: missing node _challenge_presenter")
-	if _coin_counter == null:
-		push_warning("game_screen.gd: missing node _coin_counter")
 	if _progress_bar == null:
 		push_warning("game_screen.gd: missing node _progress_bar")
 	if _card_prompt_label == null:

@@ -1,10 +1,9 @@
-## ResultsScreen — Shows run results including accuracy and coins earned.
+## ResultsScreen — Shows run results: accuracy and rounds completed.
 ## Pulls data from GameState's last run result. Offers Play Again and Main Menu buttons.
 class_name ResultsScreen
 extends Control
 
 @onready var _accuracy_label: Label = $StatsContainer/AccuracyLabel if has_node("StatsContainer/AccuracyLabel") else null
-@onready var _coins_label: Label = $StatsContainer/CoinsLabel if has_node("StatsContainer/CoinsLabel") else null
 @onready var _rounds_label: Label = $StatsContainer/RoundsLabel if has_node("StatsContainer/RoundsLabel") else null
 @onready var _title_label: Label = $TitleLabel if has_node("TitleLabel") else null
 @onready var _play_again_button: Button = $ButtonContainer/PlayAgainButton if has_node("ButtonContainer/PlayAgainButton") else null
@@ -54,16 +53,12 @@ func _display_results() -> void:
 		return
 
 	var accuracy: float = _result_data.get("accuracy", 0.0)
-	var coins: int = _result_data.get("coins", 0)
 	var rounds: int = _result_data.get("rounds", 0)
 	if _title_label:
 		_title_label.text = "Run Complete!"
 
 	if _accuracy_label:
 		_accuracy_label.text = "Accuracy: %.0f%%" % accuracy
-
-	if _coins_label:
-		_coins_label.text = "Coins Earned: %d" % coins
 
 	if _rounds_label:
 		_rounds_label.text = "Rounds: %d" % rounds
@@ -85,8 +80,6 @@ func _on_main_menu_pressed() -> void:
 func _warn_missing_nodes() -> void:
 	if _accuracy_label == null:
 		push_warning("results_screen.gd: missing node _accuracy_label")
-	if _coins_label == null:
-		push_warning("results_screen.gd: missing node _coins_label")
 	if _rounds_label == null:
 		push_warning("results_screen.gd: missing node _rounds_label")
 	if _title_label == null:

@@ -10,7 +10,7 @@ import sys
 import argparse
 
 REQUIRED_CHAR_FIELDS = ["character", "pinyin", "tone", "meaning", "hsk_level", "radicals"]
-REQUIRED_RADICAL_FIELDS = ["radical", "meaning", "rarity_tier", "shop_cost", "characters"]
+REQUIRED_RADICAL_FIELDS = ["radical", "meaning", "characters"]
 REQUIRED_SENTENCE_FIELDS = ["id", "sentence", "meaning", "characters", "hsk_level", "type"]
 
 def validate_characters(data_dir: str) -> list:

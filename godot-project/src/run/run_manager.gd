@@ -95,7 +95,6 @@ func get_run_summary() -> Dictionary:
 		"total_cards": _session.total_cards,
 		"correct_count": _session.correct_count,
 		"accuracy": _session.get_accuracy(),
-		"coins_earned": _session.coins_earned,
 		"duration_seconds": _session.get_duration_seconds(),
 		"new_cards_seen": _session.new_cards_seen,
 	}

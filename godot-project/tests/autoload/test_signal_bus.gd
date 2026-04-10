@@ -27,10 +27,6 @@ func test_has_run_signals() -> void:
 	assert_bool(bus.has_signal("round_ended")).is_true()
 
 
-func test_has_economy_signals() -> void:
-	assert_bool(bus.has_signal("coins_changed")).is_true()
-
-
 func test_has_progression_signals() -> void:
 	assert_bool(bus.has_signal("character_mastered")).is_true()
 	assert_bool(bus.has_signal("streak_updated")).is_true()

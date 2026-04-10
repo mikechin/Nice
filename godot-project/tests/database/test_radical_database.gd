@@ -17,8 +17,6 @@ func _make_test_radicals() -> Array[RadicalData]:
 	radicals.append(RadicalData.from_dict({
 		"radical": "女",
 		"meaning": "woman",
-		"rarity_tier": "common",
-		"shop_cost": 50,
 		"characters": ["好", "她", "妈"],
 		"display_name": "Woman",
 	}))
@@ -26,8 +24,6 @@ func _make_test_radicals() -> Array[RadicalData]:
 	radicals.append(RadicalData.from_dict({
 		"radical": "子",
 		"meaning": "child",
-		"rarity_tier": "common",
-		"shop_cost": 50,
 		"characters": ["好", "学", "字"],
 		"display_name": "Child",
 	}))
@@ -35,8 +31,6 @@ func _make_test_radicals() -> Array[RadicalData]:
 	radicals.append(RadicalData.from_dict({
 		"radical": "口",
 		"meaning": "mouth",
-		"rarity_tier": "rare",
-		"shop_cost": 150,
 		"characters": ["吗", "吃", "叫"],
 		"display_name": "Mouth",
 	}))
@@ -44,8 +38,6 @@ func _make_test_radicals() -> Array[RadicalData]:
 	radicals.append(RadicalData.from_dict({
 		"radical": "火",
 		"meaning": "fire",
-		"rarity_tier": "epic",
-		"shop_cost": 300,
 		"characters": ["烧", "灯"],
 		"display_name": "Fire",
 	}))
@@ -119,29 +111,6 @@ func test_get_characters_for_unknown_radical() -> void:
 	assert_int(chars.size()).is_equal(0)
 
 
-# -- get_by_rarity --
-
-func test_get_by_rarity_common() -> void:
-	var commons := db.get_by_rarity("common")
-	assert_int(commons.size()).is_equal(2)
-
-
-func test_get_by_rarity_rare() -> void:
-	var rares := db.get_by_rarity("rare")
-	assert_int(rares.size()).is_equal(1)
-
-
-func test_get_by_rarity_epic() -> void:
-	var epics := db.get_by_rarity("epic")
-	assert_int(epics.size()).is_equal(1)
-	assert_str(epics[0].radical).is_equal("火")
-
-
-func test_get_by_rarity_nonexistent() -> void:
-	var legendary := db.get_by_rarity("legendary")
-	assert_int(legendary.size()).is_equal(0)
-
-
 # -- character_has_radical --
 
 func test_character_has_radical_true() -> void:
@@ -156,31 +125,7 @@ func test_character_has_radical_unknown_char() -> void:
 	assert_bool(db.character_has_radical("龙", "女")).is_false()
 
 
-# -- get_shop_cost --
-
-func test_get_shop_cost() -> void:
-	assert_int(db.get_shop_cost("女")).is_equal(50)
-	assert_int(db.get_shop_cost("口")).is_equal(150)
-	assert_int(db.get_shop_cost("火")).is_equal(300)
-
-
-func test_get_shop_cost_unknown() -> void:
-	assert_int(db.get_shop_cost("龍")).is_equal(0)
-
-
 # -- RadicalData helpers --
-
-func test_radical_data_is_epic() -> void:
-	var rd := db.get_radical("火")
-	assert_bool(rd.is_epic()).is_true()
-	assert_bool(rd.is_rare()).is_false()
-
-
-func test_radical_data_is_rare() -> void:
-	var rd := db.get_radical("口")
-	assert_bool(rd.is_rare()).is_true()
-	assert_bool(rd.is_epic()).is_false()
-
 
 func test_radical_data_get_character_count() -> void:
 	var rd := db.get_radical("女")

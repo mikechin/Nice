@@ -68,14 +68,6 @@ text = "Mastered: --"
 layout_mode = 2
 text = "Today's Accuracy: --"
 
-[node name="CoinsLabel" type="Label" parent="StatsContainer"]
-layout_mode = 2
-text = "Coins: --"
-
-[node name="RadicalsLabel" type="Label" parent="StatsContainer"]
-layout_mode = 2
-text = "Radicals: --"
-
 [node name="TierBreakdown" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
