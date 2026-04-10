@@ -78,7 +78,7 @@ func _start_session() -> void:
 
 	# Create RunManager for this session
 	_run_manager = RunManager.new()
-	_run_manager.start_run(GameState.current_run_type if GameState.current_run_type != "" else "easy", _pack)
+	_run_manager.start_run(_pack)
 
 	_update_progress()
 	AudioManager.play_music("gameplay")

@@ -10,7 +10,6 @@ var unlocked_characters: Dictionary = {}  # character -> true
 
 # --- Current Run State ---
 var is_in_run: bool = false
-var current_run_type: String = ""  # "easy" or "challenge"
 var current_pack: PackData = null
 var last_run_summary: Dictionary = {}
 
@@ -43,19 +42,16 @@ func initialize_databases() -> void:
 	print("[GameState] Registered %d cards with review_scheduler" % review_scheduler.card_states.size())
 
 
-func start_run(run_type: String) -> void:
+func start_run() -> void:
 	is_in_run = true
-	current_run_type = run_type
 	last_run_summary.clear()
-	SignalBus.run_started.emit(run_type)
+	SignalBus.run_started.emit()
 
 
 func end_run(summary: Dictionary = {}) -> void:
 	last_run_summary = summary.duplicate()
-	last_run_summary["run_type"] = current_run_type
 
 	is_in_run = false
-	current_run_type = ""
 	current_pack = null
 	SignalBus.run_ended.emit(last_run_summary)
 

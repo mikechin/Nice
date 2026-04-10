@@ -25,7 +25,7 @@ func test_to_save_dict_default_values() -> void:
 
 func test_initial_run_state() -> void:
 	assert_bool(state.is_in_run).is_false()
-	assert_str(state.current_run_type).is_equal("")
+	assert_object(state.current_pack).is_null()
 
 
 func test_load_from_dict_restores_state() -> void:

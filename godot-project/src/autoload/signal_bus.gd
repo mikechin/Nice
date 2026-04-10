@@ -9,7 +9,7 @@ signal card_answered(card_data: Dictionary, challenge_type: String, correct: boo
 signal srs_state_updated(card_id: String, new_state: Dictionary)
 
 # --- Run Signals ---
-signal run_started(run_type: String)  # "easy" or "challenge"
+signal run_started()
 signal run_ended(result: Dictionary)
 signal round_started(round_number: int)
 signal round_ended(round_number: int)
