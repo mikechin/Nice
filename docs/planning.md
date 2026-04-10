@@ -289,17 +289,16 @@ SRS tracks per-card, per-type accuracy independently. A player who recognizes a 
 
 ## Economy (TBD)
 
-Economy design depends on the core game mechanic and the maxed-card spend mechanic. Previous iteration used dual currencies (tiles + coins) tied to a battle/shop loop — see Appendix A for reference.
+Economy design depends on the core game mechanic and the maxed-card spend mechanic. Previous iteration used dual currencies (coins + tiles) tied to a battle/shop loop — tiles have been removed; see Appendix A for reference.
 
 What's likely retained:
-- Some form of currency earned through correct reviews
-- A shop or unlock system for spending it
+- Coins earned through correct reviews
+- A shop or unlock system for spending them
 - Economy scaling by HSK level (harder characters = richer reward)
 - The "one or two more sessions" tension — player is always slightly short of what they need next
 
 What's uncertain:
-- Whether tiles and coins both survive or simplify to one currency
-- What the currency buys (was: card upgrades, radical forging, shop items)
+- What currency buys (was: card upgrades, radical forging, shop items)
 - How the maxed-card spend mechanic interacts with economy
 
 ---
@@ -602,9 +601,9 @@ The following systems were implemented during the initial Phase 1 build but belo
 ### From Appendix A (JRPG battler artifacts)
 These were built based on the previous iteration's design. They'll need rethinking to fit the current draft + board game direction.
 
-- **`src/economy/`** — CoinManager, EconomyScaler, TileInventory, DropCalculator. Dual currency (tiles + coins) from the JRPG economy. Economy design is TBD per planning doc.
-- **`src/shop/`** — ShopManager, ShopRotation, ShopItem. Rotating shop selling radicals, tiles, hearts. Shop design is TBD.
-- **`src/run/`** — RunManager, HeartsManager, ComboManager, DifficultyManager, RoundManager. Hearts/lives, combo streaks, difficulty scaling. These map to the JRPG battle flow, not the pack-opening flow.
+- **`src/economy/`** — CoinManager, EconomyScaler, DropCalculator. Coin-based economy from the JRPG iteration. Economy design is TBD per planning doc.
+- **`src/shop/`** — ShopManager, ShopRotation, ShopItem. Rotating shop selling radicals. Shop design is TBD.
+- **`src/run/`** — RunManager, ComboManager, DifficultyManager, RoundManager. Combo streaks, difficulty scaling. These map to the JRPG battle flow, not the pack-opening flow.
 - **`src/radicals/radical_activator.gd`, `radical_bonus_calculator.gd`** — Radical equip/activate/bonus system from the battler. Radicals' actual role is as the board game's strategic axis (Phase 3).
 
 ### Phase 2+ systems (built early)
@@ -615,12 +614,12 @@ These are directionally correct but premature for Phase 1.
 - **`scenes/screens/boss_round_screen.gd`, `daily_weekly_screen.gd`, `run_select.gd`** — Screen scripts for features not in Phase 1.
 
 ### Scene scripts with JRPG assumptions
-These screen/component scripts reference hearts, combos, coins, and tiles in ways that assume the JRPG flow. They'll need updates when their .tscn files are created:
+These screen/component scripts reference combos and coins in ways that assume the JRPG flow. They'll need updates when their .tscn files are created:
 
 - `scenes/screens/game_screen.gd` — Built around swipe-based challenge + drops loop, not pack opening
 - `scenes/screens/shop_screen.gd` — References ShopManager and coin spending
-- `scenes/screens/results_screen.gd` — Shows combo, hearts, coins, tiles earned
-- `scenes/components/combo_counter.gd`, `heart_display.gd`, `coin_counter.gd`, `tile_slot.gd`
+- `scenes/screens/results_screen.gd` — Shows combo and coins earned
+- `scenes/components/combo_counter.gd`, `coin_counter.gd`
 
 ### What IS Phase 1 (wired and working)
 - FSRS algorithm (`src/srs/`) — full FSRS-6 port
@@ -785,7 +784,7 @@ JRPG-style battle scene. Enemies appear on one side, player's hand of character 
 
 ### Deck Building
 
-Player builds a 20-30 card deck before each run from their collection. Balances mastery (strong cards) against review needs (weak cards). Equips radicals for elemental synergies. Run types: Easy (free, comfortable) or Challenge (costs tiles, harder, richer rewards).
+Player builds a 20-30 card deck before each run from their collection. Balances mastery (strong cards) against review needs (weak cards). Equips radicals for elemental synergies. Run types: Easy (free, comfortable) or Challenge (costs coins, harder, richer rewards).
 
 ### Combo System
 
@@ -795,15 +794,14 @@ Consecutive correct plays build a combo multiplier. Wrong answer halves combo (n
 
 Radicals as elemental affinities (MTG colors equivalent). Playing same-element cards in sequence triggers synergy bonuses. Two activation modes: elemental synergy (common) and radical attach (special event). Radical rarity tiers: Common (12-15+ chars, 40-50 coins), Rare (7-11 chars, 100-120 coins), Epic (3-6 chars, 300-350 coins).
 
-### Dual Currency Economy
+### Currency Economy
 
-- **Tiles** (short-term): earned per correct play, spent on card upgrades, word fusion, radical forging, challenge run entry fees
-- **Coins** (long-term): spent in rotating shop on radicals, planet boosts, HP, card packs
+- **Coins**: earned per correct play, spent on card upgrades, word fusion, radical forging, challenge run entry fees, rotating shop (radicals, planet boosts, HP, card packs)
 - Economy scaling by HSK level (harder cards = richer reward)
 
 ### Card Upgrades
 
-Spend duplicate tiles to level up card battle stats. 4 levels, unlocks card ability at max. Separate from SRS state.
+Spend coins to level up card battle stats. 4 levels, unlocks card ability at max. Separate from SRS state.
 
 ### Rotating Shop
 

@@ -32,7 +32,7 @@ See `CLAUDE.md` for the complete structure and design rationale.
 
 ## Build Phases
 
-1. **Core Engine** — SRS algorithm, character database, swipe mechanic, hearts
+1. **Core Engine** — SRS algorithm, character database, swipe mechanic
 2. **Game Layer** — Combos, loot rarity, radicals, shop, collection grid
 3. **Sentence Building** — Boss rounds, daily goals, weekly trials
 4. **Polish** — Planet boosts, streaks, economy tuning, art/audio

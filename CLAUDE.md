@@ -32,9 +32,9 @@ Nice/
 │   │   ├── autoload/          # Singletons: GameState, SignalBus, AudioManager, SaveManager
 │   │   ├── srs/               # FSRS algorithm, card state, scheduling
 │   │   ├── database/          # Data loaders and queries
-│   │   ├── run/               # Run/round flow, hearts, combo, difficulty
+│   │   ├── run/               # Run/round flow, combo, difficulty
 │   │   ├── swipe/             # Card display, swipe input, answer generation
-│   │   ├── economy/           # Tiles, coins, economy scaling
+│   │   ├── economy/           # Coins, economy scaling
 │   │   ├── radicals/          # Radical equip, activation, bonuses
 │   │   ├── shop/              # Shop logic, rotation, items
 │   │   ├── sentences/         # Sentence builder, validation, boss rounds
