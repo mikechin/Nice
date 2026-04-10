@@ -13,7 +13,6 @@ func before_test() -> void:
 	a1.achievement_id = "mastery_10"
 	a1.title = "First Steps"
 	a1.requirement_value = 10
-	a1.reward_coins = 50
 	defs.append(a1)
 
 	tracker.register_definitions(defs)

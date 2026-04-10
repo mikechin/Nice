@@ -202,21 +202,6 @@ func test_select_challenge_type_unknown_card() -> void:
 	assert_str(ct).is_equal("meaning")
 
 
-# -- get_coin_multiplier --
-
-func test_coin_multiplier_new_card() -> void:
-	scheduler.register_card("c1", "好")
-	var mult := scheduler.get_coin_multiplier("c1", "meaning", _now)
-	assert_float(mult).is_equal(SrsConfig.COIN_MULT_NEW)
-
-
-func test_coin_multiplier_common() -> void:
-	scheduler.register_card("c1", "好")
-	scheduler.record_review("c1", "meaning", FsrsAlgorithm.Rating.GOOD, _now)
-	var mult := scheduler.get_coin_multiplier("c1", "meaning", _now + 1.0)
-	assert_float(mult).is_equal(SrsConfig.COIN_MULT_COMMON)
-
-
 # -- get_new_card_ids --
 
 func test_get_new_card_ids() -> void:

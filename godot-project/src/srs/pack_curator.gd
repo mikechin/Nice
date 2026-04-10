@@ -74,11 +74,13 @@ func curate_pack(now: float, pack_size: int = SrsConfig.PACK_SIZE_DEFAULT, avail
 	# New cards (limited per session)
 	var new_pool: Array = available_new_ids.duplicate()
 	new_pool.shuffle()
-	var new_count := mini(n_new, new_pool.size())
-	for i in new_count:
+	var new_added := mini(n_new, new_pool.size())
+	for i in new_added:
 		pack.new_cards.append(str(new_pool[i]))
 
-	# If we have leftover slots, fill from due_cards
+	# If we have leftover slots, fill from due_cards first, then any remaining new IDs
+	# (capped at MAX_NEW_CARDS_PER_SESSION). This keeps packs full when the review
+	# queue is sparse — e.g. brand new players with no card states yet.
 	var total := pack.get_total_count()
 	if total < pack_size:
 		var remaining := pack_size - total
@@ -88,6 +90,12 @@ func curate_pack(now: float, pack_size: int = SrsConfig.PACK_SIZE_DEFAULT, avail
 			if card_id not in pack.common_cards and card_id not in pack.struggling_cards:
 				pack.common_cards.append(card_id)
 				remaining -= 1
+		var new_cap := SrsConfig.MAX_NEW_CARDS_PER_SESSION
+		var i := new_added
+		while remaining > 0 and i < new_pool.size() and pack.new_cards.size() < new_cap:
+			pack.new_cards.append(str(new_pool[i]))
+			remaining -= 1
+			i += 1
 
 	pack.build_presentation_order()
 	return pack

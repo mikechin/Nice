@@ -30,16 +30,6 @@ func test_pack_ratios_sum_to_one() -> void:
 	assert_float(total).is_equal_approx(1.0, 0.01)
 
 
-func test_easy_run_ratios_sum_to_one() -> void:
-	var total := SrsConfig.EASY_RUN_DUE_RATIO + SrsConfig.EASY_RUN_KNOWN_RATIO + SrsConfig.EASY_RUN_NEW_RATIO
-	assert_float(total).is_equal_approx(1.0, 0.01)
-
-
-func test_challenge_run_ratios_sum_to_one() -> void:
-	var total := SrsConfig.CHALLENGE_RUN_DUE_RATIO + SrsConfig.CHALLENGE_RUN_KNOWN_RATIO + SrsConfig.CHALLENGE_RUN_NEW_RATIO
-	assert_float(total).is_equal_approx(1.0, 0.01)
-
-
 # -- tier stability ordering --
 
 func test_tier_stability_ordering() -> void:
@@ -57,25 +47,10 @@ func test_tier_stabilities_positive() -> void:
 	assert_float(SrsConfig.TIER_LEGENDARY_STABILITY).is_greater(0.0)
 
 
-# -- coin multipliers --
-
-func test_coin_multipliers_positive() -> void:
-	assert_float(SrsConfig.COIN_MULT_COMMON).is_greater(0.0)
-	assert_float(SrsConfig.COIN_MULT_LEARNING).is_greater(0.0)
-	assert_float(SrsConfig.COIN_MULT_ABOUT_TO_FORGET).is_greater(0.0)
-	assert_float(SrsConfig.COIN_MULT_NEW).is_greater(0.0)
-
-
-func test_about_to_forget_highest_multiplier() -> void:
-	assert_float(SrsConfig.COIN_MULT_ABOUT_TO_FORGET).is_greater(SrsConfig.COIN_MULT_COMMON)
-	assert_float(SrsConfig.COIN_MULT_ABOUT_TO_FORGET).is_greater(SrsConfig.COIN_MULT_LEARNING)
-	assert_float(SrsConfig.COIN_MULT_ABOUT_TO_FORGET).is_greater(SrsConfig.COIN_MULT_NEW)
-
-
 # -- pack size --
 
-func test_pack_size_default_positive() -> void:
-	assert_int(SrsConfig.PACK_SIZE_DEFAULT).is_greater(0)
+func test_pack_size_default_is_twelve() -> void:
+	assert_int(SrsConfig.PACK_SIZE_DEFAULT).is_equal(12)
 
 
 # -- new card limits --

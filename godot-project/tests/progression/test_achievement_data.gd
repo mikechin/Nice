@@ -13,17 +13,15 @@ func before_test() -> void:
 	achievement.category = AchievementData.AchievementCategory.MASTERY
 	achievement.icon_id = "icon_scholar"
 	achievement.requirement_value = 50
-	achievement.reward_coins = 200
 	achievement.is_hidden = false
 
 	sample_dict = {
-		"achievement_id": "streak_30",
-		"title": "Monthly Warrior",
-		"description": "Maintain a 30-day streak",
-		"category": AchievementData.AchievementCategory.STREAK,
-		"icon_id": "icon_streak",
+		"achievement_id": "session_30",
+		"title": "Dedicated Learner",
+		"description": "Complete 30 sessions",
+		"category": AchievementData.AchievementCategory.SESSION,
+		"icon_id": "icon_session",
 		"requirement_value": 30,
-		"reward_coins": 500,
 		"is_hidden": true,
 	}
 
@@ -67,13 +65,12 @@ func test_get_progress_zero_requirement() -> void:
 
 func test_from_dict_sets_all_fields() -> void:
 	var ad := AchievementData.from_dict(sample_dict)
-	assert_str(ad.achievement_id).is_equal("streak_30")
-	assert_str(ad.title).is_equal("Monthly Warrior")
-	assert_str(ad.description).is_equal("Maintain a 30-day streak")
-	assert_int(ad.category).is_equal(AchievementData.AchievementCategory.STREAK)
-	assert_str(ad.icon_id).is_equal("icon_streak")
+	assert_str(ad.achievement_id).is_equal("session_30")
+	assert_str(ad.title).is_equal("Dedicated Learner")
+	assert_str(ad.description).is_equal("Complete 30 sessions")
+	assert_int(ad.category).is_equal(AchievementData.AchievementCategory.SESSION)
+	assert_str(ad.icon_id).is_equal("icon_session")
 	assert_int(ad.requirement_value).is_equal(30)
-	assert_int(ad.reward_coins).is_equal(500)
 	assert_bool(ad.is_hidden).is_true()
 
 
@@ -82,7 +79,6 @@ func test_from_dict_defaults_on_empty() -> void:
 	assert_str(ad.achievement_id).is_equal("")
 	assert_str(ad.title).is_equal("")
 	assert_int(ad.requirement_value).is_equal(0)
-	assert_int(ad.reward_coins).is_equal(0)
 	assert_bool(ad.is_hidden).is_false()
 
 
@@ -92,4 +88,3 @@ func test_to_dict_round_trip() -> void:
 	assert_str(restored.achievement_id).is_equal(achievement.achievement_id)
 	assert_str(restored.title).is_equal(achievement.title)
 	assert_int(restored.requirement_value).is_equal(achievement.requirement_value)
-	assert_int(restored.reward_coins).is_equal(achievement.reward_coins)

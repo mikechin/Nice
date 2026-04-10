@@ -157,7 +157,7 @@ func test_review_increases_stability() -> void:
 	var now := 1700000000.0
 	var after_first := fsrs.review(card, FsrsAlgorithm.Rating.GOOD, now)
 	# Advance time by the scheduled interval
-	var later := now + after_first["scheduled_days"] * 86400.0
+	var later: float = now + float(after_first["scheduled_days"]) * 86400.0
 	var after_second := fsrs.review(after_first, FsrsAlgorithm.Rating.GOOD, later)
 	assert_float(after_second["stability"]).is_greater(after_first["stability"])
 
@@ -167,7 +167,7 @@ func test_review_again_decreases_stability() -> void:
 	var now := 1700000000.0
 	var after_first := fsrs.review(card, FsrsAlgorithm.Rating.GOOD, now)
 	# Advance time so it is a real recall test
-	var later := now + after_first["scheduled_days"] * 86400.0
+	var later: float = now + float(after_first["scheduled_days"]) * 86400.0
 	var after_fail := fsrs.review(after_first, FsrsAlgorithm.Rating.AGAIN, later)
 	assert_float(after_fail["stability"]).is_less(after_first["stability"])
 	assert_int(after_fail["state"]).is_equal(FsrsAlgorithm.State.RELEARNING)
@@ -177,7 +177,7 @@ func test_review_again_increments_lapses() -> void:
 	var card := fsrs.init_card()
 	var now := 1700000000.0
 	var after_first := fsrs.review(card, FsrsAlgorithm.Rating.GOOD, now)
-	var later := now + after_first["scheduled_days"] * 86400.0
+	var later: float = now + float(after_first["scheduled_days"]) * 86400.0
 	var after_fail := fsrs.review(after_first, FsrsAlgorithm.Rating.AGAIN, later)
 	assert_int(after_fail["lapses"]).is_equal(1)
 

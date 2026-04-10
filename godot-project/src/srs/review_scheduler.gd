@@ -120,21 +120,6 @@ func get_loot_rarity(card_id: String, challenge_type: String, now: float) -> Srs
 	return SrsEnums.LootRarity.COMMON
 
 
-## Get coin multiplier for a card's loot rarity.
-func get_coin_multiplier(card_id: String, challenge_type: String, now: float) -> float:
-	var rarity := get_loot_rarity(card_id, challenge_type, now)
-	match rarity:
-		SrsEnums.LootRarity.COMMON:
-			return SrsConfig.COIN_MULT_COMMON
-		SrsEnums.LootRarity.LEARNING:
-			return SrsConfig.COIN_MULT_LEARNING
-		SrsEnums.LootRarity.ABOUT_TO_FORGET:
-			return SrsConfig.COIN_MULT_ABOUT_TO_FORGET
-		SrsEnums.LootRarity.NEW_CARD:
-			return SrsConfig.COIN_MULT_NEW
-	return 1.0
-
-
 ## Serialize all card states for saving.
 func serialize_all() -> Array[Dictionary]:
 	var result: Array[Dictionary] = []

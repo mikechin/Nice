@@ -7,8 +7,8 @@ const ABOUT_TO_FORGET_THRESHOLD: float = 0.7
 const WELL_KNOWN_THRESHOLD: float = 0.95
 
 # --- Pack composition (percentage targets) ---
-# Common daily pack for an active learner
-const PACK_SIZE_DEFAULT: int = 20
+# Fixed pack size: each run shows the player a sealed set of 12 cards.
+const PACK_SIZE_DEFAULT: int = 12
 
 const PACK_COMMON_RATIO: float = 0.70
 const PACK_STRUGGLING_RATIO: float = 0.15
@@ -25,21 +25,6 @@ const TIER_UNCOMMON_STABILITY: float = 7.0      # ~1 week intervals
 const TIER_RARE_STABILITY: float = 30.0         # ~1 month intervals
 const TIER_EPIC_STABILITY: float = 90.0         # ~3 month intervals
 const TIER_LEGENDARY_STABILITY: float = 180.0   # ~6 month+ intervals
-
-# --- Coin multipliers by loot rarity ---
-const COIN_MULT_COMMON: float = 1.0
-const COIN_MULT_LEARNING: float = 1.5
-const COIN_MULT_ABOUT_TO_FORGET: float = 4.0
-const COIN_MULT_NEW: float = 2.0
-
-# --- Run type card mix ---
-const EASY_RUN_DUE_RATIO: float = 0.3
-const EASY_RUN_KNOWN_RATIO: float = 0.6
-const EASY_RUN_NEW_RATIO: float = 0.1
-
-const CHALLENGE_RUN_DUE_RATIO: float = 0.5
-const CHALLENGE_RUN_KNOWN_RATIO: float = 0.2
-const CHALLENGE_RUN_NEW_RATIO: float = 0.3
 
 # --- Desired retention ---
 const DEFAULT_DESIRED_RETENTION: float = 0.9

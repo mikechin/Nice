@@ -2,7 +2,7 @@
 class_name AchievementData
 extends Resource
 
-enum AchievementCategory { COLLECTION, MASTERY, STREAK, SESSION, ECONOMY, RADICAL }
+enum AchievementCategory { COLLECTION, MASTERY, SESSION }
 
 @export var achievement_id: String = ""
 @export var title: String = ""
@@ -10,7 +10,6 @@ enum AchievementCategory { COLLECTION, MASTERY, STREAK, SESSION, ECONOMY, RADICA
 @export var category: AchievementCategory = AchievementCategory.COLLECTION
 @export var icon_id: String = ""
 @export var requirement_value: int = 0
-@export var reward_coins: int = 0
 @export var is_hidden: bool = false
 
 func check_completion(current_value: int) -> bool:
@@ -29,7 +28,6 @@ func to_dict() -> Dictionary:
 		"category": category,
 		"icon_id": icon_id,
 		"requirement_value": requirement_value,
-		"reward_coins": reward_coins,
 		"is_hidden": is_hidden,
 	}
 
@@ -41,6 +39,5 @@ static func from_dict(data: Dictionary) -> AchievementData:
 	ad.category = data.get("category", AchievementCategory.COLLECTION)
 	ad.icon_id = data.get("icon_id", "")
 	ad.requirement_value = data.get("requirement_value", 0)
-	ad.reward_coins = data.get("reward_coins", 0)
 	ad.is_hidden = data.get("is_hidden", false)
 	return ad

@@ -43,12 +43,6 @@ func create_score_popup(parent: Control, amount: int, position: Vector2, multipl
 	return create_popup(parent, text, position, color, scale)
 
 
-## Create a radical bonus popup (e.g., radical name + bonus amount).
-func create_radical_bonus_popup(parent: Control, radical: String, bonus: int, position: Vector2) -> Label:
-	var text: String = "%s +%d" % [radical, bonus]
-	return create_popup(parent, text, position, Color(0.4, 1.0, 0.8), 1.1)
-
-
 func _animate_popup(label: Label, scale_mult: float) -> void:
 	var start_pos: Vector2 = label.position
 	var end_pos: Vector2 = start_pos + Vector2(0.0, -DEFAULT_RISE_DISTANCE * scale_mult)

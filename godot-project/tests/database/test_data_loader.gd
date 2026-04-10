@@ -6,12 +6,12 @@ extends GdUnitTestSuite
 # -- load_json with nonexistent path --
 
 func test_load_json_nonexistent_returns_null() -> void:
-	var result := DataLoader.load_json("res://nonexistent/fake_file.json")
+	var result: Variant = DataLoader.load_json("res://nonexistent/fake_file.json")
 	assert_bool(result == null).is_true()
 
 
 func test_load_json_invalid_path_returns_null() -> void:
-	var result := DataLoader.load_json("")
+	var result: Variant = DataLoader.load_json("")
 	assert_bool(result == null).is_true()
 
 

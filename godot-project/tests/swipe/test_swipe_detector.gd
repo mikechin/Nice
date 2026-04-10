@@ -5,7 +5,7 @@ var _detector: SwipeDetector
 
 
 func before_test() -> void:
-	_detector = SwipeDetector.new()
+	_detector = auto_free(SwipeDetector.new())
 
 
 # -- _get_swipe_direction --
