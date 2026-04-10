@@ -114,12 +114,6 @@ func _on_purchase_requested(item: ShopItem) -> void:
 			var radical: String = item.data.get("radical", "")
 			if radical != "" and radical not in GameState.owned_radicals:
 				GameState.owned_radicals.append(radical)
-		ShopItem.ItemType.UTILITY_TILE:
-			var character: String = item.data.get("character", "")
-			if character != "":
-				GameState.add_tiles(character)
-		ShopItem.ItemType.EXTRA_HEART:
-			pass  # Applied at next run start via RunManager
 		ShopItem.ItemType.PACK_REFRESH:
 			pass  # Applied at next pack curation
 

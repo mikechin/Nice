@@ -34,17 +34,6 @@ func test_generate_rotation_returns_items() -> void:
 	assert_bool(items.size() > 0).is_true()
 
 
-func test_generate_rotation_includes_extra_heart() -> void:
-	var owned: Array[String] = []
-	var items := rotation.generate_rotation(4, owned)
-	var has_heart := false
-	for item in items:
-		if item.item_type == ShopItem.ItemType.EXTRA_HEART:
-			has_heart = true
-			break
-	assert_bool(has_heart).is_true()
-
-
 func test_generate_rotation_includes_pack_refresh() -> void:
 	var owned: Array[String] = []
 	var items := rotation.generate_rotation(4, owned)

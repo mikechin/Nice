@@ -1,5 +1,5 @@
 ## BossRoundScreen — Boss round UI for sentence-building challenges.
-## Creates a BossRoundManager, generates the challenge, shows sentence tiles,
+## Creates a BossRoundManager, generates the challenge, shows available characters,
 ## and handles player submission and scoring.
 class_name BossRoundScreen
 extends Control
@@ -9,7 +9,7 @@ extends Control
 @onready var _prompt_label: Label = $PromptLabel if has_node("PromptLabel") else null
 @onready var _hint_label: Label = $HintLabel if has_node("HintLabel") else null
 @onready var _sentence_container: HBoxContainer = $SentenceContainer if has_node("SentenceContainer") else null
-@onready var _tile_container: GridContainer = $TileContainer if has_node("TileContainer") else null
+@onready var _char_container: GridContainer = $CharContainer if has_node("CharContainer") else null
 @onready var _submit_button: Button = $SubmitButton if has_node("SubmitButton") else null
 @onready var _clear_button: Button = $ClearButton if has_node("ClearButton") else null
 @onready var _result_label: Label = $ResultLabel if has_node("ResultLabel") else null
@@ -21,14 +21,14 @@ var _sentence_builder: SentenceBuilder
 var _challenge: Dictionary = {}
 var _is_submitted: bool = false
 var _slot_scene: PackedScene
-var _tile_scene: PackedScene
+var _char_scene: PackedScene
 
 
 func _ready() -> void:
 	_warn_missing_nodes()
 	_boss_manager = BossRoundManager.new(GameState.sentence_db)
 	_sentence_builder = SentenceBuilder.new()
-	_sentence_builder.set_available_tiles(GameState.tile_inventory.duplicate())
+	_sentence_builder.set_available_chars(_get_available_chars())
 
 	if _submit_button:
 		_submit_button.pressed.connect(_on_submit_pressed)
@@ -41,16 +41,24 @@ func _ready() -> void:
 	if ResourceLoader.exists("res://scenes/components/sentence_slot.tscn"):
 		_slot_scene = load("res://scenes/components/sentence_slot.tscn")
 	if ResourceLoader.exists("res://scenes/components/tile_slot.tscn"):
-		_tile_scene = load("res://scenes/components/tile_slot.tscn")
+		_char_scene = load("res://scenes/components/tile_slot.tscn")
 
 	_generate_challenge()
 	AudioManager.play_boss_start()
 
 
+func _get_available_chars() -> Dictionary:
+	# Use unlocked characters as available characters (count 1 each)
+	var available: Dictionary = {}
+	for ch in GameState.unlocked_characters:
+		available[ch] = 1
+	return available
+
+
 func _generate_challenge() -> void:
 	_challenge = _boss_manager.generate_boss_round(
 		GameState.player_hsk_level,
-		GameState.tile_inventory
+		_sentence_builder.available_chars
 	)
 
 	if _challenge.is_empty():
@@ -58,13 +66,13 @@ func _generate_challenge() -> void:
 		if _title_label:
 			_title_label.text = "Boss Round"
 		if _prompt_label:
-			_prompt_label.text = "No sentence available for your current tiles."
+			_prompt_label.text = "No sentence available."
 		if _submit_button:
 			_submit_button.visible = false
 		return
 
 	_display_challenge()
-	_populate_available_tiles()
+	_populate_available_chars()
 
 
 func _display_challenge() -> void:
@@ -90,8 +98,8 @@ func _display_challenge() -> void:
 				_prompt_label.text = "Unscramble: %s" % " ".join(scrambled)
 			if _hint_label:
 				_hint_label.text = "Meaning: %s" % _challenge.get("meaning", "")
-			# Pre-populate tile area with scrambled characters
-			_populate_scramble_tiles(scrambled)
+			# Pre-populate char area with scrambled characters
+			_populate_scramble_chars(scrambled)
 
 		BossRoundManager.BossType.FREE_BUILD:
 			if _prompt_label:
@@ -101,71 +109,70 @@ func _display_challenge() -> void:
 				_hint_label.text = "\"%s\" (%d characters)" % [_challenge.get("meaning", ""), char_count]
 
 
-func _populate_available_tiles() -> void:
-	if _tile_container == null:
+func _populate_available_chars() -> void:
+	if _char_container == null:
 		return
-	for child in _tile_container.get_children():
+	for child in _char_container.get_children():
 		child.queue_free()
 
-	var available: Dictionary = _sentence_builder.available_tiles
+	var available: Dictionary = _sentence_builder.available_chars
 	for ch in available:
 		var count: int = available[ch]
 		for i in count:
-			var tile: Control = _create_tile(ch)
-			_tile_container.add_child(tile)
+			var slot: Control = _create_char_slot(ch)
+			_char_container.add_child(slot)
 
 
-func _populate_scramble_tiles(characters: Array) -> void:
-	if _tile_container == null:
+func _populate_scramble_chars(characters: Array) -> void:
+	if _char_container == null:
 		return
-	for child in _tile_container.get_children():
+	for child in _char_container.get_children():
 		child.queue_free()
 
 	for ch in characters:
-		var tile: Control = _create_tile(str(ch))
-		_tile_container.add_child(tile)
+		var slot: Control = _create_char_slot(str(ch))
+		_char_container.add_child(slot)
 
 
-func _create_tile(character: String) -> Control:
-	var tile: Control
-	if _tile_scene:
-		tile = _tile_scene.instantiate()
+func _create_char_slot(character: String) -> Control:
+	var slot: Control
+	if _char_scene:
+		slot = _char_scene.instantiate()
 	else:
-		tile = _create_fallback_tile(character)
+		slot = _create_fallback_slot(character)
 
-	if tile.has_method("setup_tile"):
-		tile.setup_tile(character)
+	if slot.has_method("setup"):
+		slot.setup(character)
 
 	# Connect tap to place
-	if tile is BaseButton:
-		tile.pressed.connect(_on_tile_tapped.bind(character, tile))
-	elif tile.has_signal("tile_tapped"):
-		tile.tile_tapped.connect(_on_tile_tapped.bind(character, tile))
+	if slot is BaseButton:
+		slot.pressed.connect(_on_char_tapped.bind(character, slot))
+	elif slot.has_signal("char_tapped"):
+		slot.char_tapped.connect(_on_char_tapped.bind(character, slot))
 	else:
-		# Wrap in a button for interaction
-		tile.gui_input.connect(_on_tile_gui_input.bind(character, tile))
+		slot.gui_input.connect(_on_char_gui_input.bind(character, slot))
 
-	return tile
+	return slot
 
 
-func _create_fallback_tile(character: String) -> Button:
+func _create_fallback_slot(character: String) -> Button:
 	var btn := Button.new()
 	btn.text = character
 	btn.custom_minimum_size = Vector2(48, 48)
 	return btn
 
 
-func _on_tile_tapped(character: String, tile_node: Control) -> void:
+func _on_char_tapped(character: String, slot_node: Control) -> void:
 	if _is_submitted:
 		return
-	if _sentence_builder.place_tile(character):
-		tile_node.visible = false
+	if _sentence_builder.place_char(character):
+		slot_node.visible = false
 		_update_sentence_display()
 
 
-func _on_tile_gui_input(event: InputEvent, character: String, tile_node: Control) -> void:
+func _on_char_gui_input(event: InputEvent, character: String, slot_node: Control) -> void:
 	if event is InputEventMouseButton and event.pressed:
-		_on_tile_tapped(character, tile_node)
+		_on_char_tapped(character, slot_node)
 
 
 func _update_sentence_display() -> void:
@@ -174,8 +181,8 @@ func _update_sentence_display() -> void:
 	for child in _sentence_container.get_children():
 		child.queue_free()
 
-	for i in _sentence_builder.placed_tiles.size():
-		var ch: String = _sentence_builder.placed_tiles[i]
+	for i in _sentence_builder.placed_chars.size():
+		var ch: String = _sentence_builder.placed_chars[i]
 		var slot: Control
 		if _slot_scene:
 			slot = _slot_scene.instantiate()
@@ -196,10 +203,10 @@ func _update_sentence_display() -> void:
 func _on_slot_tapped(position: int) -> void:
 	if _is_submitted:
 		return
-	var removed: String = _sentence_builder.remove_tile(position)
+	var removed: String = _sentence_builder.remove_char(position)
 	if removed != "":
 		_update_sentence_display()
-		_populate_available_tiles()
+		_populate_available_chars()
 
 
 func _on_slot_gui_input(event: InputEvent, position: int) -> void:
@@ -252,7 +259,7 @@ func _on_clear_pressed() -> void:
 		return
 	_sentence_builder.clear_sentence()
 	_update_sentence_display()
-	_populate_available_tiles()
+	_populate_available_chars()
 
 
 func _on_continue_pressed() -> void:
@@ -271,8 +278,8 @@ func _warn_missing_nodes() -> void:
 		push_warning("boss_round_screen.gd: missing node _hint_label")
 	if _sentence_container == null:
 		push_warning("boss_round_screen.gd: missing node _sentence_container")
-	if _tile_container == null:
-		push_warning("boss_round_screen.gd: missing node _tile_container")
+	if _char_container == null:
+		push_warning("boss_round_screen.gd: missing node _char_container")
 	if _submit_button == null:
 		push_warning("boss_round_screen.gd: missing node _submit_button")
 	if _clear_button == null:

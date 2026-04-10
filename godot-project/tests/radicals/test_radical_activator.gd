@@ -159,18 +159,6 @@ func test_attach_mode_non_radical_card() -> void:
 	assert_bool(_activator.can_trigger_attach(_test_card)).is_false()
 
 
-# -- passive tile drop --
-
-func test_passive_tile_drop_returns_character() -> void:
-	var ch := _activator.get_passive_tile_drop("女")
-	assert_bool(ch in ["好", "妈", "她"]).is_true()
-
-
-func test_passive_tile_drop_unknown_radical() -> void:
-	var ch := _activator.get_passive_tile_drop("nonexistent")
-	assert_str(ch).is_equal("")
-
-
 # -- null dependencies --
 
 func test_null_databases_returns_not_activated() -> void:

@@ -85,21 +85,21 @@ func get_weekly_trial(hsk_level: int, week: String) -> Dictionary:
 	return _weekly_trials[idx]
 
 
-## Find a sentence buildable from the player's available tiles.
-func get_boss_sentence(hsk_level: int, available_tiles: Dictionary) -> Dictionary:
+## Find a sentence buildable from the player's available characters.
+func get_boss_sentence(hsk_level: int, available_chars: Dictionary) -> Dictionary:
 	var pool: Array = get_sentences_for_level(hsk_level)
-	# Sort by tile_count ascending (easier sentences first)
+	# Sort by character_count ascending (easier sentences first)
 	pool.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
-		return a.get("tile_count", 99) < b.get("tile_count", 99)
+		return a.get("character_count", 99) < b.get("character_count", 99)
 	)
 	for s in pool:
-		if _can_build(s, available_tiles):
+		if _can_build(s, available_chars):
 			return s
 	return {}
 
 
-## Check if a sentence can be built from available tiles.
-func _can_build(sentence: Dictionary, available_tiles: Dictionary) -> bool:
+## Check if a sentence can be built from available characters.
+func _can_build(sentence: Dictionary, available_chars: Dictionary) -> bool:
 	var needed: Dictionary = {}
 	var chars: Array = sentence.get("characters", [])
 	for ch in chars:
@@ -107,7 +107,7 @@ func _can_build(sentence: Dictionary, available_tiles: Dictionary) -> bool:
 		needed[ch_str] = needed.get(ch_str, 0) + 1
 
 	for ch_str in needed:
-		if available_tiles.get(ch_str, 0) < needed[ch_str]:
+		if available_chars.get(ch_str, 0) < needed[ch_str]:
 			return false
 	return true
 

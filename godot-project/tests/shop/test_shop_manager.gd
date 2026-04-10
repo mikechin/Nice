@@ -4,7 +4,6 @@ extends GdUnitTestSuite
 var _shop: ShopManager
 var _coins: CoinManager
 var _radicals: RadicalManager
-var _tiles: TileInventory
 var _radical_db: RadicalDatabase
 var _rotation: ShopRotation
 
@@ -27,9 +26,8 @@ func before_test() -> void:
 
 	_coins = CoinManager.new()
 	_radicals = RadicalManager.new()
-	_tiles = TileInventory.new()
 	_rotation = ShopRotation.new(_radical_db)
-	_shop = ShopManager.new(_rotation, _coins, _radicals, _tiles)
+	_shop = ShopManager.new(_rotation, _coins, _radicals)
 
 
 # -- generate_inventory --
@@ -41,14 +39,10 @@ func test_generate_inventory_produces_items() -> void:
 
 func test_generate_inventory_includes_utility_items() -> void:
 	var items := _shop.generate_inventory(2, [])
-	var has_heart := false
 	var has_refresh := false
 	for item in items:
-		if item.item_type == ShopItem.ItemType.EXTRA_HEART:
-			has_heart = true
 		if item.item_type == ShopItem.ItemType.PACK_REFRESH:
 			has_refresh = true
-	assert_bool(has_heart).is_true()
 	assert_bool(has_refresh).is_true()
 
 

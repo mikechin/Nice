@@ -80,7 +80,7 @@ grow_horizontal = 2
 theme_override_constants/separation = 4
 alignment = 1
 
-[node name="TileContainer" type="GridContainer" parent="."]
+[node name="CharContainer" type="GridContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

@@ -1,11 +1,10 @@
 ## GameScreen — Main gameplay screen managing the card challenge flow.
 ## Orchestrates ChallengePresenter, tracks round progress, records reviews,
-## and transitions to results when the pack is complete or hearts run out.
+## and transitions to results when the pack is complete.
 class_name GameScreen
 extends Control
 
 @onready var _challenge_presenter: ChallengePresenter = $ChallengePresenter if has_node("ChallengePresenter") else null
-@onready var _heart_display: Control = $HeartDisplay if has_node("HeartDisplay") else null
 @onready var _combo_counter: Control = $ComboCounter if has_node("ComboCounter") else null
 @onready var _coin_counter: Control = $CoinCounter if has_node("CoinCounter") else null
 @onready var _progress_bar: Control = $ProgressBar if has_node("ProgressBar") else null
@@ -36,10 +35,8 @@ func _ready() -> void:
 	if _challenge_presenter:
 		_challenge_presenter.challenge_completed.connect(_on_challenge_completed)
 
-	SignalBus.hearts_changed.connect(_on_hearts_changed)
 	SignalBus.combo_incremented.connect(_on_combo_incremented)
 	SignalBus.combo_broken.connect(_on_combo_broken)
-	SignalBus.all_hearts_lost.connect(_on_all_hearts_lost)
 	SignalBus.card_presented.connect(_on_card_presented)
 
 	_connect_answer_buttons()
@@ -47,10 +44,8 @@ func _ready() -> void:
 
 
 func _exit_tree() -> void:
-	SignalBus.hearts_changed.disconnect(_on_hearts_changed)
 	SignalBus.combo_incremented.disconnect(_on_combo_incremented)
 	SignalBus.combo_broken.disconnect(_on_combo_broken)
-	SignalBus.all_hearts_lost.disconnect(_on_all_hearts_lost)
 	SignalBus.card_presented.disconnect(_on_card_presented)
 
 
@@ -176,7 +171,7 @@ func _on_challenge_completed(card_id: String, challenge_type: String, correct: b
 	if _is_transitioning:
 		return
 
-	# Record in RunManager (emits combo/hearts signals)
+	# Record in RunManager (emits combo signals)
 	if _run_manager:
 		_run_manager.on_card_answered(card_id, challenge_type, correct, rating)
 
@@ -241,9 +236,6 @@ func _apply_drops(drops: Dictionary) -> void:
 	if coins > 0:
 		GameState.add_coins(coins)
 
-	var tiles: Array = drops.get("tiles", [])
-	for tile in tiles:
-		GameState.add_tiles(str(tile))
 
 
 func _on_pack_complete() -> void:
@@ -251,20 +243,6 @@ func _on_pack_complete() -> void:
 		_run_manager.end_run()
 	GameState.end_run(_run_manager.get_run_summary() if _run_manager else {})
 	SignalBus.screen_transition_requested.emit("results")
-
-
-func _on_all_hearts_lost() -> void:
-	# Game over -- transition to results
-	_is_transitioning = true
-	if _run_manager:
-		_run_manager.end_run()
-	GameState.end_run(_run_manager.get_run_summary() if _run_manager else {})
-	SignalBus.screen_transition_requested.emit("results")
-
-
-func _on_hearts_changed(current: int, max_hearts: int) -> void:
-	if _heart_display and _heart_display.has_method("set_hearts"):
-		_heart_display.set_hearts(current, max_hearts)
 
 
 func _on_combo_incremented(combo_count: int) -> void:
@@ -309,8 +287,6 @@ func _on_back_pressed() -> void:
 func _warn_missing_nodes() -> void:
 	if _challenge_presenter == null:
 		push_warning("game_screen.gd: missing node _challenge_presenter")
-	if _heart_display == null:
-		push_warning("game_screen.gd: missing node _heart_display")
 	if _combo_counter == null:
 		push_warning("game_screen.gd: missing node _combo_counter")
 	if _coin_counter == null:

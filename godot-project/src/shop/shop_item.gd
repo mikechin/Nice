@@ -2,7 +2,7 @@
 class_name ShopItem
 extends RefCounted
 
-enum ItemType { RADICAL, UTILITY_TILE, EXTRA_HEART, PACK_REFRESH }
+enum ItemType { RADICAL, PACK_REFRESH }
 
 var item_type: ItemType
 var item_id: String = ""
@@ -21,27 +21,6 @@ static func create_radical(radical_data: RadicalData) -> ShopItem:
 	item.description = "Radical: %s (%s)" % [radical_data.radical, radical_data.meaning]
 	item.cost = radical_data.shop_cost
 	item.data = {"radical": radical_data.radical, "rarity_tier": radical_data.rarity_tier}
-	return item
-
-
-static func create_utility_tile(character: String, cost_val: int) -> ShopItem:
-	var item := ShopItem.new()
-	item.item_type = ItemType.UTILITY_TILE
-	item.item_id = "tile_" + character
-	item.display_name = character
-	item.description = "Character tile"
-	item.cost = cost_val
-	item.data = {"character": character}
-	return item
-
-
-static func create_extra_heart(cost_val: int = 50) -> ShopItem:
-	var item := ShopItem.new()
-	item.item_type = ItemType.EXTRA_HEART
-	item.item_id = "extra_heart"
-	item.display_name = "Extra Heart"
-	item.description = "+1 heart for your next run"
-	item.cost = cost_val
 	return item
 
 

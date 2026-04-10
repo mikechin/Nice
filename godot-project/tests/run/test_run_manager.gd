@@ -1,4 +1,4 @@
-## Tests for RunManager — run flow, card answering, and game over detection.
+## Tests for RunManager — run flow, card answering, and combo tracking.
 extends GdUnitTestSuite
 
 var _run: RunManager
@@ -28,45 +28,12 @@ func test_start_run_resets_combo() -> void:
 	assert_int(_run.get_combo_manager().current_combo).is_equal(0)
 
 
-func test_start_run_sets_hearts_for_easy() -> void:
-	_run.start_run("easy", _pack)
-	assert_int(_run.get_hearts_manager().current_hearts).is_equal(SrsConfig.HEARTS_EASY_RUN)
-
-
-func test_start_run_sets_hearts_for_challenge() -> void:
-	_run.start_run("challenge", _pack)
-	assert_int(_run.get_hearts_manager().current_hearts).is_equal(SrsConfig.HEARTS_CHALLENGE_RUN)
-
-
 # -- on_card_answered correct --
 
 func test_on_card_answered_correct_increments_combo() -> void:
 	_run.start_run("challenge", _pack)
 	_run.on_card_answered("char_a", "meaning", true, 3)
 	assert_int(_run.get_combo_manager().current_combo).is_equal(1)
-
-
-func test_on_card_answered_correct_keeps_hearts() -> void:
-	_run.start_run("challenge", _pack)
-	var hearts_before := _run.get_hearts_manager().current_hearts
-	_run.on_card_answered("char_a", "meaning", true, 3)
-	assert_int(_run.get_hearts_manager().current_hearts).is_equal(hearts_before)
-
-
-# -- on_card_answered wrong --
-
-func test_on_card_answered_wrong_challenge_loses_heart() -> void:
-	_run.start_run("challenge", _pack)
-	var hearts_before := _run.get_hearts_manager().current_hearts
-	_run.on_card_answered("char_a", "meaning", false, 1)
-	assert_int(_run.get_hearts_manager().current_hearts).is_equal(hearts_before - 1)
-
-
-func test_on_card_answered_wrong_easy_no_heart_loss() -> void:
-	_run.start_run("easy", _pack)
-	var hearts_before := _run.get_hearts_manager().current_hearts
-	_run.on_card_answered("char_a", "meaning", false, 1)
-	assert_int(_run.get_hearts_manager().current_hearts).is_equal(hearts_before)
 
 
 func test_on_card_answered_wrong_breaks_combo() -> void:

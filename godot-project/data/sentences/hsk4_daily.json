@@ -1,4 +1,4 @@
 [
-  {"id": "daily_hsk4_001", "sentence": "虽然外面很冷但是我还是想出去走走", "meaning": "Although it's cold outside, I still want to go out for a walk", "characters": ["虽", "然", "外", "面", "很", "冷", "但", "是", "我", "还", "是", "想", "出", "去", "走", "走"], "hsk_level": 4, "grammar_pattern": "suiran_danshi", "tile_count": 16, "type": "daily"},
-  {"id": "daily_hsk4_002", "sentence": "他把那本书放在桌子上了", "meaning": "He put that book on the table", "characters": ["他", "把", "那", "本", "书", "放", "在", "桌", "子", "上", "了"], "hsk_level": 4, "grammar_pattern": "ba_construction", "tile_count": 11, "type": "daily"}
+  {"id": "daily_hsk4_001", "sentence": "虽然外面很冷但是我还是想出去走走", "meaning": "Although it's cold outside, I still want to go out for a walk", "characters": ["虽", "然", "外", "面", "很", "冷", "但", "是", "我", "还", "是", "想", "出", "去", "走", "走"], "hsk_level": 4, "grammar_pattern": "suiran_danshi", "character_count": 16, "type": "daily"},
+  {"id": "daily_hsk4_002", "sentence": "他把那本书放在桌子上了", "meaning": "He put that book on the table", "characters": ["他", "把", "那", "本", "书", "放", "在", "桌", "子", "上", "了"], "hsk_level": 4, "grammar_pattern": "ba_construction", "character_count": 11, "type": "daily"}
 ]

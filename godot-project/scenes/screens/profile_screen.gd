@@ -9,7 +9,6 @@ extends Control
 @onready var _mastered_label: Label = $StatsContainer/MasteredLabel if has_node("StatsContainer/MasteredLabel") else null
 @onready var _accuracy_label: Label = $StatsContainer/AccuracyLabel if has_node("StatsContainer/AccuracyLabel") else null
 @onready var _coins_label: Label = $StatsContainer/CoinsLabel if has_node("StatsContainer/CoinsLabel") else null
-@onready var _tiles_label: Label = $StatsContainer/TilesLabel if has_node("StatsContainer/TilesLabel") else null
 @onready var _radicals_label: Label = $StatsContainer/RadicalsLabel if has_node("StatsContainer/RadicalsLabel") else null
 @onready var _tier_breakdown: VBoxContainer = $TierBreakdown if has_node("TierBreakdown") else null
 @onready var _back_button: Button = $BackButton if has_node("BackButton") else null
@@ -71,13 +70,6 @@ func _update_stats() -> void:
 	# Coins
 	if _coins_label:
 		_coins_label.text = "Coins: %d" % GameState.total_coins
-
-	# Total tiles
-	var total_tiles: int = 0
-	for ch in GameState.tile_inventory:
-		total_tiles += int(GameState.tile_inventory[ch])
-	if _tiles_label:
-		_tiles_label.text = "Tiles: %d" % total_tiles
 
 	# Radicals owned
 	if _radicals_label:
@@ -143,8 +135,6 @@ func _warn_missing_nodes() -> void:
 		push_warning("profile_screen.gd: missing node _accuracy_label")
 	if _coins_label == null:
 		push_warning("profile_screen.gd: missing node _coins_label")
-	if _tiles_label == null:
-		push_warning("profile_screen.gd: missing node _tiles_label")
 	if _radicals_label == null:
 		push_warning("profile_screen.gd: missing node _radicals_label")
 	if _tier_breakdown == null:

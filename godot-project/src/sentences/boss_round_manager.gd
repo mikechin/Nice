@@ -17,12 +17,12 @@ func _init(sentence_db: SentenceDatabase = null) -> void:
 	_validator = SentenceValidator.new(sentence_db)
 
 
-func generate_boss_round(hsk_level: int, available_tiles: Dictionary) -> Dictionary:
+func generate_boss_round(hsk_level: int, available_chars: Dictionary) -> Dictionary:
 	if _sentence_db == null:
 		return {}
 
-	# Find a sentence buildable from available tiles
-	var sentence := _sentence_db.get_boss_sentence(hsk_level, available_tiles)
+	# Find a sentence buildable from available characters
+	var sentence := _sentence_db.get_boss_sentence(hsk_level, available_chars)
 	if sentence.is_empty():
 		return {}
 
@@ -120,11 +120,11 @@ func _generate_free_build(sentence: Dictionary) -> Dictionary:
 		"type": "free_build",
 		"meaning": sentence.get("meaning", ""),
 		"expected_sentence": sentence.get("sentence", ""),
-		"hint_character_count": sentence.get("tile_count", 0),
+		"hint_character_count": sentence.get("character_count", 0),
 	}
 
 
 func _calculate_score() -> int:
 	var sentence_data: Dictionary = current_challenge.get("sentence_data", {})
-	var tile_count: int = sentence_data.get("tile_count", 0)
-	return tile_count * 20 + 100
+	var character_count: int = sentence_data.get("character_count", 0)
+	return character_count * 20 + 100

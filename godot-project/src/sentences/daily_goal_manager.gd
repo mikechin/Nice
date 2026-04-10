@@ -7,7 +7,6 @@ var is_completed: bool = false
 var _sentence_db: SentenceDatabase
 
 const DAILY_REWARD_COINS: int = 50
-const DAILY_REWARD_BONUS_TILES: int = 3
 
 
 func _init(sentence_db: SentenceDatabase = null) -> void:
@@ -23,7 +22,7 @@ func load_today(hsk_level: int) -> Dictionary:
 	return today_sentence
 
 
-func check_completion(tile_inventory: Dictionary) -> bool:
+func check_completion(char_inventory: Dictionary) -> bool:
 	if today_sentence.is_empty():
 		return false
 	var chars: Array = today_sentence.get("characters", [])
@@ -32,16 +31,16 @@ func check_completion(tile_inventory: Dictionary) -> bool:
 		var ch_str := str(ch)
 		needed[ch_str] = needed.get(ch_str, 0) + 1
 	for ch_str in needed:
-		if tile_inventory.get(ch_str, 0) < needed[ch_str]:
+		if char_inventory.get(ch_str, 0) < needed[ch_str]:
 			return false
 	return true
 
 
-func complete_daily(tiles_used: Array) -> Dictionary:
+func complete_daily(chars_used: Array) -> Dictionary:
 	if is_completed:
 		return {}
 	is_completed = true
-	var score: int = today_sentence.get("tile_count", 0) * 15 + 50
+	var score: int = today_sentence.get("character_count", 0) * 15 + 50
 	SignalBus.daily_sentence_completed.emit(
 		today_sentence.get("id", ""),
 		score
@@ -49,11 +48,10 @@ func complete_daily(tiles_used: Array) -> Dictionary:
 	return {
 		"score": score,
 		"reward_coins": DAILY_REWARD_COINS,
-		"reward_bonus_tiles": DAILY_REWARD_BONUS_TILES,
 	}
 
 
-func get_needed_tiles() -> Array[String]:
+func get_needed_chars() -> Array[String]:
 	var needed: Array[String] = []
 	var chars: Array = today_sentence.get("characters", [])
 	for ch in chars:

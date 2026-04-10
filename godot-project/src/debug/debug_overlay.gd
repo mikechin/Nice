@@ -1,5 +1,5 @@
 ## DebugOverlay — In-game HUD showing live debug stats.
-## Toggle with F3. Displays FPS, SRS state, combo, hearts, and daily review count.
+## Toggle with F3. Displays FPS, SRS state, combo, and daily review count.
 class_name DebugOverlay
 extends Control
 
@@ -8,15 +8,12 @@ var _vbox: VBoxContainer
 var _fps_label: Label
 var _srs_label: Label
 var _combo_label: Label
-var _hearts_label: Label
 var _reviewed_label: Label
 var _scheduler_label: Label
 
 var _update_interval: float = 0.25
 var _time_since_update: float = 0.0
 var _debug_combo: int = 0
-var _debug_hearts: int = 0
-var _debug_max_hearts: int = 0
 
 
 func _ready() -> void:
@@ -47,7 +44,6 @@ func _build_ui() -> void:
 	_fps_label = _create_stat_label("FPS: --")
 	_srs_label = _create_stat_label("SRS: --")
 	_combo_label = _create_stat_label("Combo: 0")
-	_hearts_label = _create_stat_label("Hearts: --")
 	_reviewed_label = _create_stat_label("Reviewed: 0")
 	_scheduler_label = _create_stat_label("Due: --")
 
@@ -68,7 +64,6 @@ func _create_stat_label(initial_text: String) -> Label:
 func _connect_signals() -> void:
 	SignalBus.combo_incremented.connect(_on_combo_incremented)
 	SignalBus.combo_broken.connect(_on_combo_broken)
-	SignalBus.hearts_changed.connect(_on_hearts_changed)
 	SignalBus.card_answered.connect(_on_card_answered)
 
 
@@ -99,7 +94,6 @@ func _refresh_stats() -> void:
 	_fps_label.text = "FPS: %d" % Engine.get_frames_per_second()
 	_update_srs_label()
 	_update_combo_label()
-	_update_hearts_label()
 	_update_reviewed_label()
 	_update_scheduler_label()
 
@@ -131,13 +125,6 @@ func _update_srs_label() -> void:
 
 func _update_combo_label() -> void:
 	_combo_label.text = "Combo: %d" % _debug_combo
-
-
-func _update_hearts_label() -> void:
-	if GameState.is_in_run:
-		_hearts_label.text = "Hearts: %d / %d (%s)" % [_debug_hearts, _debug_max_hearts, GameState.current_run_type]
-	else:
-		_hearts_label.text = "Hearts: not in run"
 
 
 func _update_reviewed_label() -> void:
@@ -172,13 +159,6 @@ func _on_combo_broken(_final_count: int) -> void:
 	_debug_combo = 0
 	if visible:
 		_update_combo_label()
-
-
-func _on_hearts_changed(current: int, max_h: int) -> void:
-	_debug_hearts = current
-	_debug_max_hearts = max_h
-	if visible:
-		_update_hearts_label()
 
 
 func _on_card_answered(_card_data: Dictionary, _challenge_type: String, _correct: bool, _rating: int) -> void:

@@ -8,7 +8,6 @@ var refresh_count: int = 0
 var _rotation: ShopRotation
 var _coin_manager: CoinManager
 var _radical_manager: RadicalManager
-var _tile_inventory: TileInventory
 
 const REFRESH_COST_BASE: int = 20
 const REFRESH_COST_INCREASE: int = 10
@@ -17,13 +16,11 @@ const REFRESH_COST_INCREASE: int = 10
 func _init(
 	rotation: ShopRotation = null,
 	coins: CoinManager = null,
-	radicals: RadicalManager = null,
-	tiles: TileInventory = null
+	radicals: RadicalManager = null
 ) -> void:
 	_rotation = rotation if rotation else ShopRotation.new()
 	_coin_manager = coins if coins else CoinManager.new()
 	_radical_manager = radicals if radicals else RadicalManager.new()
-	_tile_inventory = tiles if tiles else TileInventory.new()
 
 
 func generate_inventory(player_level: int, owned_radicals: Array[String]) -> Array[ShopItem]:
@@ -44,10 +41,6 @@ func purchase_item(item: ShopItem) -> bool:
 	match item.item_type:
 		ShopItem.ItemType.RADICAL:
 			_radical_manager.purchase_radical(item.data.get("radical", ""))
-		ShopItem.ItemType.UTILITY_TILE:
-			_tile_inventory.add_tile(item.data.get("character", ""))
-		ShopItem.ItemType.EXTRA_HEART:
-			pass  # Handled by run start
 		ShopItem.ItemType.PACK_REFRESH:
 			pass  # Handled by pack curator
 

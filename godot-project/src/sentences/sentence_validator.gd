@@ -67,8 +67,8 @@ func validate_free_build(meaning: String, player_sentence: String) -> bool:
 
 
 func _calculate_base_score(sentence_data: Dictionary) -> int:
-	var tile_count: int = sentence_data.get("tile_count", 0)
-	return tile_count * 15 + 50
+	var character_count: int = sentence_data.get("character_count", 0)
+	return character_count * 15 + 50
 
 
 func _check_partial_match(sentence: String) -> Dictionary:

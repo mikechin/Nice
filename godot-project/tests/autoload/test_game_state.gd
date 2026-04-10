@@ -18,7 +18,6 @@ func test_to_save_dict_has_expected_keys() -> void:
 	assert_bool(d.has("total_coins")).is_true()
 	assert_bool(d.has("daily_streak")).is_true()
 	assert_bool(d.has("equipped_radicals")).is_true()
-	assert_bool(d.has("tile_inventory")).is_true()
 	assert_bool(d.has("session_history")).is_true()
 
 
@@ -44,7 +43,6 @@ func test_load_from_dict_restores_state() -> void:
 		"equipped_radicals": [],
 		"owned_radicals": [],
 		"planet_boosts": [],
-		"tile_inventory": {},
 		"unlocked_characters": {},
 		"cards_answered_today": 10,
 		"correct_answers_today": 8,

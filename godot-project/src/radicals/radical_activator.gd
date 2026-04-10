@@ -71,11 +71,3 @@ func calculate_radical_bonus(radical: String, card_data: CharacterData, combo: i
 	return base
 
 
-func get_passive_tile_drop(radical: String) -> String:
-	if _radical_db == null:
-		return ""
-	var chars := _radical_db.get_characters_for_radical(radical)
-	if chars.is_empty():
-		return ""
-	chars.shuffle()
-	return chars[0]

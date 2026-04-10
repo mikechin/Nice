@@ -14,7 +14,7 @@ func before_test() -> void:
 			"meaning": "I am fine",
 			"characters": ["我", "很", "好"],
 			"hsk_level": 2,
-			"tile_count": 3,
+			"character_count": 3,
 			"grammar_pattern": "SVO",
 		},
 		{
@@ -23,7 +23,7 @@ func before_test() -> void:
 			"meaning": "He is a student",
 			"characters": ["他", "是", "学", "生"],
 			"hsk_level": 2,
-			"tile_count": 4,
+			"character_count": 4,
 			"grammar_pattern": "SVO",
 		},
 	] as Array[Dictionary]
@@ -31,23 +31,23 @@ func before_test() -> void:
 	manager = BossRoundManager.new(sentence_db)
 
 
-func test_generate_boss_round_with_matching_tiles() -> void:
-	var tiles := {"我": 2, "很": 1, "好": 1, "他": 1, "是": 1, "学": 1, "生": 1}
-	var challenge := manager.generate_boss_round(2, tiles)
+func test_generate_boss_round_with_matching_chars() -> void:
+	var chars := {"我": 2, "很": 1, "好": 1, "他": 1, "是": 1, "学": 1, "生": 1}
+	var challenge := manager.generate_boss_round(2, chars)
 	assert_bool(challenge.is_empty()).is_false()
 	assert_bool(challenge.has("boss_type")).is_true()
 
 
-func test_generate_boss_round_no_tiles_returns_empty() -> void:
-	var tiles := {"猫": 1}
-	var challenge := manager.generate_boss_round(2, tiles)
+func test_generate_boss_round_no_chars_returns_empty() -> void:
+	var chars := {"猫": 1}
+	var challenge := manager.generate_boss_round(2, chars)
 	assert_bool(challenge.is_empty()).is_true()
 
 
 func test_generate_boss_round_no_db_returns_empty() -> void:
 	var no_db_manager := BossRoundManager.new(null)
-	var tiles := {"我": 1, "很": 1, "好": 1}
-	var challenge := no_db_manager.generate_boss_round(2, tiles)
+	var chars := {"我": 1, "很": 1, "好": 1}
+	var challenge := no_db_manager.generate_boss_round(2, chars)
 	assert_bool(challenge.is_empty()).is_true()
 
 
@@ -73,7 +73,7 @@ func test_submit_answer_scramble_correct() -> void:
 		"type": "scramble",
 		"original": "我很好",
 		"meaning": "I am fine",
-		"sentence_data": {"tile_count": 3},
+		"sentence_data": {"character_count": 3},
 	}
 	var result := manager.submit_answer("我很好")
 	assert_bool(result["correct"]).is_true()
@@ -86,7 +86,7 @@ func test_submit_answer_scramble_incorrect() -> void:
 		"type": "scramble",
 		"original": "我很好",
 		"meaning": "I am fine",
-		"sentence_data": {"tile_count": 3},
+		"sentence_data": {"character_count": 3},
 	}
 	var result := manager.submit_answer("好很我")
 	assert_bool(result["correct"]).is_false()

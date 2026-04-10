@@ -1,5 +1,5 @@
-## SentenceSlot — Single slot in the sentence builder showing a placed tile.
-## Tappable to remove the tile from the sentence. Shows position index.
+## SentenceSlot — Single slot in the sentence builder showing a placed character.
+## Tappable to remove the character from the sentence. Shows position index.
 class_name SentenceSlot
 extends Control
 

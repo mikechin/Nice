@@ -1,4 +1,4 @@
-## DropCalculator — Tests calculate_drops() for tiles, coins, and radical bonuses.
+## DropCalculator — Tests calculate_drops() for coins and radical bonuses.
 extends GdUnitTestSuite
 
 var scaler: EconomyScaler
@@ -35,25 +35,11 @@ func before_test() -> void:
 	})
 
 
-func test_drops_contain_tiles() -> void:
-	var equipped: Array[String] = []
-	var drops := calc.calculate_drops(test_char, SrsEnums.LootRarity.COMMON, 0, 2, equipped)
-	assert_bool(drops.has("tiles")).is_true()
-	assert_bool(drops["tiles"].size() > 0).is_true()
-
-
 func test_drops_contain_coins() -> void:
 	var equipped: Array[String] = []
 	var drops := calc.calculate_drops(test_char, SrsEnums.LootRarity.COMMON, 0, 2, equipped)
 	assert_bool(drops.has("coins")).is_true()
 	assert_int(drops["coins"]).is_greater(0)
-
-
-func test_tiles_contain_character() -> void:
-	var equipped: Array[String] = []
-	var drops := calc.calculate_drops(test_char, SrsEnums.LootRarity.COMMON, 0, 2, equipped)
-	var tiles: Array = drops["tiles"]
-	assert_bool(tiles.has("海")).is_true()
 
 
 func test_radical_bonus_when_equipped() -> void:
@@ -70,13 +56,6 @@ func test_no_radical_bonus_when_not_equipped() -> void:
 	var drops := calc.calculate_drops(test_char, SrsEnums.LootRarity.COMMON, 0, 2, equipped)
 	var bonus: Dictionary = drops.get("radical_bonus", {})
 	assert_bool(bonus.is_empty()).is_true()
-
-
-func test_higher_combo_increases_tiles() -> void:
-	var equipped: Array[String] = []
-	var drops_low := calc.calculate_drops(test_char, SrsEnums.LootRarity.COMMON, 0, 2, equipped)
-	var drops_high := calc.calculate_drops(test_char, SrsEnums.LootRarity.COMMON, 50, 2, equipped)
-	assert_bool(drops_high["tiles"].size() >= drops_low["tiles"].size()).is_true()
 
 
 func test_about_to_forget_rarity_gives_more_coins() -> void:

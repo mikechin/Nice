@@ -1,4 +1,4 @@
-## DropCalculator — Determines what drops (tiles, words, bonuses) from each correct answer.
+## DropCalculator — Determines what drops (coins, words, bonuses) from each correct answer.
 class_name DropCalculator
 extends RefCounted
 
@@ -22,17 +22,10 @@ func calculate_drops(
 	combo_multiplier: float = 1.0
 ) -> Dictionary:
 	var result := {
-		"tiles": [] as Array[String],
 		"coins": 0,
 		"word_drop": {},
 		"radical_bonus": {},
 	}
-
-	# Tile drops: character tile + combo bonus
-	var tile_count := economy_scaler.get_tile_multiplier(hsk_level)
-	tile_count += economy_scaler.get_combo_tile_bonus(combo, hsk_level)
-	for i in tile_count:
-		result["tiles"].append(card_data.character)
 
 	# Check radical bonus
 	var has_radical_bonus := false

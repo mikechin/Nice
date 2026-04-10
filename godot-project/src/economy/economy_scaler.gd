@@ -1,10 +1,8 @@
 ## EconomyScaler — Scales rewards based on HSK level to prevent grinding.
-## Higher levels earn more tiles per answer, get word drops, etc.
+## Higher levels earn more coins per answer, get word drops, etc.
 class_name EconomyScaler
 extends RefCounted
 
-const TILE_MULTIPLIERS: Dictionary = {2: 1, 3: 1, 4: 2, 5: 3}
-const COMBO_TILE_THRESHOLDS: Array[int] = [10, 20, 50]
 const WORD_DROP_MIN_LEVEL: int = 4
 const WORD_DROP_CHANCE: float = 0.15
 const BOSS_REWARD_MULTIPLIERS: Dictionary = {2: 1.0, 3: 1.5, 4: 2.0, 5: 3.0}
@@ -14,18 +12,6 @@ var _word_db: WordDatabase
 
 func _init(word_db: WordDatabase = null) -> void:
 	_word_db = word_db
-
-
-func get_tile_multiplier(hsk_level: int) -> int:
-	return TILE_MULTIPLIERS.get(hsk_level, 1)
-
-
-func get_combo_tile_bonus(combo: int, hsk_level: int) -> int:
-	var bonus := 0
-	for threshold in COMBO_TILE_THRESHOLDS:
-		if combo >= threshold:
-			bonus += 1
-	return bonus * get_tile_multiplier(hsk_level)
 
 
 func should_drop_word(hsk_level: int, card_data: CharacterData) -> bool:

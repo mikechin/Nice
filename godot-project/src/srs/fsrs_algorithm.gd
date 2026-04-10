@@ -1,5 +1,5 @@
 ## FsrsAlgorithm — Core FSRS (Free Spaced Repetition Scheduler) implementation.
-## Ported from ts-fsrs (FSRS-6). This is the heart of the entire app.
+## Ported from ts-fsrs (FSRS-6). This is the core of the entire app.
 ## See: https://github.com/open-spaced-repetition/ts-fsrs
 class_name FsrsAlgorithm
 extends RefCounted

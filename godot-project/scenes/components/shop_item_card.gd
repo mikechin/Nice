@@ -18,16 +18,12 @@ var _is_affordable: bool = true
 
 const TYPE_COLORS: Dictionary = {
 	0: Color(0.7, 0.2, 1.0),  # RADICAL
-	1: Color(0.2, 0.6, 1.0),  # UTILITY_TILE
-	2: Color(1.0, 0.3, 0.3),  # EXTRA_HEART
-	3: Color(0.3, 0.8, 0.3),  # PACK_REFRESH
+	1: Color(0.3, 0.8, 0.3),  # PACK_REFRESH
 }
 
 const TYPE_ICONS: Dictionary = {
 	0: "R",  # RADICAL
-	1: "T",  # UTILITY_TILE
-	2: "H",  # EXTRA_HEART
-	3: "P",  # PACK_REFRESH
+	1: "P",  # PACK_REFRESH
 }
 
 

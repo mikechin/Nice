@@ -14,7 +14,7 @@ func before_test() -> void:
 			"meaning": "I am a student",
 			"characters": ["我", "是", "学", "生"],
 			"hsk_level": 2,
-			"tile_count": 4,
+			"character_count": 4,
 			"grammar_pattern": "SVO",
 		},
 		{
@@ -23,7 +23,7 @@ func before_test() -> void:
 			"meaning": "He is fine",
 			"characters": ["他", "很", "好"],
 			"hsk_level": 2,
-			"tile_count": 3,
+			"character_count": 3,
 			"grammar_pattern": "SVO",
 		},
 	] as Array[Dictionary]
@@ -43,25 +43,25 @@ func test_load_today_no_db_returns_empty() -> void:
 	assert_bool(sentence.is_empty()).is_true()
 
 
-func test_check_completion_with_sufficient_tiles() -> void:
+func test_check_completion_with_sufficient_chars() -> void:
 	manager.load_today(2)
-	# Provide enough tiles for any sentence in the database
-	var tiles := {"我": 2, "是": 2, "学": 2, "生": 2, "他": 2, "很": 2, "好": 2}
-	assert_bool(manager.check_completion(tiles)).is_true()
+	# Provide enough characters for any sentence in the database
+	var chars := {"我": 2, "是": 2, "学": 2, "生": 2, "他": 2, "很": 2, "好": 2}
+	assert_bool(manager.check_completion(chars)).is_true()
 
 
-func test_check_completion_with_insufficient_tiles() -> void:
+func test_check_completion_with_insufficient_chars() -> void:
 	manager.load_today(2)
-	# Only one tile -- not enough for any 3+ character sentence
-	var tiles := {"我": 1}
-	assert_bool(manager.check_completion(tiles)).is_false()
+	# Only one character -- not enough for any 3+ character sentence
+	var chars := {"我": 1}
+	assert_bool(manager.check_completion(chars)).is_false()
 
 
 func test_check_completion_empty_sentence_returns_false() -> void:
 	# Don't call load_today -- today_sentence stays empty
 	var no_db_manager := DailyGoalManager.new(null)
-	var tiles := {"我": 1, "很": 1, "好": 1}
-	assert_bool(no_db_manager.check_completion(tiles)).is_false()
+	var chars := {"我": 1, "很": 1, "好": 1}
+	assert_bool(no_db_manager.check_completion(chars)).is_false()
 
 
 func test_complete_daily_returns_rewards() -> void:
@@ -70,7 +70,6 @@ func test_complete_daily_returns_rewards() -> void:
 	assert_bool(result.has("score")).is_true()
 	assert_bool(result.has("reward_coins")).is_true()
 	assert_int(result["reward_coins"]).is_equal(DailyGoalManager.DAILY_REWARD_COINS)
-	assert_int(result["reward_bonus_tiles"]).is_equal(DailyGoalManager.DAILY_REWARD_BONUS_TILES)
 
 
 func test_complete_daily_twice_returns_empty() -> void:

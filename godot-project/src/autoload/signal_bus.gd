@@ -13,9 +13,6 @@ signal run_started(run_type: String)  # "easy" or "challenge"
 signal run_ended(result: Dictionary)
 signal round_started(round_number: int)
 signal round_ended(round_number: int)
-signal hearts_changed(current: int, max_hearts: int)
-signal heart_lost()
-signal all_hearts_lost()
 
 # --- Swipe Signals ---
 signal swipe_detected(direction: Vector2)
@@ -26,8 +23,6 @@ signal combo_milestone(milestone: int)  # 10, 20, 50, etc.
 
 # --- Economy Signals ---
 signal coins_changed(amount: int, total: int)
-signal tiles_changed(character: String, count: int)
-signal tiles_spent(characters: Array)
 signal word_drop(word: String, characters: Array)
 
 # --- Radical Signals ---

@@ -1,4 +1,4 @@
-## RadicalBonusCalculator — Computes passive tile generation from owned radicals.
+## RadicalBonusCalculator — Computes passive character drops from owned radicals.
 class_name RadicalBonusCalculator
 extends RefCounted
 
@@ -12,7 +12,7 @@ func _init(radical_db: RadicalDatabase = null) -> void:
 	_radical_db = radical_db
 
 
-## Check for passive tile drops from equipped radicals after answering a character.
+## Check for passive character drops from equipped radicals after answering a character.
 func calculate_passive_drops(equipped_radicals: Array[String], answered_character: String) -> Array[String]:
 	var drops: Array[String] = []
 	if _radical_db == null:

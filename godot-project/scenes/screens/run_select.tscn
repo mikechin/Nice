@@ -71,10 +71,6 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 12
 autowrap_mode = 2
 
-[node name="EasyHeartsLabel" type="Label" parent="ModeContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 14
-
 [node name="ChallengeButton" type="Button" parent="ModeContainer"]
 layout_mode = 2
 custom_minimum_size = Vector2(0, 56)
@@ -85,6 +81,3 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 12
 autowrap_mode = 2
 
-[node name="ChallengeHeartsLabel" type="Label" parent="ModeContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 14

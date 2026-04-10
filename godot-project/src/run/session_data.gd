@@ -14,8 +14,6 @@ var card_results: Array[Dictionary] = []
 @export var correct_count: int = 0
 @export var best_combo: int = 0
 @export var coins_earned: int = 0
-@export var tiles_earned: Dictionary = {}
-@export var hearts_remaining: int = 0
 @export var new_cards_seen: int = 0
 @export var cards_promoted: int = 0
 
@@ -50,8 +48,6 @@ func to_dict() -> Dictionary:
 		"correct_count": correct_count,
 		"best_combo": best_combo,
 		"coins_earned": coins_earned,
-		"tiles_earned": tiles_earned,
-		"hearts_remaining": hearts_remaining,
 		"new_cards_seen": new_cards_seen,
 		"cards_promoted": cards_promoted,
 	}
@@ -67,8 +63,6 @@ static func from_dict(data: Dictionary) -> SessionData:
 	sd.correct_count = data.get("correct_count", 0)
 	sd.best_combo = data.get("best_combo", 0)
 	sd.coins_earned = data.get("coins_earned", 0)
-	sd.tiles_earned = data.get("tiles_earned", {})
-	sd.hearts_remaining = data.get("hearts_remaining", 0)
 	sd.new_cards_seen = data.get("new_cards_seen", 0)
 	sd.cards_promoted = data.get("cards_promoted", 0)
 	return sd

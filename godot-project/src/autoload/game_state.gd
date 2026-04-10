@@ -13,15 +13,10 @@ var owned_radicals: Array[String] = []
 var planet_boosts: Array[String] = []
 var unlocked_characters: Dictionary = {}  # character -> true
 
-# --- Tile Inventory ---
-## Dictionary of character -> count (e.g., {"我": 5, "你": 3})
-var tile_inventory: Dictionary = {}
-
 # --- Current Run State ---
 var is_in_run: bool = false
 var current_run_type: String = ""  # "easy" or "challenge"
 var run_coins_earned: int = 0
-var run_tiles_earned: Dictionary = {}
 var current_pack: PackData = null
 var last_run_summary: Dictionary = {}
 
@@ -62,52 +57,21 @@ func start_run(run_type: String) -> void:
 	is_in_run = true
 	current_run_type = run_type
 	run_coins_earned = 0
-	run_tiles_earned.clear()
 	last_run_summary.clear()
 	SignalBus.run_started.emit(run_type)
 
 
 func end_run(summary: Dictionary = {}) -> void:
-	# Bank earned tiles into inventory
-	for ch in run_tiles_earned:
-		add_tiles(ch, run_tiles_earned[ch])
-
 	total_coins += run_coins_earned
 
 	last_run_summary = summary.duplicate()
 	last_run_summary["run_type"] = current_run_type
 	last_run_summary["coins"] = run_coins_earned
-	last_run_summary["tiles"] = run_tiles_earned.duplicate()
 
 	is_in_run = false
 	current_run_type = ""
 	current_pack = null
 	SignalBus.run_ended.emit(last_run_summary)
-
-
-func add_tiles(character: String, count: int = 1) -> void:
-	tile_inventory[character] = tile_inventory.get(character, 0) + count
-	if is_in_run:
-		run_tiles_earned[character] = run_tiles_earned.get(character, 0) + count
-	SignalBus.tiles_changed.emit(character, tile_inventory.get(character, 0))
-
-
-func spend_tiles(characters: Array) -> bool:
-	# Check if all tiles available
-	var needed: Dictionary = {}
-	for ch in characters:
-		var ch_str := str(ch)
-		needed[ch_str] = needed.get(ch_str, 0) + 1
-	for ch_str in needed:
-		if tile_inventory.get(ch_str, 0) < needed[ch_str]:
-			return false
-	# Deduct
-	for ch_str in needed:
-		tile_inventory[ch_str] -= needed[ch_str]
-		if tile_inventory[ch_str] <= 0:
-			tile_inventory.erase(ch_str)
-	SignalBus.tiles_spent.emit(characters)
-	return true
 
 
 func add_coins(amount: int) -> void:
@@ -155,7 +119,6 @@ func to_save_dict() -> Dictionary:
 		"equipped_radicals": equipped_radicals,
 		"owned_radicals": owned_radicals,
 		"planet_boosts": planet_boosts,
-		"tile_inventory": tile_inventory,
 		"unlocked_characters": unlocked_characters,
 		"cards_answered_today": cards_answered_today,
 		"correct_answers_today": correct_answers_today,
@@ -172,7 +135,6 @@ func load_from_dict(data: Dictionary) -> void:
 	equipped_radicals.assign(data.get("equipped_radicals", []))
 	owned_radicals.assign(data.get("owned_radicals", []))
 	planet_boosts.assign(data.get("planet_boosts", []))
-	tile_inventory = data.get("tile_inventory", {})
 	unlocked_characters = data.get("unlocked_characters", {})
 	cards_answered_today = data.get("cards_answered_today", 0)
 	correct_answers_today = data.get("correct_answers_today", 0)

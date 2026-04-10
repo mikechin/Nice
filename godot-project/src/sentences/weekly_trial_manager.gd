@@ -26,13 +26,13 @@ func load_current_trial(hsk_level: int) -> Dictionary:
 	return current_trial
 
 
-func submit_trial_sentence(sentence: String, tiles_used: Array) -> Dictionary:
+func submit_trial_sentence(sentence: String, chars_used: Array) -> Dictionary:
 	var trial_id: String = current_trial.get("id", _get_week_string())
 	if trial_id not in trial_progress:
 		trial_progress[trial_id] = {"sentences_completed": 0, "score": 0}
 
 	var progress: Dictionary = trial_progress[trial_id]
-	var score := tiles_used.size() * 20 + 75
+	var score := chars_used.size() * 20 + 75
 	progress["sentences_completed"] += 1
 	progress["score"] += score
 

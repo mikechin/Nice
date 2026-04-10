@@ -22,7 +22,7 @@ func _make_test_sentences() -> Array[Dictionary]:
 			"hsk_level": 2,
 			"grammar_pattern": "greeting",
 			"characters": ["你", "好"],
-			"tile_count": 2,
+			"character_count": 2,
 		},
 		{
 			"id": "s2",
@@ -31,7 +31,7 @@ func _make_test_sentences() -> Array[Dictionary]:
 			"hsk_level": 2,
 			"grammar_pattern": "question",
 			"characters": ["你", "好", "吗"],
-			"tile_count": 3,
+			"character_count": 3,
 		},
 		{
 			"id": "s3",
@@ -40,7 +40,7 @@ func _make_test_sentences() -> Array[Dictionary]:
 			"hsk_level": 2,
 			"grammar_pattern": "statement",
 			"characters": ["她", "很", "好"],
-			"tile_count": 3,
+			"character_count": 3,
 		},
 		{
 			"id": "s4",
@@ -49,7 +49,7 @@ func _make_test_sentences() -> Array[Dictionary]:
 			"hsk_level": 3,
 			"grammar_pattern": "SVO",
 			"characters": ["我", "学", "中", "文"],
-			"tile_count": 4,
+			"character_count": 4,
 		},
 		{
 			"id": "s5",
@@ -58,7 +58,7 @@ func _make_test_sentences() -> Array[Dictionary]:
 			"hsk_level": 3,
 			"grammar_pattern": "compound",
 			"characters": ["大", "学"],
-			"tile_count": 2,
+			"character_count": 2,
 		},
 	]
 
@@ -71,7 +71,7 @@ func _make_test_trials() -> Array[Dictionary]:
 			"english": "Hello world",
 			"hsk_level": 2,
 			"characters": ["你", "好", "世", "界"],
-			"tile_count": 4,
+			"character_count": 4,
 		},
 		{
 			"id": "t2",
@@ -79,7 +79,7 @@ func _make_test_trials() -> Array[Dictionary]:
 			"english": "Happy studying",
 			"hsk_level": 3,
 			"characters": ["学", "习", "快", "乐"],
-			"tile_count": 4,
+			"character_count": 4,
 		},
 	]
 
@@ -174,40 +174,40 @@ func test_weekly_trial_returns_trial_data() -> void:
 	assert_bool(t.has("chinese")).is_true()
 
 
-# -- get_boss_sentence (needs tiles) --
+# -- get_boss_sentence --
 
-func test_boss_sentence_with_sufficient_tiles() -> void:
-	# Provide tiles for the simplest level 2 sentence: 你好 (s1, tile_count=2)
-	var tiles := {"你": 1, "好": 1}
-	var s := db.get_boss_sentence(2, tiles)
+func test_boss_sentence_with_sufficient_chars() -> void:
+	# Provide characters for the simplest level 2 sentence: 你好 (s1, character_count=2)
+	var chars := {"你": 1, "好": 1}
+	var s := db.get_boss_sentence(2, chars)
 	assert_bool(s.size() > 0).is_true()
 	assert_str(s.get("id", "")).is_equal("s1")
 
 
-func test_boss_sentence_insufficient_tiles_returns_empty() -> void:
-	# No tiles at all
+func test_boss_sentence_insufficient_chars_returns_empty() -> void:
+	# No characters at all
 	var s := db.get_boss_sentence(2, {})
 	assert_int(s.size()).is_equal(0)
 
 
-func test_boss_sentence_partial_tiles() -> void:
-	# Only have one tile of 你 -- can't build any sentence
-	var tiles := {"你": 1}
-	var s := db.get_boss_sentence(2, tiles)
+func test_boss_sentence_partial_chars() -> void:
+	# Only have one of 你 -- can't build any sentence
+	var chars := {"你": 1}
+	var s := db.get_boss_sentence(2, chars)
 	assert_int(s.size()).is_equal(0)
 
 
 func test_boss_sentence_picks_simplest_buildable() -> void:
-	# Provide tiles for both s1 (tile_count 2) and s2 (tile_count 3)
-	var tiles := {"你": 1, "好": 1, "吗": 1}
-	var s := db.get_boss_sentence(2, tiles)
-	# Should pick s1 first because it sorts by tile_count ascending
+	# Provide characters for both s1 (character_count 2) and s2 (character_count 3)
+	var chars := {"你": 1, "好": 1, "吗": 1}
+	var s := db.get_boss_sentence(2, chars)
+	# Should pick s1 first because it sorts by character_count ascending
 	assert_str(s.get("id", "")).is_equal("s1")
 
 
 func test_boss_sentence_nonexistent_level() -> void:
-	var tiles := {"你": 1, "好": 1}
-	var s := db.get_boss_sentence(9, tiles)
+	var chars := {"你": 1, "好": 1}
+	var s := db.get_boss_sentence(9, chars)
 	assert_int(s.size()).is_equal(0)
 
 

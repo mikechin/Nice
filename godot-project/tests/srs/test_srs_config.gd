@@ -84,18 +84,6 @@ func test_new_card_session_limit_within_daily() -> void:
 	assert_int(SrsConfig.MAX_NEW_CARDS_PER_SESSION).is_less_equal(SrsConfig.MAX_NEW_CARDS_PER_DAY)
 
 
-# -- hearts --
-
-func test_hearts_positive() -> void:
-	assert_int(SrsConfig.DEFAULT_MAX_HEARTS).is_greater(0)
-	assert_int(SrsConfig.HEARTS_EASY_RUN).is_greater(0)
-	assert_int(SrsConfig.HEARTS_CHALLENGE_RUN).is_greater(0)
-
-
-func test_easy_run_more_hearts_than_challenge() -> void:
-	assert_int(SrsConfig.HEARTS_EASY_RUN).is_greater(SrsConfig.HEARTS_CHALLENGE_RUN)
-
-
 # -- combo milestones --
 
 func test_combo_milestones_ascending() -> void:

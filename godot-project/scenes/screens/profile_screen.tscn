@@ -72,10 +72,6 @@ text = "Today's Accuracy: --"
 layout_mode = 2
 text = "Coins: --"
 
-[node name="TilesLabel" type="Label" parent="StatsContainer"]
-layout_mode = 2
-text = "Tiles: --"
-
 [node name="RadicalsLabel" type="Label" parent="StatsContainer"]
 layout_mode = 2
 text = "Radicals: --"
