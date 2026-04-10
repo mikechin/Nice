@@ -84,13 +84,6 @@ func test_new_card_session_limit_within_daily() -> void:
 	assert_int(SrsConfig.MAX_NEW_CARDS_PER_SESSION).is_less_equal(SrsConfig.MAX_NEW_CARDS_PER_DAY)
 
 
-# -- combo milestones --
-
-func test_combo_milestones_ascending() -> void:
-	for i in range(1, SrsConfig.COMBO_MILESTONES.size()):
-		assert_int(SrsConfig.COMBO_MILESTONES[i]).is_greater(SrsConfig.COMBO_MILESTONES[i - 1])
-
-
 # -- maximum interval --
 
 func test_maximum_interval_positive() -> void:

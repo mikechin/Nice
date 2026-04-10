@@ -27,12 +27,6 @@ func test_has_run_signals() -> void:
 	assert_bool(bus.has_signal("round_ended")).is_true()
 
 
-func test_has_combo_signals() -> void:
-	assert_bool(bus.has_signal("combo_incremented")).is_true()
-	assert_bool(bus.has_signal("combo_broken")).is_true()
-	assert_bool(bus.has_signal("combo_milestone")).is_true()
-
-
 func test_has_economy_signals() -> void:
 	assert_bool(bus.has_signal("coins_changed")).is_true()
 

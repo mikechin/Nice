@@ -41,9 +41,6 @@ const CHALLENGE_RUN_DUE_RATIO: float = 0.5
 const CHALLENGE_RUN_KNOWN_RATIO: float = 0.2
 const CHALLENGE_RUN_NEW_RATIO: float = 0.3
 
-# --- Combo milestones ---
-const COMBO_MILESTONES: Array[int] = [5, 10, 20, 50, 100]
-
 # --- Desired retention ---
 const DEFAULT_DESIRED_RETENTION: float = 0.9
 const MAXIMUM_INTERVAL: int = 36500

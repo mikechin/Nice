@@ -63,10 +63,6 @@ func update_from_stats(stats: Dictionary) -> Array[String]:
 		set_progress("runs_10", stats["total_runs"])
 		set_progress("runs_100", stats["total_runs"])
 
-	if stats.has("best_combo"):
-		set_progress("combo_10", stats["best_combo"])
-		set_progress("combo_50", stats["best_combo"])
-
 	return check_all()
 
 

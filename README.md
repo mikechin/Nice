@@ -23,8 +23,7 @@ Claude Code will read `CLAUDE.md` automatically and understand the entire projec
 ### Suggested first commands:
 - "Port the FSRS algorithm from ts-fsrs to GDScript in src/srs/"
 - "Fill in the character database with complete HSK 2 data"
-- "Implement the swipe detector for four-directional input"
-- "Build the tile inventory system"
+- "Build the pack-opening loop for Phase 1"
 
 ## Project Structure
 
@@ -32,10 +31,12 @@ See `CLAUDE.md` for the complete structure and design rationale.
 
 ## Build Phases
 
-1. **Core Engine** — SRS algorithm, character database, swipe mechanic
-2. **Game Layer** — Combos, loot rarity, radicals, shop, collection grid
-3. **Sentence Building** — Boss rounds, daily goals, weekly trials
-4. **Polish** — Planet boosts, streaks, economy tuning, art/audio
+1. **Foundation** — SRS algorithm, character database, collection grid, pack-opening loop
+2. **Draft Phase** — Challenge interaction, bonus rounds, card tier promotion, foil variants
+3. **Board Game** — Triple Triad-style 3x3 grid, radical matchups, computer opponent, parallax variants
+4. **Polish & Endgame** — Open world opponents, survival mode, economy tuning, art/audio
+
+See `docs/planning.md` for the full build plan.
 
 ## Tech Stack
 

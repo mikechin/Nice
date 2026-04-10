@@ -1,5 +1,5 @@
 ## RunManager — Controls the flow of a complete run session.
-## Manages rounds, combos, difficulty scaling, and session tracking.
+## Manages rounds, difficulty scaling, and session tracking.
 class_name RunManager
 extends RefCounted
 
@@ -10,7 +10,6 @@ var round_count: int = 0
 var max_rounds: int = 5
 var is_active: bool = false
 
-var _combo: ComboManager
 var _difficulty: DifficultyManager
 var _round: RoundManager
 var _session: SessionData
@@ -18,7 +17,6 @@ var _pack: PackData
 
 
 func _init() -> void:
-	_combo = ComboManager.new()
 	_difficulty = DifficultyManager.new()
 	_round = RoundManager.new()
 
@@ -29,7 +27,6 @@ func start_run(type: String, pack: PackData) -> void:
 	round_count = 0
 	is_active = true
 
-	_combo.reset()
 	_difficulty.reset()
 
 	_session = SessionData.new()
@@ -43,7 +40,6 @@ func start_run(type: String, pack: PackData) -> void:
 func end_run() -> void:
 	is_active = false
 	_session.ended_at = Time.get_unix_time_from_system()
-	_session.best_combo = _combo.best_combo
 
 	var summary := get_run_summary()
 	run_completed.emit(summary)
@@ -65,21 +61,6 @@ func on_card_answered(card_id: String, challenge_type: String, correct: bool, ra
 
 	var time_ms := 0  # Could track per-card timing
 	_session.record_answer(card_id, challenge_type, correct, rating, time_ms)
-
-	if correct:
-		_combo.increment()
-		_difficulty.on_combo_changed(_combo.current_combo)
-		SignalBus.combo_incremented.emit(_combo.current_combo)
-		for milestone in SrsConfig.COMBO_MILESTONES:
-			if _combo.current_combo == milestone:
-				SignalBus.combo_milestone.emit(milestone)
-				break
-	else:
-		var old_combo := _combo.current_combo
-		_combo.break_combo()
-		_difficulty.on_combo_changed(0)
-		if old_combo > 0:
-			SignalBus.combo_broken.emit(old_combo)
 
 	_round.on_card_answered(correct)
 
@@ -114,15 +95,10 @@ func get_run_summary() -> Dictionary:
 		"total_cards": _session.total_cards,
 		"correct_count": _session.correct_count,
 		"accuracy": _session.get_accuracy(),
-		"best_combo": _combo.best_combo,
 		"coins_earned": _session.coins_earned,
 		"duration_seconds": _session.get_duration_seconds(),
 		"new_cards_seen": _session.new_cards_seen,
 	}
-
-
-func get_combo_manager() -> ComboManager:
-	return _combo
 
 
 func get_difficulty_manager() -> DifficultyManager:

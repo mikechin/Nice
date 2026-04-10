@@ -57,21 +57,6 @@ func play_wrong() -> void:
 	play_sfx("wrong")
 
 
-func play_combo_milestone(milestone: int) -> void:
-	# Escalating pitch for higher combos
-	var pitch_scale := 1.0 + (float(milestone) / 100.0) * 0.5
-	var stream := _get_or_load_sfx("combo")
-	if stream == null:
-		return
-	var player := _get_free_sfx_player()
-	if player == null:
-		return
-	player.stream = stream
-	player.pitch_scale = pitch_scale
-	player.volume_db = linear_to_db(sfx_volume)
-	player.play()
-
-
 func play_radical_activation() -> void:
 	play_sfx("radical_activate")
 

@@ -1,6 +1,6 @@
 ## ParticleBurst — Configurable particle burst effect using procedural particles.
 ## Spawns colored squares that fly outward with gravity and fade. Used for
-## card reveals, tier promotions, and combo milestones.
+## card reveals and tier promotions.
 class_name ParticleBurst
 extends Node2D
 

@@ -1,4 +1,4 @@
-## Tests for DifficultyManager — card pacing, speed scaling, and round escalation.
+## Tests for DifficultyManager — card pacing and round escalation.
 extends GdUnitTestSuite
 
 var _diff: DifficultyManager
@@ -14,39 +14,10 @@ func test_initial_interval_is_base() -> void:
 	assert_float(_diff.get_current_interval()).is_equal(_diff.base_card_interval)
 
 
-# -- combo speeds up --
-
-func test_combo_speeds_up_interval() -> void:
-	var before := _diff.get_current_interval()
-	_diff.on_combo_changed(20)
-	var after := _diff.get_current_interval()
-	assert_float(after).is_less(before)
-
-
-func test_higher_combo_lower_interval() -> void:
-	_diff.on_combo_changed(10)
-	var interval_10 := _diff.get_current_interval()
-	_diff.on_combo_changed(30)
-	var interval_30 := _diff.get_current_interval()
-	assert_float(interval_30).is_less(interval_10)
-
-
-func test_low_combo_no_reduction() -> void:
-	# Combo below 10 has floor(combo/10)=0 so no combo reduction
-	_diff.on_combo_changed(5)
-	assert_float(_diff.get_current_interval()).is_equal(_diff.base_card_interval)
-
-
 # -- min interval respected --
-
-func test_min_interval_respected() -> void:
-	_diff.on_combo_changed(500)
-	assert_float(_diff.get_current_interval()).is_greater_equal(_diff.min_interval)
-
 
 func test_min_interval_with_high_round() -> void:
 	_diff.on_round_changed(20)
-	_diff.on_combo_changed(200)
 	assert_float(_diff.get_current_interval()).is_greater_equal(_diff.min_interval)
 
 
@@ -80,7 +51,6 @@ func test_round_change_adjusts_interval() -> void:
 
 func test_reset_restores_base_interval() -> void:
 	_diff.on_round_changed(5)
-	_diff.on_combo_changed(30)
 	_diff.reset()
 	assert_float(_diff.get_current_interval()).is_equal(_diff.base_card_interval)
 

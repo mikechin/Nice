@@ -1,5 +1,5 @@
 ## DebugOverlay — In-game HUD showing live debug stats.
-## Toggle with F3. Displays FPS, SRS state, combo, and daily review count.
+## Toggle with F3. Displays FPS, SRS state, and daily review count.
 class_name DebugOverlay
 extends Control
 
@@ -7,13 +7,11 @@ extends Control
 var _vbox: VBoxContainer
 var _fps_label: Label
 var _srs_label: Label
-var _combo_label: Label
 var _reviewed_label: Label
 var _scheduler_label: Label
 
 var _update_interval: float = 0.25
 var _time_since_update: float = 0.0
-var _debug_combo: int = 0
 
 
 func _ready() -> void:
@@ -43,7 +41,6 @@ func _build_ui() -> void:
 
 	_fps_label = _create_stat_label("FPS: --")
 	_srs_label = _create_stat_label("SRS: --")
-	_combo_label = _create_stat_label("Combo: 0")
 	_reviewed_label = _create_stat_label("Reviewed: 0")
 	_scheduler_label = _create_stat_label("Due: --")
 
@@ -62,8 +59,6 @@ func _create_stat_label(initial_text: String) -> Label:
 
 
 func _connect_signals() -> void:
-	SignalBus.combo_incremented.connect(_on_combo_incremented)
-	SignalBus.combo_broken.connect(_on_combo_broken)
 	SignalBus.card_answered.connect(_on_card_answered)
 
 
@@ -93,7 +88,6 @@ func toggle_visibility() -> void:
 func _refresh_stats() -> void:
 	_fps_label.text = "FPS: %d" % Engine.get_frames_per_second()
 	_update_srs_label()
-	_update_combo_label()
 	_update_reviewed_label()
 	_update_scheduler_label()
 
@@ -123,10 +117,6 @@ func _update_srs_label() -> void:
 	_srs_label.text = "SRS: %d total | N:%d L:%d R:%d" % [total_cards, new_count, learning_count, review_count]
 
 
-func _update_combo_label() -> void:
-	_combo_label.text = "Combo: %d" % _debug_combo
-
-
 func _update_reviewed_label() -> void:
 	var total: int = GameState.cards_answered_today
 	var correct: int = GameState.correct_answers_today
@@ -148,18 +138,6 @@ func _update_scheduler_label() -> void:
 
 
 # --- Signal handlers ---
-
-func _on_combo_incremented(combo_count: int) -> void:
-	_debug_combo = combo_count
-	if visible:
-		_update_combo_label()
-
-
-func _on_combo_broken(_final_count: int) -> void:
-	_debug_combo = 0
-	if visible:
-		_update_combo_label()
-
 
 func _on_card_answered(_card_data: Dictionary, _challenge_type: String, _correct: bool, _rating: int) -> void:
 	if visible:

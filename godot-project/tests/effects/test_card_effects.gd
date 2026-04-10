@@ -20,10 +20,6 @@ func test_create_wrong_tween_callable() -> void:
 	assert_bool(effects.has_method("create_wrong_tween")).is_true()
 
 
-func test_create_combo_burst_callable() -> void:
-	assert_bool(effects.has_method("create_combo_burst")).is_true()
-
-
 func test_create_tier_promotion_callable() -> void:
 	assert_bool(effects.has_method("create_tier_promotion")).is_true()
 

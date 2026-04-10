@@ -10,10 +10,8 @@ var total_coins: int = 0
 
 func calculate_coin_value(
 	loot_rarity: SrsEnums.LootRarity,
-	combo: int,
 	hsk_level: int,
-	has_radical_bonus: bool,
-	combo_multiplier: float = 1.0
+	has_radical_bonus: bool
 ) -> int:
 	var base: int = BASE_COIN_VALUE + HSK_LEVEL_BONUS.get(hsk_level, 0)
 
@@ -32,7 +30,7 @@ func calculate_coin_value(
 	# Radical bonus
 	var radical_mult := 1.5 if has_radical_bonus else 1.0
 
-	var total := float(base) * rarity_mult * combo_multiplier * radical_mult
+	var total := float(base) * rarity_mult * radical_mult
 	return maxi(1, roundi(total))
 
 

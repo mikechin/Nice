@@ -604,7 +604,7 @@ These were built based on the previous iteration's design. They'll need rethinki
 
 - **`src/economy/`** — CoinManager, EconomyScaler, DropCalculator. Coin-based economy from the JRPG iteration. Economy design is TBD per planning doc.
 - **`src/shop/`** — ShopManager, ShopRotation, ShopItem. Rotating shop selling radicals. Shop design is TBD.
-- **`src/run/`** — RunManager, ComboManager, DifficultyManager, RoundManager. Combo streaks, difficulty scaling. These map to the JRPG battle flow, not the pack-opening flow.
+- **`src/run/`** — RunManager, DifficultyManager, RoundManager. Difficulty scaling. Maps to the JRPG battle flow, not the pack-opening flow. (ComboManager removed — combos no longer fit the design.)
 - **`src/radicals/radical_activator.gd`, `radical_bonus_calculator.gd`** — Radical equip/activate/bonus system from the battler. Radicals' actual role is as the board game's strategic axis (Phase 3).
 
 ### Phase 2+ systems (built early)
@@ -615,12 +615,13 @@ These are directionally correct but premature for Phase 1.
 - **`scenes/screens/run_select.gd`** — Screen script for features not in Phase 1. (boss_round_screen and daily_weekly_screen removed.)
 
 ### Scene scripts with JRPG assumptions
-These screen/component scripts reference combos and coins in ways that assume the JRPG flow. They'll need updates when their .tscn files are created:
+These screen/component scripts reference coins in ways that assume the JRPG flow. They'll need updates when their .tscn files are created:
 
 - `scenes/screens/game_screen.gd` — Built around swipe-based challenge + drops loop, not pack opening
 - `scenes/screens/shop_screen.gd` — References ShopManager and coin spending
-- `scenes/screens/results_screen.gd` — Shows combo and coins earned
-- `scenes/components/combo_counter.gd`, `coin_counter.gd`
+- `scenes/screens/results_screen.gd` — Shows coins earned
+- `scenes/components/coin_counter.gd`
+- `scenes/components/combo_counter.gd` — **Removed.** Combo system no longer fits the design.
 - `scenes/components/sentence_slot.gd`, `tile_slot.gd` — **Removed.** Were sentence builder UI components.
 
 ### What IS Phase 1 (wired and working)
@@ -788,9 +789,9 @@ JRPG-style battle scene. Enemies appear on one side, player's hand of character 
 
 Player builds a 20-30 card deck before each run from their collection. Balances mastery (strong cards) against review needs (weak cards). Equips radicals for elemental synergies. Run types: Easy (free, comfortable) or Challenge (costs coins, harder, richer rewards).
 
-### Combo System
+### Combo System (removed)
 
-Consecutive correct plays build a combo multiplier. Wrong answer halves combo (not reset). "About to Forget" cards don't break combo on miss. Combo counter is the moment-to-moment engagement driver.
+Consecutive correct plays build a combo multiplier. Wrong answer halves combo (not reset). "About to Forget" cards don't break combo on miss. Combo counter is the moment-to-moment engagement driver. **Status:** Source code removed. The pack-opening + draft direction doesn't lean on streak-based pressure.
 
 ### Radical Elements
 

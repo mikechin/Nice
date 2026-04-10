@@ -53,11 +53,9 @@ func test_to_dict_has_expected_keys() -> void:
 
 func test_from_dict_round_trip() -> void:
 	session.record_answer("wo3", "meaning", true, FsrsAlgorithm.Rating.GOOD, 1500)
-	session.best_combo = 5
 	session.coins_earned = 100
 	var d := session.to_dict()
 	var restored := SessionData.from_dict(d)
 	assert_str(restored.session_id).is_equal("test_session_001")
 	assert_int(restored.total_cards).is_equal(1)
-	assert_int(restored.best_combo).is_equal(5)
 	assert_int(restored.coins_earned).is_equal(100)

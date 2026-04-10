@@ -1,4 +1,4 @@
-## Tests for RunManager — run flow, card answering, and combo tracking.
+## Tests for RunManager — run flow, card answering, and session tracking.
 extends GdUnitTestSuite
 
 var _run: RunManager
@@ -21,28 +21,6 @@ func test_start_run_initializes_state() -> void:
 	assert_bool(_run.is_active).is_true()
 	assert_str(_run.run_type).is_equal("challenge")
 	assert_int(_run.round_count).is_equal(1)
-
-
-func test_start_run_resets_combo() -> void:
-	_run.start_run("challenge", _pack)
-	assert_int(_run.get_combo_manager().current_combo).is_equal(0)
-
-
-# -- on_card_answered correct --
-
-func test_on_card_answered_correct_increments_combo() -> void:
-	_run.start_run("challenge", _pack)
-	_run.on_card_answered("char_a", "meaning", true, 3)
-	assert_int(_run.get_combo_manager().current_combo).is_equal(1)
-
-
-func test_on_card_answered_wrong_breaks_combo() -> void:
-	_run.start_run("challenge", _pack)
-	_run.on_card_answered("char_a", "meaning", true, 3)
-	_run.on_card_answered("char_b", "meaning", true, 3)
-	assert_int(_run.get_combo_manager().current_combo).is_equal(2)
-	_run.on_card_answered("char_c", "meaning", false, 1)
-	assert_int(_run.get_combo_manager().current_combo).is_equal(0)
 
 
 # -- session tracking --

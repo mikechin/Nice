@@ -45,10 +45,6 @@ theme_override_constants/separation = 12
 layout_mode = 2
 text = "Accuracy: --"
 
-[node name="ComboLabel" type="Label" parent="StatsContainer"]
-layout_mode = 2
-text = "Best Combo: --"
-
 [node name="CoinsLabel" type="Label" parent="StatsContainer"]
 layout_mode = 2
 text = "Coins Earned: --"

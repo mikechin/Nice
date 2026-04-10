@@ -16,10 +16,8 @@ func _init(scaler: EconomyScaler = null, coins: CoinManager = null, rad_db: Radi
 func calculate_drops(
 	card_data: CharacterData,
 	loot_rarity: SrsEnums.LootRarity,
-	combo: int,
 	hsk_level: int,
-	equipped_radicals: Array[String],
-	combo_multiplier: float = 1.0
+	equipped_radicals: Array[String]
 ) -> Dictionary:
 	var result := {
 		"coins": 0,
@@ -45,7 +43,7 @@ func calculate_drops(
 
 	# Coin drops
 	result["coins"] = coin_manager.calculate_coin_value(
-		loot_rarity, combo, hsk_level, has_radical_bonus, combo_multiplier
+		loot_rarity, hsk_level, has_radical_bonus
 	)
 
 	# Word drops (HSK 4+)

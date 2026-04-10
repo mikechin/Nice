@@ -27,7 +27,7 @@ func check_activation(card_data: CharacterData) -> Dictionary:
 
 	# Use the first matching equipped radical
 	var radical: String = matching[0]
-	var bonus := calculate_radical_bonus(radical, card_data, 0)
+	var bonus := calculate_radical_bonus(radical, card_data)
 
 	SignalBus.radical_activated.emit(radical, card_data.character, bonus)
 
@@ -58,7 +58,7 @@ func can_trigger_attach(card_data: CharacterData) -> bool:
 	return card_data.is_radical and _radical_manager != null and not _radical_manager.get_equipped().is_empty()
 
 
-func calculate_radical_bonus(radical: String, card_data: CharacterData, combo: int) -> int:
+func calculate_radical_bonus(radical: String, _card_data: CharacterData) -> int:
 	var base := BASE_RADICAL_BONUS
 	# Rarity multiplier
 	if _radical_db:

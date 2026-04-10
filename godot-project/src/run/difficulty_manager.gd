@@ -1,5 +1,5 @@
 ## DifficultyManager — Scales card pacing and difficulty within a run.
-## Controls speed increase during combos and round escalation.
+## Controls speed increase as rounds progress.
 class_name DifficultyManager
 extends RefCounted
 
@@ -8,7 +8,6 @@ var current_interval: float = 3.0
 var min_interval: float = 1.0
 var _current_round: int = 0
 
-const COMBO_SPEED_FACTOR: float = 0.05   # 5% faster per 10 combo
 const ROUND_SPEED_FACTOR: float = 0.1    # 10% faster per round
 const BASE_CARDS_PER_ROUND: int = 8
 const CARDS_PER_ROUND_INCREASE: int = 2
@@ -19,19 +18,13 @@ func reset() -> void:
 	_current_round = 0
 
 
-func on_combo_changed(combo: int) -> void:
-	var combo_reduction := COMBO_SPEED_FACTOR * floorf(float(combo) / 10.0)
+func on_round_changed(round_number: int) -> void:
+	_current_round = round_number
 	var round_reduction := ROUND_SPEED_FACTOR * float(_current_round)
 	current_interval = maxf(
 		min_interval,
-		base_card_interval * (1.0 - combo_reduction - round_reduction)
+		base_card_interval * (1.0 - round_reduction)
 	)
-
-
-func on_round_changed(round_number: int) -> void:
-	_current_round = round_number
-	# Recalculate with current combo = 0 at round start
-	on_combo_changed(0)
 
 
 func get_current_interval() -> float:

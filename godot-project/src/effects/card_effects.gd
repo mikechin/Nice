@@ -1,5 +1,5 @@
 ## CardEffects — Visual tween effects for card interactions.
-## Creates and returns Tweens for correct/wrong answers, combos, tier promotions, and reveals.
+## Creates and returns Tweens for correct/wrong answers, tier promotions, and reveals.
 class_name CardEffects
 extends RefCounted
 
@@ -51,42 +51,6 @@ func create_wrong_tween(node: Control) -> Tween:
 	# Return to original position and color
 	tween.tween_property(node, "position", original_pos, 0.04)
 	tween.tween_property(node, "modulate", original_modulate, 0.15)
-
-	return tween
-
-
-## Combo burst — intensity scales with combo count.
-func create_combo_burst(node: Control, combo: int) -> Tween:
-	var tween: Tween = node.create_tween()
-	var original_scale: Vector2 = node.scale
-
-	if node.pivot_offset == Vector2.ZERO:
-		node.pivot_offset = node.size / 2.0
-
-	# Scale burst proportional to combo tier
-	var burst_scale: float = 1.0
-	if combo >= 50:
-		burst_scale = 1.4
-	elif combo >= 20:
-		burst_scale = 1.3
-	elif combo >= 10:
-		burst_scale = 1.2
-	elif combo >= 5:
-		burst_scale = 1.15
-	else:
-		burst_scale = 1.1
-
-	# Determine combo glow color
-	var glow_color: Color = _combo_color(combo)
-
-	tween.set_parallel(true)
-	tween.tween_property(node, "scale", original_scale * burst_scale, 0.08).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
-	tween.tween_property(node, "modulate", glow_color, 0.08)
-
-	tween.set_parallel(false)
-	tween.set_parallel(true)
-	tween.tween_property(node, "scale", original_scale, 0.25).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
-	tween.tween_property(node, "modulate", Color.WHITE, 0.25)
 
 	return tween
 
@@ -146,16 +110,3 @@ func create_new_card_reveal(node: Control) -> Tween:
 	tween.tween_property(node, "modulate", Color.WHITE, 0.25)
 
 	return tween
-
-
-## Determine glow color based on combo count.
-func _combo_color(combo: int) -> Color:
-	if combo >= 50:
-		return Color(1.0, 0.8, 0.0)   # Gold
-	elif combo >= 20:
-		return Color(0.7, 0.2, 1.0)   # Purple
-	elif combo >= 10:
-		return Color(0.2, 0.6, 1.0)   # Blue
-	elif combo >= 5:
-		return Color(0.2, 1.0, 0.4)   # Green
-	return Color(1.0, 1.0, 1.0)       # White

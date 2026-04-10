@@ -17,9 +17,6 @@ signal round_ended(round_number: int)
 # --- Swipe Signals ---
 signal swipe_detected(direction: Vector2)
 signal answer_selected(direction: String, answer: String)
-signal combo_incremented(combo_count: int)
-signal combo_broken(final_count: int)
-signal combo_milestone(milestone: int)  # 10, 20, 50, etc.
 
 # --- Economy Signals ---
 signal coins_changed(amount: int, total: int)

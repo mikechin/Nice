@@ -126,12 +126,12 @@ func test_get_matching_radicals_no_matches() -> void:
 # -- calculate_radical_bonus --
 
 func test_bonus_common_radical() -> void:
-	var bonus := _activator.calculate_radical_bonus("女", _test_card, 0)
+	var bonus := _activator.calculate_radical_bonus("女", _test_card)
 	assert_int(bonus).is_equal(RadicalActivator.BASE_RADICAL_BONUS)
 
 
 func test_bonus_rare_radical() -> void:
-	var bonus := _activator.calculate_radical_bonus("子", _test_card, 0)
+	var bonus := _activator.calculate_radical_bonus("子", _test_card)
 	var expected := roundi(float(RadicalActivator.BASE_RADICAL_BONUS) * RadicalActivator.RARE_RADICAL_MULT)
 	assert_int(bonus).is_equal(expected)
 
@@ -139,7 +139,7 @@ func test_bonus_rare_radical() -> void:
 func test_bonus_epic_radical() -> void:
 	_radical_mgr.equip_radical("火")
 	var card := CharacterData.from_dict({"character": "烧", "meaning": "burn"})
-	var bonus := _activator.calculate_radical_bonus("火", card, 0)
+	var bonus := _activator.calculate_radical_bonus("火", card)
 	var expected := roundi(float(RadicalActivator.BASE_RADICAL_BONUS) * RadicalActivator.EPIC_RADICAL_MULT)
 	assert_int(bonus).is_equal(expected)
 

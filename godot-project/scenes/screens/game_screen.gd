@@ -5,7 +5,6 @@ class_name GameScreen
 extends Control
 
 @onready var _challenge_presenter: ChallengePresenter = $ChallengePresenter if has_node("ChallengePresenter") else null
-@onready var _combo_counter: Control = $ComboCounter if has_node("ComboCounter") else null
 @onready var _coin_counter: Control = $CoinCounter if has_node("CoinCounter") else null
 @onready var _progress_bar: Control = $ProgressBar if has_node("ProgressBar") else null
 @onready var _card_prompt_label: Label = $CardPromptLabel if has_node("CardPromptLabel") else null
@@ -35,8 +34,6 @@ func _ready() -> void:
 	if _challenge_presenter:
 		_challenge_presenter.challenge_completed.connect(_on_challenge_completed)
 
-	SignalBus.combo_incremented.connect(_on_combo_incremented)
-	SignalBus.combo_broken.connect(_on_combo_broken)
 	SignalBus.card_presented.connect(_on_card_presented)
 
 	_connect_answer_buttons()
@@ -44,8 +41,6 @@ func _ready() -> void:
 
 
 func _exit_tree() -> void:
-	SignalBus.combo_incremented.disconnect(_on_combo_incremented)
-	SignalBus.combo_broken.disconnect(_on_combo_broken)
 	SignalBus.card_presented.disconnect(_on_card_presented)
 
 
@@ -171,7 +166,7 @@ func _on_challenge_completed(card_id: String, challenge_type: String, correct: b
 	if _is_transitioning:
 		return
 
-	# Record in RunManager (emits combo signals)
+	# Record in RunManager
 	if _run_manager:
 		_run_manager.on_card_answered(card_id, challenge_type, correct, rating)
 
@@ -189,11 +184,9 @@ func _on_challenge_completed(card_id: String, challenge_type: String, correct: b
 			var loot_rarity: SrsEnums.LootRarity = GameState.review_scheduler.get_loot_rarity(
 				card_id, challenge_type, now
 			)
-			var combo: int = _run_manager.get_combo_manager().current_combo if _run_manager else 0
 			var drops: Dictionary = _drop_calculator.calculate_drops(
 				card_data,
 				loot_rarity,
-				combo,
 				GameState.player_hsk_level,
 				GameState.equipped_radicals
 			)
@@ -245,16 +238,6 @@ func _on_pack_complete() -> void:
 	SignalBus.screen_transition_requested.emit("results")
 
 
-func _on_combo_incremented(combo_count: int) -> void:
-	if _combo_counter and _combo_counter.has_method("set_combo"):
-		_combo_counter.set_combo(combo_count)
-
-
-func _on_combo_broken(_final_count: int) -> void:
-	if _combo_counter and _combo_counter.has_method("set_combo"):
-		_combo_counter.set_combo(0)
-
-
 func _update_progress() -> void:
 	if _progress_bar and _progress_bar.has_method("set_progress"):
 		_progress_bar.set_progress(_card_index, _total_cards)
@@ -287,8 +270,6 @@ func _on_back_pressed() -> void:
 func _warn_missing_nodes() -> void:
 	if _challenge_presenter == null:
 		push_warning("game_screen.gd: missing node _challenge_presenter")
-	if _combo_counter == null:
-		push_warning("game_screen.gd: missing node _combo_counter")
 	if _coin_counter == null:
 		push_warning("game_screen.gd: missing node _coin_counter")
 	if _progress_bar == null:

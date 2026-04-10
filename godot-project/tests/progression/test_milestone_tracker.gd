@@ -23,18 +23,11 @@ func before_test() -> void:
 	a2.reward_coins = 100
 	defs.append(a2)
 
-	var a3 := AchievementData.new()
-	a3.achievement_id = "combo_10"
-	a3.title = "Combo King"
-	a3.requirement_value = 10
-	a3.reward_coins = 75
-	defs.append(a3)
-
 	tracker.register_definitions(defs)
 
 
 func test_register_definitions_sets_count() -> void:
-	assert_int(tracker.get_total_count()).is_equal(3)
+	assert_int(tracker.get_total_count()).is_equal(2)
 
 
 func test_set_progress_and_get_progress() -> void:
@@ -82,16 +75,10 @@ func test_update_from_stats_streak() -> void:
 	assert_bool("streak_7" in newly).is_true()
 
 
-func test_update_from_stats_combo() -> void:
-	var stats := {"best_combo": 15}
-	var newly := tracker.update_from_stats(stats)
-	assert_bool("combo_10" in newly).is_true()
-
-
 func test_completion_percentage() -> void:
 	tracker.set_progress("mastery_10", 15)
 	tracker.set_progress("streak_7", 10)
 	tracker.check_all()
 	var pct := tracker.get_completion_percentage()
-	# 2 out of 3 completed
-	assert_float(pct).is_equal_approx(2.0 / 3.0, 0.01)
+	# 2 out of 2 completed
+	assert_float(pct).is_equal_approx(1.0, 0.01)

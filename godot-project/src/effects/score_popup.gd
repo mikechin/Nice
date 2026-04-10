@@ -43,15 +43,6 @@ func create_score_popup(parent: Control, amount: int, position: Vector2, multipl
 	return create_popup(parent, text, position, color, scale)
 
 
-## Create a combo milestone popup (e.g., "10x COMBO!").
-func create_combo_popup(parent: Control, combo_count: int, position: Vector2) -> Label:
-	var text: String = "%dx COMBO!" % combo_count
-	var color: Color = _combo_popup_color(combo_count)
-	var scale: float = 1.2 + (float(combo_count) / 100.0) * 0.8
-	scale = minf(scale, 2.0)
-	return create_popup(parent, text, position, color, scale)
-
-
 ## Create a radical bonus popup (e.g., radical name + bonus amount).
 func create_radical_bonus_popup(parent: Control, radical: String, bonus: int, position: Vector2) -> Label:
 	var text: String = "%s +%d" % [radical, bonus]
@@ -106,11 +97,3 @@ func _score_scale(multiplier: float) -> float:
 	return 1.0
 
 
-func _combo_popup_color(combo: int) -> Color:
-	if combo >= 50:
-		return Color(1.0, 0.8, 0.0)
-	elif combo >= 20:
-		return Color(0.7, 0.2, 1.0)
-	elif combo >= 10:
-		return Color(0.2, 0.6, 1.0)
-	return Color(0.2, 1.0, 0.4)
