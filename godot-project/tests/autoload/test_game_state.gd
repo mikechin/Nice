@@ -42,7 +42,6 @@ func test_load_from_dict_restores_state() -> void:
 		"last_play_date": "2024-01-15",
 		"equipped_radicals": [],
 		"owned_radicals": [],
-		"planet_boosts": [],
 		"unlocked_characters": {},
 		"cards_answered_today": 10,
 		"correct_answers_today": 8,

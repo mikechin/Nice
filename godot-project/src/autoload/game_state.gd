@@ -10,7 +10,6 @@ var daily_streak: int = 0
 var last_play_date: String = ""
 var equipped_radicals: Array[String] = []
 var owned_radicals: Array[String] = []
-var planet_boosts: Array[String] = []
 var unlocked_characters: Dictionary = {}  # character -> true
 
 # --- Current Run State ---
@@ -113,7 +112,6 @@ func to_save_dict() -> Dictionary:
 		"last_play_date": last_play_date,
 		"equipped_radicals": equipped_radicals,
 		"owned_radicals": owned_radicals,
-		"planet_boosts": planet_boosts,
 		"unlocked_characters": unlocked_characters,
 		"cards_answered_today": cards_answered_today,
 		"correct_answers_today": correct_answers_today,
@@ -128,7 +126,6 @@ func load_from_dict(data: Dictionary) -> void:
 	last_play_date = data.get("last_play_date", "")
 	equipped_radicals.assign(data.get("equipped_radicals", []))
 	owned_radicals.assign(data.get("owned_radicals", []))
-	planet_boosts.assign(data.get("planet_boosts", []))
 	unlocked_characters = data.get("unlocked_characters", {})
 	cards_answered_today = data.get("cards_answered_today", 0)
 	correct_answers_today = data.get("correct_answers_today", 0)

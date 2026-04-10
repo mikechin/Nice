@@ -40,7 +40,6 @@ signal character_mastered(character: String)
 signal character_decaying(character: String)
 signal streak_updated(days: int)
 signal streak_broken()
-signal planet_boost_unlocked(boost_id: String)
 signal milestone_achieved(milestone_id: String)
 
 # --- UI Signals ---
