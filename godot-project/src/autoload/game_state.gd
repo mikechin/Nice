@@ -5,7 +5,6 @@ extends Node
 
 # --- Player Profile ---
 var player_hsk_level: int = 2
-var daily_streak: int = 0
 var last_play_date: String = ""
 var unlocked_characters: Dictionary = {}  # character -> true
 
@@ -83,7 +82,6 @@ func check_daily_reset() -> void:
 func to_save_dict() -> Dictionary:
 	return {
 		"player_hsk_level": player_hsk_level,
-		"daily_streak": daily_streak,
 		"last_play_date": last_play_date,
 		"unlocked_characters": unlocked_characters,
 		"cards_answered_today": cards_answered_today,
@@ -94,7 +92,6 @@ func to_save_dict() -> Dictionary:
 
 func load_from_dict(data: Dictionary) -> void:
 	player_hsk_level = data.get("player_hsk_level", 2)
-	daily_streak = data.get("daily_streak", 0)
 	last_play_date = data.get("last_play_date", "")
 	unlocked_characters = data.get("unlocked_characters", {})
 	cards_answered_today = data.get("cards_answered_today", 0)

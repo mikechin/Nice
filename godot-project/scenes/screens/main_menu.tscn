@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://3kx6fremdjys"]
 
 [ext_resource type="Script" uid="uid://creial77phmsh" path="res://scenes/screens/main_menu.gd" id="1_script"]
-[ext_resource type="PackedScene" path="res://scenes/components/streak_display.tscn" id="3_streak"]
 
 [node name="MainMenu" type="Control" unique_id=891755112]
 layout_mode = 3
@@ -26,14 +25,6 @@ theme_override_font_sizes/font_size = 48
 text = "Nice"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="StreakDisplay" parent="." unique_id=2108767143 instance=ExtResource("3_streak")]
-layout_mode = 1
-anchors_preset = 0
-offset_left = 16.0
-offset_top = 16.0
-offset_right = 136.0
-offset_bottom = 52.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1988387506]
 layout_mode = 1

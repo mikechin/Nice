@@ -607,6 +607,7 @@ These were built based on the previous iteration's design. Most have been remove
 - **`src/run/`** — RunManager, DifficultyManager, RoundManager. Difficulty scaling. Maps to the JRPG battle flow, not the pack-opening flow. (ComboManager removed — combos no longer fit the design.)
 - **`src/radicals/`** — **Removed.** Was: RadicalActivator, RadicalBonusCalculator, RadicalManager. Radical equip/activate/bonus system from the battler. Radicals' actual Phase 3 role is as the board game's strategic axis. Radical *data* (`src/database/radical_data.gd`, `radical_database.gd`) is retained.
 - **`src/database/word_database.gd`** — **Removed.** Was an unused word lookup for future fusion. Rebuild when word fusion lands in Phase 3+.
+- **`src/progression/streak_tracker.gd`** — **Removed.** Daily streak tracking. The dopamine map and design philosophy still call for streaks, but the implementation was cut to keep Phase 1 lean. Rebuild when daily-engagement features come back.
 
 ### Phase 2+ systems (built early)
 These are directionally correct but premature for Phase 1.
@@ -622,6 +623,7 @@ These are directionally correct but premature for Phase 1.
 - `scenes/components/radical_badge.gd` — **Removed.** Was a rarity-tinted equipped-state UI badge tied to the equip system.
 - `scenes/components/combo_counter.gd` — **Removed.** Combo system no longer fits the design.
 - `scenes/components/sentence_slot.gd`, `tile_slot.gd` — **Removed.** Were sentence builder UI components.
+- `scenes/components/streak_display.gd` — **Removed** with the streak system.
 
 ### What IS Phase 1 (wired and working)
 - FSRS algorithm (`src/srs/`) — full FSRS-6 port

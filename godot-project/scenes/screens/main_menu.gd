@@ -8,7 +8,6 @@ extends Control
 @onready var _profile_button: Button = $VBoxContainer/ProfileButton if has_node("VBoxContainer/ProfileButton") else null
 @onready var _settings_button: Button = $VBoxContainer/SettingsButton if has_node("VBoxContainer/SettingsButton") else null
 @onready var _title_label: Label = $TitleLabel if has_node("TitleLabel") else null
-@onready var _streak_display: Control = $StreakDisplay if has_node("StreakDisplay") else null
 
 
 func _ready() -> void:
@@ -17,12 +16,6 @@ func _ready() -> void:
 	_update_displays()
 	GameState.check_daily_reset()
 	AudioManager.play_music("main_menu")
-
-	SignalBus.streak_updated.connect(_on_streak_updated)
-
-
-func _exit_tree() -> void:
-	SignalBus.streak_updated.disconnect(_on_streak_updated)
 
 
 func _connect_buttons() -> void:
@@ -39,8 +32,6 @@ func _connect_buttons() -> void:
 func _update_displays() -> void:
 	if _title_label:
 		_title_label.text = "Nice"
-	if _streak_display and _streak_display.has_method("set_streak"):
-		_streak_display.set_streak(GameState.daily_streak)
 
 
 func _on_play_pressed() -> void:
@@ -63,11 +54,6 @@ func _on_settings_pressed() -> void:
 	SignalBus.screen_transition_requested.emit("settings")
 
 
-func _on_streak_updated(days: int) -> void:
-	if _streak_display and _streak_display.has_method("set_streak"):
-		_streak_display.set_streak(days)
-
-
 func _warn_missing_nodes() -> void:
 	if _play_button == null:
 		push_warning("main_menu.gd: missing node _play_button")
@@ -79,5 +65,3 @@ func _warn_missing_nodes() -> void:
 		push_warning("main_menu.gd: missing node _settings_button")
 	if _title_label == null:
 		push_warning("main_menu.gd: missing node _title_label")
-	if _streak_display == null:
-		push_warning("main_menu.gd: missing node _streak_display")

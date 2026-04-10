@@ -1,11 +1,10 @@
-## ProfileScreen — Displays player stats: HSK level, mastery percentage, streak,
+## ProfileScreen — Displays player stats: HSK level, mastery percentage,
 ## total mastered characters, and overall accuracy. Reads from GameState.
 class_name ProfileScreen
 extends Control
 
 @onready var _hsk_label: Label = $StatsContainer/HskLabel if has_node("StatsContainer/HskLabel") else null
 @onready var _mastery_label: Label = $StatsContainer/MasteryLabel if has_node("StatsContainer/MasteryLabel") else null
-@onready var _streak_label: Label = $StatsContainer/StreakLabel if has_node("StatsContainer/StreakLabel") else null
 @onready var _mastered_label: Label = $StatsContainer/MasteredLabel if has_node("StatsContainer/MasteredLabel") else null
 @onready var _accuracy_label: Label = $StatsContainer/AccuracyLabel if has_node("StatsContainer/AccuracyLabel") else null
 @onready var _tier_breakdown: VBoxContainer = $TierBreakdown if has_node("TierBreakdown") else null
@@ -21,12 +20,10 @@ func _ready() -> void:
 	_update_stats()
 
 	SignalBus.character_mastered.connect(_on_character_mastered)
-	SignalBus.streak_updated.connect(_on_streak_updated)
 
 
 func _exit_tree() -> void:
 	SignalBus.character_mastered.disconnect(_on_character_mastered)
-	SignalBus.streak_updated.disconnect(_on_streak_updated)
 
 
 func _update_stats() -> void:
@@ -53,10 +50,6 @@ func _update_stats() -> void:
 	var total_mastered: int = epic_chars.size() + legend_chars.size()
 	if _mastered_label:
 		_mastered_label.text = "Mastered: %d" % total_mastered
-
-	# Streak
-	if _streak_label:
-		_streak_label.text = "Daily Streak: %d days" % GameState.daily_streak
 
 	# Accuracy
 	var answered: int = GameState.cards_answered_today
@@ -101,10 +94,6 @@ func _on_character_mastered(_character: String) -> void:
 	_update_stats()
 
 
-func _on_streak_updated(_days: int) -> void:
-	_update_stats()
-
-
 func _on_back_pressed() -> void:
 	SignalBus.screen_transition_requested.emit("main_menu")
 
@@ -114,8 +103,6 @@ func _warn_missing_nodes() -> void:
 		push_warning("profile_screen.gd: missing node _hsk_label")
 	if _mastery_label == null:
 		push_warning("profile_screen.gd: missing node _mastery_label")
-	if _streak_label == null:
-		push_warning("profile_screen.gd: missing node _streak_label")
 	if _mastered_label == null:
 		push_warning("profile_screen.gd: missing node _mastered_label")
 	if _accuracy_label == null:

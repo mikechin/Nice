@@ -56,10 +56,6 @@ text = "HSK Level: --"
 layout_mode = 2
 text = "Collection: --"
 
-[node name="StreakLabel" type="Label" parent="StatsContainer"]
-layout_mode = 2
-text = "Daily Streak: --"
-
 [node name="MasteredLabel" type="Label" parent="StatsContainer"]
 layout_mode = 2
 text = "Mastered: --"

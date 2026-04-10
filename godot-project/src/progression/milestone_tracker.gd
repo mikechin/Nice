@@ -54,11 +54,6 @@ func update_from_stats(stats: Dictionary) -> Array[String]:
 		set_progress("mastery_100", stats["total_characters_mastered"])
 		set_progress("mastery_500", stats["total_characters_mastered"])
 
-	if stats.has("current_streak"):
-		set_progress("streak_7", stats["current_streak"])
-		set_progress("streak_30", stats["current_streak"])
-		set_progress("streak_100", stats["current_streak"])
-
 	if stats.has("total_runs"):
 		set_progress("runs_10", stats["total_runs"])
 		set_progress("runs_100", stats["total_runs"])

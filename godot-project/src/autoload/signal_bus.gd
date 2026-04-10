@@ -22,8 +22,6 @@ signal answer_selected(direction: String, answer: String)
 signal hsk_level_changed(old_level: int, new_level: int)
 signal character_mastered(character: String)
 signal character_decaying(character: String)
-signal streak_updated(days: int)
-signal streak_broken()
 signal milestone_achieved(milestone_id: String)
 
 # --- UI Signals ---
