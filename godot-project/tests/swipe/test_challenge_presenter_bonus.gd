@@ -80,8 +80,13 @@ func test_common_loot_resolves_immediately_on_correct() -> void:
 	# Lambdas capture ints by value, so use a 1-element Array as a counter.
 	var bonus_starts: Array[int] = [0]
 	_presenter.card_resolved.connect(
-		func(card_id: String, primary_correct: bool, boosts: Array) -> void:
-			resolved.append({"card_id": card_id, "correct": primary_correct, "boosts": boosts})
+		func(card_id: String, primary_correct: bool, base_power: int, boosts: Array) -> void:
+			resolved.append({
+				"card_id": card_id,
+				"correct": primary_correct,
+				"base_power": base_power,
+				"boosts": boosts,
+			})
 	)
 	_presenter.bonus_round_started.connect(func(_c: String) -> void: bonus_starts[0] += 1)
 
@@ -92,6 +97,8 @@ func test_common_loot_resolves_immediately_on_correct() -> void:
 	assert_str(resolved[0]["card_id"]).is_equal("好")
 	assert_bool(resolved[0]["correct"]).is_true()
 	assert_int(resolved[0]["boosts"].size()).is_equal(0)
+	# COMMON loot rarity → weakest base power.
+	assert_int(resolved[0]["base_power"]).is_equal(PowerEnums.BASE_POWER[SrsEnums.LootRarity.COMMON])
 	assert_int(bonus_starts[0]).is_equal(0)
 
 
@@ -104,7 +111,7 @@ func test_wrong_primary_resolves_with_no_boosts() -> void:
 	var resolved: Array[Dictionary] = []
 	var bonus_starts: Array[int] = [0]
 	_presenter.card_resolved.connect(
-		func(_c: String, primary_correct: bool, boosts: Array) -> void:
+		func(_c: String, primary_correct: bool, _bp: int, boosts: Array) -> void:
 			resolved.append({"correct": primary_correct, "boosts": boosts})
 	)
 	_presenter.bonus_round_started.connect(func(_c: String) -> void: bonus_starts[0] += 1)
@@ -132,8 +139,9 @@ func test_bonus_triggered_three_correct_stages_yields_three_boosts() -> void:
 		func(_c: String, stage: int) -> void: stages_started.append(stage)
 	)
 	_presenter.card_resolved.connect(
-		func(_c: String, primary_correct: bool, boosts: Array) -> void:
+		func(_c: String, primary_correct: bool, base_power: int, boosts: Array) -> void:
 			resolved["correct"] = primary_correct
+			resolved["base_power"] = base_power
 			resolved["boosts"] = boosts
 	)
 
@@ -165,7 +173,7 @@ func test_bonus_miss_after_one_correct_stops_chain_with_one_boost() -> void:
 
 	var resolved: Dictionary = {}
 	_presenter.card_resolved.connect(
-		func(_c: String, primary_correct: bool, boosts: Array) -> void:
+		func(_c: String, primary_correct: bool, _bp: int, boosts: Array) -> void:
 			resolved["correct"] = primary_correct
 			resolved["boosts"] = boosts
 	)
@@ -192,7 +200,7 @@ func test_bonus_not_triggered_when_roll_above_threshold() -> void:
 	var resolved: Dictionary = {}
 	_presenter.bonus_round_started.connect(func(_c: String) -> void: bonus_starts[0] += 1)
 	_presenter.card_resolved.connect(
-		func(_c: String, primary_correct: bool, boosts: Array) -> void:
+		func(_c: String, primary_correct: bool, _bp: int, boosts: Array) -> void:
 			resolved["correct"] = primary_correct
 			resolved["boosts"] = boosts
 	)
@@ -210,7 +218,7 @@ func test_bonus_not_triggered_when_roll_above_threshold() -> void:
 func test_no_bonus_manager_skips_bonus_path_safely() -> void:
 	_presenter.setup(_gen, null, null, null, null)
 	var resolved: Array[bool] = [false]
-	_presenter.card_resolved.connect(func(_c: String, _ok: bool, _b: Array) -> void: resolved[0] = true)
+	_presenter.card_resolved.connect(func(_c: String, _ok: bool, _bp: int, _b: Array) -> void: resolved[0] = true)
 
 	_presenter.present_challenge(_card, "meaning", SrsEnums.LootRarity.NEW_CARD)
 	_submit_correct()

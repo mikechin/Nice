@@ -182,9 +182,12 @@ func _on_bonus_round_started(_card_id: String) -> void:
 	_in_bonus_stage = true
 
 
-func _on_card_resolved(_card_id: String, primary_correct: bool, _boosts: Array) -> void:
+func _on_card_resolved(card_id: String, primary_correct: bool, base_power: int, boosts: Array) -> void:
 	if _is_transitioning:
 		return
+
+	if _run_manager:
+		_run_manager.on_card_resolved(card_id, primary_correct, base_power, boosts)
 
 	if primary_correct:
 		_correct_count += 1

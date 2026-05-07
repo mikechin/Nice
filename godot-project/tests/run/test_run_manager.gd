@@ -47,17 +47,37 @@ func test_run_summary_accuracy() -> void:
 
 # -- hand cards (carried into board game) --
 
-func test_run_summary_includes_hand_cards_for_correct_answers() -> void:
+func test_run_summary_hand_cards_records_resolutions() -> void:
 	_run.start_run(_pack)
+	# on_card_answered tracks the SRS stage; on_card_resolved seals the
+	# per-card outcome including hand membership and power.
 	_run.on_card_answered("char_a", "meaning", true, 3)
+	_run.on_card_resolved("char_a", true, 7, [])
 	_run.on_card_answered("char_b", "meaning", false, 1)
+	_run.on_card_resolved("char_b", false, 4, [])
 	_run.on_card_answered("char_c", "meaning", true, 4)
+	_run.on_card_resolved("char_c", true, 5, [])
+
+	var summary := _run.get_run_summary()
+	var ids: Array = summary["hand_card_ids"]
+	assert_int(ids.size()).is_equal(2)
+	assert_bool("char_a" in ids).is_true()
+	assert_bool("char_c" in ids).is_true()
+	assert_bool("char_b" in ids).is_false()
+
+
+func test_run_summary_hand_cards_carries_boosts() -> void:
+	_run.start_run(_pack)
+	var boosts: Array = [
+		PowerBoost.from_bonus_stage(BonusEnums.BonusStage.PINYIN),
+		PowerBoost.from_bonus_stage(BonusEnums.BonusStage.TONE),
+	]
+	_run.on_card_resolved("char_a", true, 7, boosts)
 	var summary := _run.get_run_summary()
 	var hand: Array = summary["hand_cards"]
-	assert_int(hand.size()).is_equal(2)
-	assert_bool(hand.has("char_a")).is_true()
-	assert_bool(hand.has("char_c")).is_true()
-	assert_bool(hand.has("char_b")).is_false()
+	assert_int(hand.size()).is_equal(1)
+	# 7 base + 2 boosts = 9.
+	assert_int(hand[0].get_total_power()).is_equal(9)
 
 
 # -- inactive run ignores answers --
@@ -65,4 +85,10 @@ func test_run_summary_includes_hand_cards_for_correct_answers() -> void:
 func test_inactive_run_ignores_answers() -> void:
 	_run.on_card_answered("char_a", "meaning", true, 3)
 	# Should not crash or change state when run is not active
+	assert_bool(_run.is_active).is_false()
+
+
+func test_inactive_run_ignores_resolution() -> void:
+	_run.on_card_resolved("char_a", true, 7, [])
+	# Same: a stray resolution outside an active run shouldn't crash.
 	assert_bool(_run.is_active).is_false()

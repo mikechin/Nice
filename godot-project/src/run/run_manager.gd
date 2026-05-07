@@ -66,6 +66,15 @@ func on_card_answered(card_id: String, challenge_type: String, correct: bool, ra
 		on_round_completed()
 
 
+## Per-card resolution event. Fires once per card after the primary (and
+## any bonus stages) finish. base_power + boosts feed the future board
+## game; primary_correct decides hand membership.
+func on_card_resolved(card_id: String, primary_correct: bool, base_power: int, boosts: Array) -> void:
+	if not is_active:
+		return
+	_session.record_card_resolution(card_id, primary_correct, base_power, boosts)
+
+
 func on_round_completed() -> void:
 	if round_count >= max_rounds:
 		end_run()
@@ -94,6 +103,7 @@ func get_run_summary() -> Dictionary:
 		"duration_seconds": _session.get_duration_seconds(),
 		"new_cards_seen": _session.new_cards_seen,
 		"hand_cards": _session.hand_cards.duplicate(),
+		"hand_card_ids": _session.get_hand_card_ids(),
 	}
 
 

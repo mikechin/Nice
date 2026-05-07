@@ -16,8 +16,9 @@ signal bonus_round_started(card_id: String)
 ## Fires once per bonus stage, just before its input is enabled.
 signal bonus_stage_started(card_id: String, stage: int)
 ## Terminal signal — fires exactly once per card after the primary
-## (and any bonus stages) finish. boosts is Array[PowerBoost].
-signal card_resolved(card_id: String, primary_correct: bool, boosts: Array)
+## (and any bonus stages) finish. base_power is the power frozen at draft
+## time (LootRarity → PowerEnums.BASE_POWER); boosts is Array[PowerBoost].
+signal card_resolved(card_id: String, primary_correct: bool, base_power: int, boosts: Array)
 
 var card_display: CardDisplay
 var swipe_detector: SwipeDetector
@@ -198,7 +199,8 @@ func _handle_bonus_stage_result(is_correct: bool) -> void:
 
 func _resolve_card(boosts: Array) -> void:
 	_in_bonus_round = false
-	card_resolved.emit(_current_card.character, _primary_correct, boosts)
+	var base_power := PowerCalculator.base_power(_current_loot_rarity)
+	card_resolved.emit(_current_card.character, _primary_correct, base_power, boosts)
 
 
 ## Map answer correctness + speed to an SRS rating.
