@@ -7,6 +7,7 @@ var char_db: CharacterDatabase
 
 const DIRECTIONS: Array[String] = ["up", "down", "left", "right"]
 const TONE_MARKS: Array[String] = ["· (neutral)", "ˉ (1st)", "ˊ (2nd)", "ˇ (3rd)", "ˋ (4th)"]
+const SYNTHETIC_FILLERS: Array[String] = ["—", "··", "···"]
 
 
 func _init(db: CharacterDatabase = null) -> void:
@@ -73,22 +74,17 @@ func _generate_wrong_meanings(card_data: CharacterData, count: int) -> Array[Str
 	# Strategy 1: Same radical (semantically confusable)
 	var same_radical := char_db.get_same_radical_characters(card_data.character)
 	same_radical.shuffle()
-	for cd in same_radical:
-		if result.size() >= count:
-			break
-		if cd.meaning not in seen:
-			result.append(cd.meaning)
-			seen[cd.meaning] = true
+	_collect_field(result, count, seen, same_radical, "meaning")
 
 	# Strategy 2: Same HSK level
 	if result.size() < count:
 		var same_level := char_db.get_random_same_level(card_data.character, count * 2)
-		for cd in same_level:
-			if result.size() >= count:
-				break
-			if cd.meaning not in seen:
-				result.append(cd.meaning)
-				seen[cd.meaning] = true
+		_collect_field(result, count, seen, same_level, "meaning")
+
+	# Strategy 3: Anywhere in the database (cross-level)
+	_pad_from_all(result, count, seen, "meaning")
+	# Last resort: synthetic fillers (degenerate tiny-DB case)
+	_pad_synthetic(result, count, seen)
 
 	return result
 
@@ -103,22 +99,16 @@ func _generate_wrong_characters(card_data: CharacterData, count: int) -> Array[S
 	# Same radical = visually similar
 	var same_radical := char_db.get_same_radical_characters(card_data.character)
 	same_radical.shuffle()
-	for cd in same_radical:
-		if result.size() >= count:
-			break
-		if cd.character not in seen:
-			result.append(cd.character)
-			seen[cd.character] = true
+	_collect_field(result, count, seen, same_radical, "character")
 
 	# Fallback: same level
 	if result.size() < count:
 		var same_level := char_db.get_random_same_level(card_data.character, count * 2)
-		for cd in same_level:
-			if result.size() >= count:
-				break
-			if cd.character not in seen:
-				result.append(cd.character)
-				seen[cd.character] = true
+		_collect_field(result, count, seen, same_level, "character")
+
+	# Cross-level fallback
+	_pad_from_all(result, count, seen, "character")
+	_pad_synthetic(result, count, seen)
 
 	return result
 
@@ -133,35 +123,62 @@ func _generate_wrong_pinyin(card_data: CharacterData, count: int) -> Array[Strin
 	# Similar sounding pinyin (same base)
 	var similar := char_db.get_similar_pinyin_characters(card_data.character)
 	similar.shuffle()
-	for cd in similar:
-		if result.size() >= count:
-			break
-		if cd.pinyin not in seen:
-			result.append(cd.pinyin)
-			seen[cd.pinyin] = true
+	_collect_field(result, count, seen, similar, "pinyin")
 
 	# Same tone (different pinyin)
 	if result.size() < count:
 		var same_tone := char_db.get_same_tone_characters(card_data.character)
 		same_tone.shuffle()
-		for cd in same_tone:
-			if result.size() >= count:
-				break
-			if cd.pinyin not in seen:
-				result.append(cd.pinyin)
-				seen[cd.pinyin] = true
+		_collect_field(result, count, seen, same_tone, "pinyin")
 
 	# Fallback: same level
 	if result.size() < count:
 		var same_level := char_db.get_random_same_level(card_data.character, count * 2)
-		for cd in same_level:
-			if result.size() >= count:
-				break
-			if cd.pinyin not in seen:
-				result.append(cd.pinyin)
-				seen[cd.pinyin] = true
+		_collect_field(result, count, seen, same_level, "pinyin")
+
+	# Cross-level fallback
+	_pad_from_all(result, count, seen, "pinyin")
+	_pad_synthetic(result, count, seen)
 
 	return result
+
+
+func _collect_field(result: Array[String], count: int, seen: Dictionary, pool: Array, field: String) -> void:
+	for cd in pool:
+		if result.size() >= count:
+			return
+		var key := _field_value(cd, field)
+		if key != "" and key not in seen:
+			result.append(key)
+			seen[key] = true
+
+
+func _pad_from_all(result: Array[String], count: int, seen: Dictionary, field: String) -> void:
+	if result.size() >= count or char_db == null:
+		return
+	var pool: Array = char_db.get_all().duplicate()
+	pool.shuffle()
+	_collect_field(result, count, seen, pool, field)
+
+
+func _pad_synthetic(result: Array[String], count: int, seen: Dictionary) -> void:
+	for filler in SYNTHETIC_FILLERS:
+		if result.size() >= count:
+			return
+		if filler not in seen:
+			result.append(filler)
+			seen[filler] = true
+
+
+func _field_value(cd: CharacterData, field: String) -> String:
+	match field:
+		"meaning":
+			return cd.meaning
+		"character":
+			return cd.character
+		"pinyin":
+			return cd.pinyin
+	return ""
 
 
 func _generate_wrong_tones(correct_tone: int, count: int) -> Array[String]:
@@ -183,5 +200,5 @@ func _tone_label(tone: int) -> String:
 func _fallback_strings(count: int) -> Array[String]:
 	var result: Array[String] = []
 	for i in count:
-		result.append("???")
+		result.append(SYNTHETIC_FILLERS[i % SYNTHETIC_FILLERS.size()])
 	return result

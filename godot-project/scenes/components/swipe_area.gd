@@ -26,6 +26,13 @@ const ARROW_CHARS: Dictionary = {
 	"right": ">",
 }
 
+const VECTOR_BY_LABEL: Dictionary = {
+	"up": Vector2.UP,
+	"down": Vector2.DOWN,
+	"left": Vector2.LEFT,
+	"right": Vector2.RIGHT,
+}
+
 const IDLE_ALPHA: float = 0.4
 const ACTIVE_ALPHA: float = 1.0
 
@@ -110,9 +117,7 @@ func _on_swipe_completed(direction: String) -> void:
 		return
 	_flash_direction(direction)
 	direction_swiped.emit(direction)
-	SignalBus.swipe_detected.emit(ChallengeEnums.DIRECTION_VECTORS.get(
-		ChallengeEnums.SwipeDirection.UP, Vector2.ZERO
-	))
+	SignalBus.swipe_detected.emit(VECTOR_BY_LABEL.get(direction, Vector2.ZERO))
 
 	var answer: String = _answer_map.get(direction, "")
 	if answer != "":

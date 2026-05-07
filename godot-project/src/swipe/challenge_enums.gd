@@ -3,7 +3,9 @@ class_name ChallengeEnums
 extends RefCounted
 
 ## Directions the player can swipe to select an answer.
-enum SwipeDirection { UP, DOWN, LEFT, RIGHT }
+## NONE represents a degenerate input (e.g. zero-magnitude vector) so callers
+## don't get a silent default of RIGHT.
+enum SwipeDirection { UP, DOWN, LEFT, RIGHT, NONE }
 
 ## How wrong answers are generated.
 enum DistractorStrategy {
@@ -22,6 +24,7 @@ const DIRECTION_LABELS: Dictionary = {
 	SwipeDirection.DOWN: "down",
 	SwipeDirection.LEFT: "left",
 	SwipeDirection.RIGHT: "right",
+	SwipeDirection.NONE: "none",
 }
 
 const DIRECTION_VECTORS: Dictionary = {
@@ -29,9 +32,12 @@ const DIRECTION_VECTORS: Dictionary = {
 	SwipeDirection.DOWN: Vector2.DOWN,
 	SwipeDirection.LEFT: Vector2.LEFT,
 	SwipeDirection.RIGHT: Vector2.RIGHT,
+	SwipeDirection.NONE: Vector2.ZERO,
 }
 
 static func direction_from_vector(v: Vector2) -> SwipeDirection:
+	if v == Vector2.ZERO:
+		return SwipeDirection.NONE
 	var abs_v := v.abs()
 	if abs_v.y > abs_v.x:
 		return SwipeDirection.UP if v.y < 0 else SwipeDirection.DOWN

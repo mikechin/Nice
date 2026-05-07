@@ -131,3 +131,44 @@ func test_no_database_uses_fallback() -> void:
 	# Should still have 4 directions, correct answer filled
 	assert_bool(result.has("up")).is_true()
 	assert_bool(result.has("correct_direction")).is_true()
+
+
+# -- distractor backstop: every direction is filled, even with a tiny DB --
+
+func test_tiny_db_still_fills_four_directions() -> void:
+	# Regression: with no same-radical / same-level candidates, the previous
+	# implementation left some directions unset (blank answer slots in the UI).
+	var tiny_db := CharacterDatabase.new()
+	var solo: Array[CharacterData] = [_test_card]
+	tiny_db.load_from_array(solo)
+	var gen := AnswerGenerator.new(tiny_db)
+
+	var result := gen.generate_answers(_test_card, "meaning")
+	for dir in ["up", "down", "left", "right"]:
+		var v: String = result.get(dir, "")
+		assert_str(v).is_not_equal("")
+
+
+func test_tiny_db_distractors_are_unique() -> void:
+	var tiny_db := CharacterDatabase.new()
+	var solo: Array[CharacterData] = [_test_card]
+	tiny_db.load_from_array(solo)
+	var gen := AnswerGenerator.new(tiny_db)
+
+	var result := gen.generate_answers(_test_card, "character")
+	var seen := {}
+	for dir in ["up", "down", "left", "right"]:
+		var v: String = result[dir]
+		assert_bool(seen.has(v)).is_false()
+		seen[v] = true
+
+
+func test_no_db_fallback_strings_are_unique() -> void:
+	# Ensures the no-DB safety net still produces 4 distinct slots.
+	var gen_no_db := AnswerGenerator.new(null)
+	var result := gen_no_db.generate_answers(_test_card, "meaning")
+	var seen := {}
+	for dir in ["up", "down", "left", "right"]:
+		var v: String = result[dir]
+		assert_bool(seen.has(v)).is_false()
+		seen[v] = true

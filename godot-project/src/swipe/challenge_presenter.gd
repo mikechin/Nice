@@ -14,12 +14,26 @@ var _current_challenge_type: String
 var _current_answers: Dictionary
 var _current_loot_rarity: SrsEnums.LootRarity
 var _challenge_start_time: float = 0.0
+var _pause_start_ms: float = -1.0
 var _is_active: bool = false
 
 
 func _ready() -> void:
 	if swipe_detector:
 		swipe_detector.swipe_completed.connect(_on_swipe)
+
+
+func _notification(what: int) -> void:
+	# When the app pauses (mobile background) or loses focus, freeze the
+	# challenge timer so a returning user isn't penalized with a HARD rating.
+	match what:
+		NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_APPLICATION_FOCUS_OUT:
+			if _is_active and _pause_start_ms < 0.0:
+				_pause_start_ms = Time.get_ticks_msec()
+		NOTIFICATION_APPLICATION_RESUMED, NOTIFICATION_APPLICATION_FOCUS_IN:
+			if _pause_start_ms >= 0.0:
+				_challenge_start_time += Time.get_ticks_msec() - _pause_start_ms
+				_pause_start_ms = -1.0
 
 
 func setup(ag: AnswerGenerator, cd: CardDisplay = null, sd: SwipeDetector = null) -> void:
@@ -36,6 +50,7 @@ func present_challenge(card_data: CharacterData, challenge_type: String, loot_ra
 	_current_challenge_type = challenge_type
 	_current_loot_rarity = loot_rarity
 	_challenge_start_time = Time.get_ticks_msec()
+	_pause_start_ms = -1.0
 	_is_active = true
 
 	# Generate answer layout
@@ -118,7 +133,7 @@ func get_challenge_prompt(card_data: CharacterData, challenge_type: String) -> S
 		"pinyin":
 			return card_data.character  # Show character, ask for pinyin
 		"tone":
-			return card_data.pinyin     # Show pinyin without tone, ask for tone
+			return card_data.get_base_pinyin()  # Show pinyin without tone, ask for tone
 	return card_data.character
 
 

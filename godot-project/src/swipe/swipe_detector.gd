@@ -14,31 +14,34 @@ var max_swipe_time: float = 1.0  # seconds
 var _swipe_start_time: float = 0.0
 
 
-func _input(event: InputEvent) -> void:
+func _gui_input(event: InputEvent) -> void:
+	# _gui_input (not _input) so events outside our rect — or consumed by an
+	# overlay button — don't accidentally start a swipe.
 	if not is_enabled:
 		return
 
-	if event is InputEventScreenTouch or event is InputEventMouseButton:
-		var pressed: bool
-		var position: Vector2
-		if event is InputEventScreenTouch:
-			pressed = event.pressed
-			position = event.position
-		else:
-			pressed = event.pressed
-			position = event.position
-
-		if pressed:
-			_start_swipe(position)
+	if event is InputEventScreenTouch:
+		# Only the primary finger drives the swipe; extra fingers must not reset state.
+		if event.index != 0:
+			return
+		if event.pressed:
+			_start_swipe(event.position)
 		elif is_swiping:
-			_end_swipe(position)
-
-	elif event is InputEventScreenDrag and is_swiping:
-		# Optional: visual feedback during drag
-		pass
+			_end_swipe(event.position)
+			accept_event()
+	elif event is InputEventMouseButton:
+		if event.button_index != MOUSE_BUTTON_LEFT:
+			return
+		if event.pressed:
+			_start_swipe(event.position)
+		elif is_swiping:
+			_end_swipe(event.position)
+			accept_event()
 
 
 func _start_swipe(pos: Vector2) -> void:
+	if is_swiping:
+		return  # Already tracking a swipe; ignore re-entry from a stray press.
 	swipe_start = pos
 	is_swiping = true
 	_swipe_start_time = Time.get_ticks_msec() / 1000.0

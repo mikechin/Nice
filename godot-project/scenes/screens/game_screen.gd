@@ -181,6 +181,9 @@ func _on_challenge_completed(card_id: String, challenge_type: String, correct: b
 
 
 func _on_transition_timeout() -> void:
+	# SceneTreeTimer keeps firing even if the screen has exited the tree.
+	if not is_inside_tree():
+		return
 	_is_transitioning = false
 	_present_next_card()
 

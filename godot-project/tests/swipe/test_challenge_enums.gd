@@ -47,3 +47,20 @@ func test_direction_vectors_values_correct() -> void:
 	assert_that(ChallengeEnums.DIRECTION_VECTORS[ChallengeEnums.SwipeDirection.DOWN]).is_equal(Vector2.DOWN)
 	assert_that(ChallengeEnums.DIRECTION_VECTORS[ChallengeEnums.SwipeDirection.LEFT]).is_equal(Vector2.LEFT)
 	assert_that(ChallengeEnums.DIRECTION_VECTORS[ChallengeEnums.SwipeDirection.RIGHT]).is_equal(Vector2.RIGHT)
+
+
+# -- degenerate input: zero vector returns NONE, not a silent default --
+
+func test_direction_from_zero_vector_returns_none() -> void:
+	# Regression: the previous implementation silently returned RIGHT for
+	# Vector2.ZERO, which masked degenerate inputs from callers.
+	var dir := ChallengeEnums.direction_from_vector(Vector2.ZERO)
+	assert_int(dir).is_equal(ChallengeEnums.SwipeDirection.NONE)
+
+
+func test_direction_to_string_none() -> void:
+	assert_str(ChallengeEnums.direction_to_string(ChallengeEnums.SwipeDirection.NONE)).is_equal("none")
+
+
+func test_direction_vectors_none_is_zero() -> void:
+	assert_that(ChallengeEnums.DIRECTION_VECTORS[ChallengeEnums.SwipeDirection.NONE]).is_equal(Vector2.ZERO)

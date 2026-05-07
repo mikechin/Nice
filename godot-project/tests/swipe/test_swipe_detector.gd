@@ -71,3 +71,51 @@ func test_set_enabled_false_resets() -> void:
 
 func test_min_swipe_distance_default() -> void:
 	assert_float(_detector.min_swipe_distance).is_equal(80.0)
+
+
+# -- input filtering: re-entrant press must not corrupt origin --
+
+func test_start_swipe_ignores_re_entry() -> void:
+	# Regression: a second press while a swipe is in progress (e.g. a second
+	# touch finger) used to overwrite swipe_start, garbling the eventual delta.
+	_detector._start_swipe(Vector2(100, 100))
+	var first_origin := _detector.swipe_start
+	_detector._start_swipe(Vector2(500, 500))
+	assert_that(_detector.swipe_start).is_equal(first_origin)
+
+
+func test_extra_finger_does_not_reset_origin() -> void:
+	# Simulate primary finger press, then a non-primary finger press.
+	var primary := InputEventScreenTouch.new()
+	primary.index = 0
+	primary.pressed = true
+	primary.position = Vector2(100, 100)
+	_detector._gui_input(primary)
+
+	var secondary := InputEventScreenTouch.new()
+	secondary.index = 1
+	secondary.pressed = true
+	secondary.position = Vector2(500, 500)
+	_detector._gui_input(secondary)
+
+	assert_bool(_detector.is_swiping).is_true()
+	assert_that(_detector.swipe_start).is_equal(Vector2(100, 100))
+
+
+func test_non_left_mouse_button_ignored() -> void:
+	var event := InputEventMouseButton.new()
+	event.button_index = MOUSE_BUTTON_RIGHT
+	event.pressed = true
+	event.position = Vector2(200, 200)
+	_detector._gui_input(event)
+	assert_bool(_detector.is_swiping).is_false()
+
+
+func test_left_mouse_button_starts_swipe() -> void:
+	var event := InputEventMouseButton.new()
+	event.button_index = MOUSE_BUTTON_LEFT
+	event.pressed = true
+	event.position = Vector2(150, 150)
+	_detector._gui_input(event)
+	assert_bool(_detector.is_swiping).is_true()
+	assert_that(_detector.swipe_start).is_equal(Vector2(150, 150))
