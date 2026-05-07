@@ -80,6 +80,16 @@ func test_run_summary_hand_cards_carries_boosts() -> void:
 	assert_int(hand[0].get_total_power()).is_equal(9)
 
 
+func test_run_summary_includes_total_hand_power() -> void:
+	_run.start_run(_pack)
+	_run.on_card_resolved("char_a", true, 7,
+		[PowerBoost.from_bonus_stage(BonusEnums.BonusStage.PINYIN)])  # 8
+	_run.on_card_resolved("char_b", true, 4, [])                      # 4
+	_run.on_card_resolved("char_c", false, 9, [])                     # ignored
+	var summary := _run.get_run_summary()
+	assert_int(summary["total_hand_power"]).is_equal(12)
+
+
 # -- inactive run ignores answers --
 
 func test_inactive_run_ignores_answers() -> void:

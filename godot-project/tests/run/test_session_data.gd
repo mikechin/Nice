@@ -94,6 +94,18 @@ func test_get_hand_card_ids_returns_string_list() -> void:
 	assert_bool("ni3" in ids).is_false()
 
 
+func test_get_total_hand_power_sums_across_cards() -> void:
+	var boosts: Array = [PowerBoost.from_bonus_stage(BonusEnums.BonusStage.PINYIN)]
+	session.record_card_resolution("wo3", true, 7, boosts)  # 7 + 1 = 8
+	session.record_card_resolution("hao3", true, 4, [])     # 4
+	session.record_card_resolution("ni3", false, 9, [])     # not added
+	assert_int(session.get_total_hand_power()).is_equal(12)
+
+
+func test_get_total_hand_power_zero_when_empty() -> void:
+	assert_int(session.get_total_hand_power()).is_equal(0)
+
+
 # -- serialization --
 
 func test_to_dict_has_expected_keys() -> void:

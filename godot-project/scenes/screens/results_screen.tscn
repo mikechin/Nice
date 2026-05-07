@@ -49,6 +49,16 @@ text = "Accuracy: --"
 layout_mode = 2
 text = "Rounds: --"
 
+[node name="PowerLabel" type="Label" parent="StatsContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Total Power: --"
+
+[node name="HandCardsLabel" type="Label" parent="StatsContainer"]
+layout_mode = 2
+text = ""
+autowrap_mode = 2
+
 [node name="ButtonContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 7

@@ -85,6 +85,15 @@ func get_hand_card_ids() -> Array[String]:
 	return ids
 
 
+## Sum of every hand card's total power. Drives the results-screen payoff
+## and seeds the Phase 3 board-game stats display.
+func get_total_hand_power() -> int:
+	var total := 0
+	for hc in hand_cards:
+		total += hc.get_total_power()
+	return total
+
+
 func to_dict() -> Dictionary:
 	var hand_dicts: Array = []
 	for hc in hand_cards:

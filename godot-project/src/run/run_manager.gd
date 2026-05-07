@@ -104,6 +104,7 @@ func get_run_summary() -> Dictionary:
 		"new_cards_seen": _session.new_cards_seen,
 		"hand_cards": _session.hand_cards.duplicate(),
 		"hand_card_ids": _session.get_hand_card_ids(),
+		"total_hand_power": _session.get_total_hand_power(),
 	}
 
 
