@@ -19,6 +19,8 @@ Build out the core SRS engine, data pipeline, collection, and pack-opening loop 
 - Custom Resource types (`extends Resource`) for typed data structures, not raw dictionaries
 - SRS tracks per-card, per-challenge-type (meaning, character, pinyin, tone, recall_pinyin) independently
 - Every `src/` file should have a corresponding test file in `tests/`
+- **Study interaction**: 4-direction swipe-or-tap (`src/swipe/`). Same input for all cards; rares get a distinct "ting" + glow on correct, common treatment on miss. Rare/epic cards have a 20% chance to trigger a slot-machine-style bonus round chaining additional challenge types — each correct stage adds to the card's board game power.
+- **Hand carry-forward**: cards answered correctly in a run are collected into `SessionData.hand_cards` and surfaced via `RunManager.get_run_summary()` — this is the bridge into the future Phase 3 Triple Triad-style board game.
 
 ## FSRS Source
 
@@ -27,9 +29,10 @@ Porting from ts-fsrs (TypeScript): https://github.com/open-spaced-repetition/ts-
 ## Running Tests
 
 ```bash
-# From Godot editor: install GdUnit4 addon, then run via GdUnit4 panel
+# From Godot editor: install GdUnit4 addon (gitignored — user maintains locally),
+# then run via GdUnit4 panel.
 # Or via command line:
-godot --headless -s addons/gdunit4/bin/GdUnitCmdTool.gd --run-all
+godot --headless -s addons/gdUnit4/bin/GdUnitCmdTool.gd --run-all
 ```
 
 ## Data Pipeline

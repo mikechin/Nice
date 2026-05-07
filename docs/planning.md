@@ -45,7 +45,9 @@ Commons flip fast with small satisfying sounds. The pack slows down when a rare 
 
 ### The Study Interaction
 
-**TBD — the core gameplay mechanic for answering/reviewing cards has not been finalized.** Candidates include swipe-based, JRPG battle, drag-to-match, or something else entirely. What matters: the interaction must feel good for commons (fast, rhythmic) and special for rares (weighty, rewarding).
+**Resolved — 4-direction swipe-or-tap.** The base interaction shows the prompt with four answer choices arranged in cardinal directions (up/down/left/right). The player either swipes toward the correct answer or taps the corresponding directional button. Mobile-native, fast, rhythmic — fits the "common cards must feel like ripping through a pack" priority.
+
+Rare and epic cards layer a **weighty rare-card treatment** on top of the same base interaction (full reveal animation, optional bonus round chaining additional challenge stages — see Phase 1 Draft Phase below). Same input mechanic, different ceremony.
 
 ### Card Rarity = SRS Mastery
 
@@ -120,13 +122,19 @@ A sealed pack of 10-15 cards, SRS-curated. The player opens them one at a time �
 **Challenge flow per card:**
 
 - **Common cards:** Single challenge (meaning recognition). Quick, rhythmic. No additional power-up stages. Commons are filler by design — fast to get through, lowest board game power.
-- **Rare/Epic cards:** Single challenge, BUT have a random chance to trigger a **bonus round** (slot-machine style). When bonus round triggers, the player gets additional challenge stages to boost the card's power further:
-  - Meaning correct → +boost
-  - Character recognition → +boost
-  - Pinyin correct → +boost
-  - Tone correct → +boost
+- **Rare/Epic cards:** Single challenge, BUT have a **20% chance** to trigger a **bonus round** (slot-machine style). When bonus round triggers, the player gets additional challenge stages that each add to the card's **board game power**:
+  - Meaning correct → +board power
+  - Character recognition → +board power
+  - Pinyin correct → +board power
+  - Tone correct → +board power
   - Miss at any stage → stop boosting, move to next card
-- **Bonus rounds are exciting, not exhausting.** They should feel like a slot machine bonus game — "Yes! Bonus round! More power possible!" Not every rare/epic gets one. The randomness creates anticipation.
+- **Bonus rounds are exciting, not exhausting.** They should feel like a slot machine bonus game — "Yes! Bonus round! More power possible!" Not every rare/epic gets one — at 20% the trigger feels lucky, not expected.
+
+**Rare-card layer (presentation around the same swipe/tap input):**
+
+- **Reveal:** Same timing as commons (no slowdown — the pack stays rhythmic). Distinct "ting" sound when a rare card surfaces signals the moment.
+- **Correct answer:** Glow effect + sound. If SRS promotes the card a tier, layer the tier-promotion glow on top.
+- **Wrong answer:** Same treatment as commons. No extra punishment for missing a rare — SRS will bring it back.
 
 **Draft rules:**
 - **Get the challenge right** → card goes to your hand for the board game
@@ -613,7 +621,7 @@ These were built based on the previous iteration's design. Most have been remove
 These are directionally correct but premature for Phase 1.
 
 - **`src/sentences/`** — **Removed.** Was: SentenceBuilder, SentenceValidator, BossRoundManager, DailyGoalManager, WeeklyTrialManager. Sentence building and boss rounds belong to Phase 2+ when the session flow is fleshed out. Rebuild from scratch when needed.
-- **`src/swipe/swipe_detector.gd`, `card_display.gd`** — Swipe-based interaction. The core challenge mechanic is TBD (might be swipe, might be something else). AnswerGenerator and ChallengePresenter are usable regardless of mechanic.
+- **`src/swipe/`** — Swipe + 4-direction tap interaction. Now the committed core challenge mechanic. SwipeDetector handles touch input, ChallengePresenter orchestrates per-card flow, AnswerGenerator builds the four answer choices.
 - **`scenes/screens/run_select.gd`** — Screen script for features not in Phase 1. (boss_round_screen and daily_weekly_screen removed.)
 
 ### Removed scene scripts and components
@@ -698,6 +706,8 @@ Port from ts-fsrs (TypeScript). Key concepts:
 
 ### Resolved
 - [x] **Core game mechanic** — Two-phase session: draft (SRS pack opening with challenges) + optional board game (Triple Triad-style 3x3 grid placement). See Game Mechanic section.
+- [x] **Study interaction (input)** — 4-direction swipe-or-tap. Same input for all cards; rares get distinct sound + glow on correct, common treatment on miss.
+- [x] **Bonus round trigger rate** — 20% chance on rare/epic cards. Boost applies to board game power.
 - [x] **Radical role in game** — Radical groups form a circular strength/weakness cycle on the board game. Strategic axis.
 - [x] **Sound group role in game** — Sound groups determine power and enable adjacency synergy bonuses. Power axis.
 - [x] **Card variants** — Two collectible visual variants: foil (random chance in draft) and parallax (captured in board game).
@@ -711,7 +721,6 @@ Port from ts-fsrs (TypeScript). Key concepts:
 - [ ] **Rime synergy balance** — how often does it realistically trigger? Is the bonus generous enough to chase? Needs data analysis of rime family distribution across HSK 2-5.
 - [ ] **Pack size** — 10 or 15 cards? 15 may create sessions that are too long (15-60 interactions in draft alone). Needs playtesting. Leaning toward 10-12.
 - [ ] **Computer opponent hand construction** — how are values assigned? Always max power? Random? Scaled to player? Directly affects difficulty and fairness.
-- [ ] **Bonus round trigger rate** — how often should rare/epic cards trigger the slot-machine-style power-up bonus? Too frequent = exhausting, too rare = forgettable.
 - [ ] **Board game card power visibility** — how much math is shown to the player? Base power + boosts + radical matchup + rime synergy = potentially opaque. Needs clean UI solution.
 - [ ] **Bad beat protection** — what happens when SRS gives you 12 commons and 3 struggling cards you fumble? Practice mode helps, but should there be pack composition guarantees?
 - [ ] **Beginner onboarding for board game** — new players don't understand radical groups yet. Beginner NPCs in open world mode solve this, but what about before open world is built?
@@ -740,7 +749,7 @@ Port from ts-fsrs (TypeScript). Key concepts:
 **Resolved.** Fifth challenge type: **Recall Pinyin.** Character appears with no options, player types pinyin. Only triggers for well-known cards. SRS tracks independently. Unlocks once player has enough mastered pinyin cards. Phase 4 feature.
 
 ### 2. Wrong-answer feedback
-**Unresolved.** Depends on core game mechanic. The correct answer needs to be shown briefly without breaking flow. Options depend on whether the mechanic is swipe, battle, or something else.
+**Open — design detail.** Now that the mechanic is 4-direction swipe/tap, the correct-answer slot needs a brief flash treatment (e.g., the wrong choice the player picked dims red, the correct choice pulses green) before the next card. Needs prototyping. Should not gate progression — flow stays fast even on misses.
 
 ### 3. HSK level progression pacing
 **Partially resolved.** Collection completion percentage is now a more natural progression metric than HSK level alone. HSK level could be a milestone marker rather than the primary number. Collection grid filling up IS the progression.
