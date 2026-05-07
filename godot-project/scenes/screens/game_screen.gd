@@ -22,14 +22,24 @@ var _correct_count: int = 0
 var _is_transitioning: bool = false
 var _answer_generator: AnswerGenerator
 var _run_manager: RunManager
+var _bonus_manager: BonusRoundManager
+var _rng: RandomNumberGenerator
+## True between bonus_round_started and card_resolved; lets the per-stage
+## challenge_completed handler skip per-card bookkeeping for bonus stages.
+var _in_bonus_stage: bool = false
 
 
 func _ready() -> void:
 	_warn_missing_nodes()
 	_answer_generator = AnswerGenerator.new(GameState.character_db)
+	_bonus_manager = BonusRoundManager.new()
+	_rng = RandomNumberGenerator.new()
+	_rng.randomize()
 
 	if _challenge_presenter:
 		_challenge_presenter.challenge_completed.connect(_on_challenge_completed)
+		_challenge_presenter.bonus_round_started.connect(_on_bonus_round_started)
+		_challenge_presenter.card_resolved.connect(_on_card_resolved)
 
 	SignalBus.card_presented.connect(_on_card_presented)
 
@@ -87,8 +97,10 @@ func _present_next_card() -> void:
 	if _card_prompt_label:
 		_card_prompt_label.remove_theme_color_override("font_color")
 
+	_in_bonus_stage = false
+
 	if _challenge_presenter:
-		_challenge_presenter.setup(_answer_generator)
+		_challenge_presenter.setup(_answer_generator, null, null, _bonus_manager, _rng)
 		_challenge_presenter.present_challenge(card_data, challenge_type, loot_rarity)
 
 
@@ -140,20 +152,18 @@ func _on_challenge_completed(card_id: String, challenge_type: String, correct: b
 	if _is_transitioning:
 		return
 
-	# Record in RunManager
-	if _run_manager:
+	# RunManager tracks per-card progress only — bonus stages share the
+	# primary card and must not double-count toward round completion.
+	if _run_manager and not _in_bonus_stage:
 		_run_manager.on_card_answered(card_id, challenge_type, correct, rating)
 
-	# Record in SRS scheduler
+	# SRS records every stage independently (per-card, per-challenge-type).
 	var now := Time.get_unix_time_from_system()
 	var review_result: Dictionary = GameState.review_scheduler.record_review(
 		card_id, challenge_type, rating, now
 	)
 
 	if correct:
-		_correct_count += 1
-
-		# Check for tier promotion
 		var promotion: Dictionary = review_result.get("promotion", {})
 		if promotion.get("promoted", false):
 			AudioManager.play_tier_promotion()
@@ -167,14 +177,24 @@ func _on_challenge_completed(card_id: String, challenge_type: String, correct: b
 		if _card_prompt_label:
 			_card_prompt_label.add_theme_color_override("font_color", Color(1.0, 0.2, 0.2))
 
-	# Clear answer labels
+
+func _on_bonus_round_started(_card_id: String) -> void:
+	_in_bonus_stage = true
+
+
+func _on_card_resolved(_card_id: String, primary_correct: bool, _boosts: Array) -> void:
+	if _is_transitioning:
+		return
+
+	if primary_correct:
+		_correct_count += 1
+
+	_in_bonus_stage = false
 	_clear_answer_labels()
 
-	# Advance to next card
 	_card_index += 1
 	_update_progress()
 
-	# Delay before next card for visual feedback
 	_is_transitioning = true
 	var timer := get_tree().create_timer(0.6)
 	timer.timeout.connect(_on_transition_timeout)
