@@ -42,27 +42,12 @@ func _exit_tree() -> void:
 
 
 func _start_session() -> void:
-	print("[GameScreen] _start_session called")
-	print("[GameScreen] GameState.is_in_run = ", GameState.is_in_run)
-	print("[GameScreen] GameState.current_pack = ", GameState.current_pack)
-	print("[GameScreen] character_db loaded = ", GameState.character_db.is_loaded(), ", count = ", GameState.character_db.get_count())
-	print("[GameScreen] review_scheduler card_states count = ", GameState.review_scheduler.card_states.size())
-
 	_pack = GameState.current_pack
 	if _pack == null:
-		# Curate a fresh pack if none was set
-		print("[GameScreen] No current_pack, curating fresh pack...")
 		var now := Time.get_unix_time_from_system()
 		var new_ids := GameState.review_scheduler.get_new_card_ids()
-		print("[GameScreen] new_card_ids count = ", new_ids.size())
 		_pack = GameState.review_scheduler.curate_pack(now, SrsConfig.PACK_SIZE_DEFAULT, new_ids)
 		GameState.current_pack = _pack
-
-	print("[GameScreen] Pack total = ", _pack.get_total_count())
-	print("[GameScreen]   struggling = ", _pack.struggling_cards.size())
-	print("[GameScreen]   common = ", _pack.common_cards.size())
-	print("[GameScreen]   new = ", _pack.new_cards.size())
-	print("[GameScreen]   returning_mastered = ", _pack.returning_mastered.size())
 
 	if _pack.presentation_order.is_empty():
 		_pack.build_presentation_order()
@@ -72,11 +57,6 @@ func _start_session() -> void:
 	_correct_count = 0
 	_is_transitioning = false
 
-	print("[GameScreen] presentation_order size = ", _total_cards)
-	if _total_cards > 0:
-		print("[GameScreen] first few cards: ", _pack.presentation_order.slice(0, mini(5, _total_cards)))
-
-	# Create RunManager for this session
 	_run_manager = RunManager.new()
 	_run_manager.start_run(_pack)
 
@@ -86,15 +66,12 @@ func _start_session() -> void:
 
 
 func _present_next_card() -> void:
-	print("[GameScreen] _present_next_card: index=%d / total=%d" % [_card_index, _total_cards])
 	if _card_index >= _total_cards:
-		print("[GameScreen] All cards done, going to pack_complete")
 		_on_pack_complete()
 		return
 
 	var card_id: String = _pack.presentation_order[_card_index]
 	var card_data: CharacterData = GameState.character_db.get_character(card_id)
-	print("[GameScreen] card_id='%s', card_data=%s" % [card_id, "found" if card_data else "NULL"])
 	if card_data == null:
 		# Skip missing cards
 		_card_index += 1
