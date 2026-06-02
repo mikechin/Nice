@@ -30,11 +30,11 @@ AccessibilityManager="*res://src/autoload/accessibility_manager.gd"
 
 [display]
 
-window/size/viewport_width=1080
-window/size/viewport_height=1920
+window/size/viewport_width=1920
+window/size/viewport_height=1080
 window/stretch/mode="viewport"
-window/stretch/aspect="keep_width"
-window/handheld/orientation=1
+window/stretch/aspect="keep_height"
+window/handheld/orientation=0
 
 [editor_plugins]
 
