@@ -1,0 +1,1670 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Style guide — Chinese character TCG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ──────────────── TOKENS ──────────────── */
+:root {
+  /* Warm dark surfaces */
+  --bg:           oklch(0.165 0.012 62);
+  --bg-deep:      oklch(0.135 0.010 60);
+  --surface:      oklch(0.205 0.014 62);
+  --elevated:     oklch(0.245 0.016 65);
+  --hairline:     oklch(0.32 0.014 65 / 0.7);
+  --hairline-soft:oklch(0.32 0.014 65 / 0.35);
+
+  /* Text */
+  --ink:          oklch(0.965 0.006 82);
+  --ink-2:        oklch(0.78 0.012 78);
+  --ink-3:        oklch(0.56 0.012 72);
+  --ink-4:        oklch(0.42 0.012 70);
+
+  /* Primary action — cream paper, like a flipped card */
+  --paper:        oklch(0.945 0.014 78);
+  --paper-press:  oklch(0.895 0.016 76);
+
+  /* The accent — amber/gold. Reserved for rare pulls + legendary. */
+  --gold:         oklch(0.80 0.135 76);
+  --gold-deep:    oklch(0.66 0.135 64);
+  --gold-glow:    oklch(0.86 0.16 82 / 0.55);
+
+  /* Semantic */
+  --correct:      oklch(0.74 0.105 158);
+  --incorrect:    oklch(0.66 0.155 32);
+  --struggling:   oklch(0.78 0.115 70);
+
+  /* Rarity hues — used as subtle border / corner accents */
+  --r-new:        oklch(0.74 0.060 220);
+  --r-common:     oklch(0.70 0.018 78);
+  --r-uncommon:   oklch(0.74 0.080 168);
+  --r-rare:       oklch(0.72 0.115 285);
+  --r-legend:     var(--gold);
+
+  /* Spacing — 4 base */
+  --s-1:  4px;
+  --s-2:  8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 96px;
+
+  /* Radii */
+  --r-xs: 4px;   /* chips, tags */
+  --r-sm: 8px;   /* inputs, small surfaces */
+  --r-md: 12px;  /* buttons, controls */
+  --r-lg: 18px;  /* sheets, panels */
+  --r-card: 22px;/* THE card radius */
+  --r-xl: 28px;  /* modals */
+  --r-pill: 999px;
+
+  /* Type */
+  --f-cn: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+  --f-ui: "Manrope", system-ui, -apple-system, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--ink); }
+body {
+  font-family: var(--f-ui);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background:
+    radial-gradient(1200px 700px at 80% -10%, oklch(0.24 0.025 70 / 0.6), transparent 60%),
+    radial-gradient(900px 600px at -10% 30%, oklch(0.22 0.02 80 / 0.5), transparent 65%),
+    var(--bg);
+  min-height: 100vh;
+}
+
+/* ──────────────── LAYOUT ──────────────── */
+.page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--s-9) var(--s-7) var(--s-9);
+}
+section { padding: var(--s-9) 0; border-top: 1px solid var(--hairline-soft); }
+section:first-of-type { border-top: 0; padding-top: 0; }
+
+.eyebrow {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: var(--s-3);
+}
+.section-title {
+  font-family: var(--f-ui);
+  font-weight: 600;
+  font-size: 36px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: var(--s-3);
+}
+.section-lede {
+  color: var(--ink-2);
+  max-width: 62ch;
+  font-size: 16px;
+  margin-bottom: var(--s-7);
+}
+
+/* ──────────────── COVER ──────────────── */
+.cover {
+  position: relative;
+  padding: var(--s-9) 0 var(--s-8);
+}
+.cover .crest {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: var(--s-6);
+  display: flex;
+  gap: var(--s-3);
+  align-items: center;
+}
+.cover .crest .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 12px var(--gold-glow); }
+.cover h1 {
+  font-family: var(--f-ui);
+  font-weight: 700;
+  font-size: clamp(48px, 6vw, 84px);
+  line-height: 0.96;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  margin-bottom: var(--s-5);
+  max-width: 14ch;
+}
+.cover h1 .cn {
+  font-family: var(--f-cn);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--gold);
+  font-size: 0.92em;
+  vertical-align: -0.02em;
+}
+.cover .lede {
+  font-size: 19px;
+  color: var(--ink-2);
+  max-width: 60ch;
+  line-height: 1.55;
+}
+.cover .meta {
+  margin-top: var(--s-7);
+  display: flex;
+  gap: var(--s-7);
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+.cover .meta b { display: block; color: var(--ink); font-weight: 500; font-size: 14px; margin-bottom: 2px; }
+
+.cover-strip {
+  margin-top: var(--s-8);
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  height: 64px;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  border: 1px solid var(--hairline-soft);
+}
+.cover-strip > div { height: 100%; }
+
+/* ──────────────── PALETTE ──────────────── */
+.palette-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--s-4);
+}
+.palette-grid.surfaces { grid-template-columns: repeat(3, 1fr); }
+.palette-grid.semantic { grid-template-columns: repeat(3, 1fr); }
+.swatch {
+  border: 1px solid var(--hairline-soft);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--surface);
+}
+.swatch .chip {
+  height: 110px;
+  border-bottom: 1px solid var(--hairline-soft);
+  position: relative;
+}
+.swatch .chip.with-text {
+  display: flex;
+  align-items: flex-end;
+  padding: var(--s-3) var(--s-4);
+}
+.swatch .chip.with-text span {
+  font-family: var(--f-cn);
+  font-weight: 700;
+  font-size: 32px;
+}
+.swatch .body { padding: var(--s-3) var(--s-4) var(--s-4); }
+.swatch .name { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+.swatch .role { color: var(--ink-3); font-size: 12px; margin-bottom: var(--s-2); }
+.swatch .val  { font-family: var(--f-mono); font-size: 11px; color: var(--ink-2); }
+
+.palette-row + .palette-row { margin-top: var(--s-6); }
+.row-label {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: var(--s-3);
+}
+
+/* ──────────────── CARDS / RARITY ──────────────── */
+.cards-rail {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--s-4);
+}
+.tcg-card {
+  aspect-ratio: 5 / 7;
+  border-radius: var(--r-card);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  padding: var(--s-4);
+  font-family: var(--f-cn);
+  user-select: none;
+}
+.tcg-card .top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-family: var(--f-ui);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  z-index: 3;
+}
+.tcg-card .hsk {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  padding: 3px 6px;
+  border-radius: var(--r-xs);
+  border: 1px solid currentColor;
+  opacity: 0.85;
+}
+.tcg-card .glyph {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 96px;
+  line-height: 1;
+  z-index: 2;
+}
+.tcg-card .foot {
+  z-index: 3;
+  font-family: var(--f-ui);
+}
+.tcg-card .pinyin {
+  font-family: var(--f-cn);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  margin-bottom: 2px;
+}
+.tcg-card .gloss {
+  font-family: var(--f-ui);
+  font-size: 11px;
+  color: currentColor;
+  opacity: 0.7;
+  letter-spacing: 0.02em;
+}
+
+/* — New — */
+.tcg-card.new {
+  background: linear-gradient(180deg, oklch(0.30 0.015 62), oklch(0.22 0.012 62));
+  color: var(--ink);
+  border: 1px solid var(--hairline);
+  box-shadow: 0 1px 0 oklch(0.40 0.015 65 / 0.5) inset;
+}
+.tcg-card.new .glyph { color: var(--ink); }
+.tcg-card.new::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(60% 50% at 50% 0%, oklch(0.74 0.06 220 / 0.18), transparent 70%);
+  z-index: 1;
+}
+.tcg-card.new .nt {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--r-new);
+  display: flex; align-items: center; gap: 5px;
+}
+.tcg-card.new .nt::before {
+  content: ""; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--r-new);
+  box-shadow: 0 0 8px var(--r-new);
+}
+
+/* — Common — */
+.tcg-card.common {
+  background: var(--elevated);
+  color: var(--ink);
+  border: 1px solid var(--hairline);
+}
+.tcg-card.common .glyph { color: var(--ink); }
+.tcg-card.common .top .lvl { color: var(--ink-3); }
+
+/* — Uncommon — */
+.tcg-card.uncommon {
+  background:
+    linear-gradient(180deg, oklch(0.27 0.024 168), oklch(0.22 0.018 165));
+  color: var(--ink);
+  border: 1px solid oklch(0.45 0.06 168 / 0.7);
+  box-shadow: inset 0 0 0 1px oklch(0.55 0.07 168 / 0.25);
+}
+.tcg-card.uncommon::before {
+  content: "";
+  position: absolute; inset: 1px;
+  border-radius: calc(var(--r-card) - 1px);
+  background:
+    repeating-linear-gradient(135deg, transparent 0 8px, oklch(1 0 0 / 0.018) 8px 9px);
+  pointer-events: none;
+  z-index: 1;
+}
+.tcg-card.uncommon .glyph { color: var(--ink); }
+
+/* — Rare — */
+.tcg-card.rare {
+  background:
+    radial-gradient(120% 80% at 50% 110%, oklch(0.36 0.10 285), oklch(0.20 0.04 280) 60%);
+  color: oklch(0.95 0.02 290);
+  border: 1px solid oklch(0.52 0.10 285 / 0.7);
+}
+.tcg-card.rare::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(50% 30% at 50% 35%, oklch(0.85 0.10 290 / 0.18), transparent 70%),
+    repeating-radial-gradient(circle at 50% 50%, oklch(1 0 0 / 0.025) 0 1px, transparent 1px 14px);
+  z-index: 1;
+}
+.tcg-card.rare .corner {
+  position: absolute;
+  width: 28px; height: 28px;
+  border: 1px solid oklch(0.78 0.12 290 / 0.6);
+  z-index: 2;
+}
+.tcg-card.rare .corner.tl { top: 8px; left: 8px;  border-right: 0; border-bottom: 0; border-top-left-radius: 12px; }
+.tcg-card.rare .corner.tr { top: 8px; right: 8px; border-left: 0;  border-bottom: 0; border-top-right-radius: 12px; }
+.tcg-card.rare .corner.bl { bottom: 8px; left: 8px;  border-right: 0; border-top: 0; border-bottom-left-radius: 12px; }
+.tcg-card.rare .corner.br { bottom: 8px; right: 8px; border-left: 0;  border-top: 0; border-bottom-right-radius: 12px; }
+.tcg-card.rare .glyph { color: oklch(0.97 0.02 290); text-shadow: 0 2px 24px oklch(0.85 0.10 290 / 0.4); }
+
+/* — Legendary — */
+.tcg-card.legend {
+  background:
+    radial-gradient(150% 100% at 50% 110%, oklch(0.40 0.10 70), oklch(0.20 0.04 60) 55%);
+  color: oklch(0.97 0.02 80);
+  border: 1px solid var(--gold);
+  box-shadow:
+    inset 0 0 0 1px oklch(0.92 0.10 80 / 0.25),
+    0 14px 40px -10px var(--gold-glow);
+}
+.tcg-card.legend::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(70% 50% at 50% 30%, oklch(0.90 0.14 78 / 0.30), transparent 70%),
+    radial-gradient(40% 30% at 50% 90%, oklch(0.90 0.14 78 / 0.20), transparent 70%);
+  z-index: 1;
+}
+.tcg-card.legend::after {
+  /* full-art integrated character — drawn with the glyph itself behind */
+  content: "清";
+  position: absolute;
+  inset: 0;
+  display: grid; place-items: center;
+  font-family: var(--f-cn);
+  font-weight: 900;
+  font-size: 220px;
+  line-height: 1;
+  color: oklch(0.55 0.10 70 / 0.22);
+  z-index: 0;
+  transform: translate(-12%, 6%) rotate(-4deg);
+  pointer-events: none;
+}
+.tcg-card.legend .glyph {
+  font-size: 128px;
+  font-weight: 900;
+  color: var(--ink);
+  text-shadow:
+    0 0 24px oklch(0.90 0.14 78 / 0.45),
+    0 0 60px oklch(0.90 0.14 78 / 0.25);
+  animation: legend-pulse 4.2s ease-in-out infinite;
+  z-index: 2;
+}
+.tcg-card.legend .ornament {
+  position: absolute;
+  left: 50%; transform: translateX(-50%);
+  width: 40%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  z-index: 2;
+}
+.tcg-card.legend .ornament.t { top: 56px; }
+.tcg-card.legend .ornament.b { bottom: 56px; }
+.tcg-card.legend .gold-tag {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+
+@keyframes legend-pulse {
+  0%, 100% { text-shadow: 0 0 24px oklch(0.90 0.14 78 / 0.40), 0 0 60px oklch(0.90 0.14 78 / 0.20); }
+  50%      { text-shadow: 0 0 32px oklch(0.90 0.14 78 / 0.65), 0 0 80px oklch(0.90 0.14 78 / 0.32); }
+}
+
+.tier-meta {
+  margin-top: var(--s-3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tier-meta .tier-name {
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.005em;
+}
+.tier-meta .tier-name.gold { color: var(--gold); }
+.tier-meta .tier-desc {
+  color: var(--ink-3);
+  font-size: 12px;
+  line-height: 1.45;
+}
+.tier-meta .tier-token {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  color: var(--ink-4);
+  margin-top: 2px;
+}
+
+/* ──────────────── TYPOGRAPHY ──────────────── */
+.type-grid {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: var(--s-5) var(--s-6);
+  align-items: baseline;
+  border-top: 1px solid var(--hairline-soft);
+  padding-top: var(--s-5);
+}
+.type-grid .row { display: contents; }
+.type-grid .label {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding-top: 8px;
+}
+.type-grid .label .spec {
+  display: block;
+  margin-top: 4px;
+  color: var(--ink-4);
+  text-transform: none;
+  letter-spacing: 0.04em;
+}
+.type-grid .sample {
+  border-bottom: 1px solid var(--hairline-soft);
+  padding-bottom: var(--s-5);
+}
+.t-display { font-family: var(--f-ui); font-size: 56px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.02; }
+.t-h1      { font-family: var(--f-ui); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; }
+.t-h2      { font-family: var(--f-ui); font-size: 22px; font-weight: 600; letter-spacing: -0.012em; line-height: 1.25; }
+.t-h3      { font-family: var(--f-ui); font-size: 17px; font-weight: 600; letter-spacing: -0.005em; line-height: 1.35; }
+.t-body    { font-family: var(--f-ui); font-size: 15px; font-weight: 400; line-height: 1.5; color: var(--ink-2); }
+.t-caption { font-family: var(--f-ui); font-size: 12px; font-weight: 500; letter-spacing: 0.04em; color: var(--ink-3); }
+.t-mono    { font-family: var(--f-mono); font-size: 13px; color: var(--gold); letter-spacing: 0.02em; }
+
+.cn-feature {
+  margin-top: var(--s-7);
+  border: 1px solid var(--hairline-soft);
+  border-radius: var(--r-lg);
+  padding: var(--s-7);
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: var(--s-7);
+  background: linear-gradient(180deg, var(--surface), var(--bg));
+  align-items: center;
+}
+.cn-feature .hero {
+  font-family: var(--f-cn);
+  font-weight: 700;
+  font-size: 160px;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+.cn-feature .hero .stroke-2 { color: oklch(0.78 0.012 78); }
+.cn-feature .scale-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-5);
+  font-family: var(--f-cn);
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: var(--s-5);
+}
+.cn-feature .scale-row span { display: block; }
+.cn-feature .scale-row .px { display: block; font-family: var(--f-mono); font-size: 10px; color: var(--ink-4); letter-spacing: 0.1em; margin-top: 4px; font-weight: 400; }
+.cn-feature .scale-row > div { text-align: center; }
+.cn-feature h4 { font-family: var(--f-ui); font-weight: 600; font-size: 18px; margin-bottom: var(--s-3); }
+.cn-feature p { color: var(--ink-2); font-size: 14px; }
+.cn-feature ul { color: var(--ink-2); font-size: 14px; margin-top: var(--s-4); padding-left: 18px; }
+.cn-feature ul li { margin-bottom: 6px; }
+
+/* ──────────────── SPACING / RADIUS ──────────────── */
+.tokens-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-7);
+}
+.tokens-block {
+  border: 1px solid var(--hairline-soft);
+  border-radius: var(--r-lg);
+  padding: var(--s-6);
+  background: var(--surface);
+}
+.tokens-block h3 {
+  font-family: var(--f-ui);
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: var(--s-2);
+}
+.tokens-block .desc { color: var(--ink-3); font-size: 13px; margin-bottom: var(--s-5); }
+
+.spacing-list { display: flex; flex-direction: column; gap: var(--s-3); }
+.spacing-row {
+  display: grid;
+  grid-template-columns: 80px 60px 1fr;
+  align-items: center;
+  gap: var(--s-4);
+  font-family: var(--f-mono);
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.spacing-row .name { color: var(--ink); }
+.spacing-row .px   { color: var(--ink-3); }
+.spacing-row .bar  { height: 14px; background: var(--gold); border-radius: 2px; opacity: 0.85; }
+
+.radius-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--s-4);
+}
+.radius-cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  align-items: center;
+  text-align: center;
+}
+.radius-cell .box {
+  width: 80px;
+  height: 80px;
+  background: var(--elevated);
+  border: 1px solid var(--hairline);
+}
+.radius-cell .nm { font-family: var(--f-mono); font-size: 11px; color: var(--ink); }
+.radius-cell .vl { font-family: var(--f-mono); font-size: 10px; color: var(--ink-3); }
+
+/* ──────────────── COMPONENTS ──────────────── */
+.comp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-5);
+}
+.comp-card {
+  border: 1px solid var(--hairline-soft);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  padding: var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+.comp-card h3 {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 500;
+}
+.comp-card .demo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  align-items: center;
+}
+.comp-card .note {
+  font-size: 12px;
+  color: var(--ink-3);
+  font-family: var(--f-mono);
+  letter-spacing: 0.02em;
+  border-top: 1px dashed var(--hairline-soft);
+  padding-top: var(--s-3);
+  line-height: 1.5;
+}
+
+/* Buttons */
+.btn {
+  font-family: var(--f-ui);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.005em;
+  border: 0;
+  cursor: pointer;
+  border-radius: var(--r-md);
+  padding: 13px 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 80ms ease, background 120ms ease, color 120ms ease;
+  min-height: 48px;
+}
+.btn-primary {
+  background: var(--paper);
+  color: oklch(0.18 0.012 60);
+  box-shadow: 0 1px 0 oklch(1 0 0 / 0.4) inset, 0 8px 22px -10px oklch(0 0 0 / 0.5);
+}
+.btn-primary:hover { background: var(--paper-press); }
+.btn-primary:active { transform: translateY(1px); }
+.btn-secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--hairline);
+}
+.btn-secondary:hover { background: oklch(1 0 0 / 0.04); border-color: oklch(0.45 0.014 65 / 0.8); }
+.btn-icon {
+  width: 48px; height: 48px; padding: 0;
+  background: var(--elevated);
+  color: var(--ink);
+  border: 1px solid var(--hairline-soft);
+  border-radius: var(--r-md);
+}
+.btn-icon:hover { background: oklch(0.27 0.016 65); }
+.btn-icon svg { width: 20px; height: 20px; }
+
+.btn.gold {
+  background: linear-gradient(180deg, oklch(0.84 0.13 78), oklch(0.72 0.135 70));
+  color: oklch(0.18 0.04 60);
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.4),
+    0 8px 24px -8px var(--gold-glow);
+}
+
+/* Chips */
+.chip {
+  font-family: var(--f-ui);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  padding: 6px 10px;
+  border-radius: var(--r-pill);
+  background: var(--elevated);
+  color: var(--ink-2);
+  border: 1px solid var(--hairline-soft);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.chip .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.chip.radical {
+  font-family: var(--f-cn);
+  font-weight: 500;
+  font-size: 13px;
+}
+.chip.hsk {
+  font-family: var(--f-mono);
+  letter-spacing: 0.1em;
+  background: transparent;
+  color: var(--gold);
+  border-color: oklch(0.55 0.09 75 / 0.6);
+}
+.chip.correct    { color: var(--correct);    border-color: oklch(0.45 0.07 158 / 0.5); }
+.chip.incorrect  { color: var(--incorrect);  border-color: oklch(0.45 0.10 32 / 0.5); }
+.chip.struggling { color: var(--struggling); border-color: oklch(0.50 0.08 70 / 0.5); }
+
+/* Progress */
+.progress {
+  width: 100%;
+  height: 6px;
+  background: oklch(0.30 0.014 65 / 0.7);
+  border-radius: var(--r-pill);
+  overflow: hidden;
+}
+.progress > div {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold));
+  border-radius: var(--r-pill);
+}
+.progress.thick { height: 10px; }
+
+/* ──────────────── STUDY LAYOUT ──────────────── */
+.study-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: var(--s-7);
+  align-items: center;
+}
+.phone {
+  width: 360px;
+  height: 760px;
+  background: oklch(0.10 0.008 60);
+  border-radius: 44px;
+  border: 1px solid oklch(0.30 0.014 65);
+  box-shadow:
+    inset 0 0 0 1px oklch(0.40 0.016 65 / 0.4),
+    0 30px 60px -20px oklch(0 0 0 / 0.6);
+  padding: 12px;
+  position: relative;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.phone .notch {
+  position: absolute;
+  top: 18px; left: 50%; transform: translateX(-50%);
+  width: 100px; height: 28px;
+  background: oklch(0.05 0 0);
+  border-radius: 18px;
+  z-index: 5;
+}
+.phone .screen {
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  border-radius: 32px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.status {
+  height: 44px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 22px 6px;
+  font-family: var(--f-mono);
+  font-size: 12px;
+  color: var(--ink);
+}
+.status .dots { display: flex; gap: 3px; }
+.status .dots span { width: 4px; height: 4px; border-radius: 50%; background: var(--ink); }
+.status .dots span:nth-child(4) { opacity: 0.4; }
+
+.study-top {
+  padding: 14px 20px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.study-top .progress { width: 65%; }
+.study-top .meta {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+
+.study-board {
+  flex: 1;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1.05fr 1fr;
+  padding: 14px 16px 18px;
+  gap: 10px;
+}
+.answer {
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 10px;
+  min-height: 66px;
+}
+.answer .a-cn {
+  font-family: var(--f-cn);
+  font-weight: 600;
+  font-size: 28px;
+  color: var(--ink);
+  line-height: 1;
+}
+.answer .a-py {
+  font-family: var(--f-cn);
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.answer.up    { grid-column: 2; grid-row: 1; }
+.answer.left  { grid-column: 1; grid-row: 2; }
+.answer.right { grid-column: 3; grid-row: 2; }
+.answer.down  { grid-column: 2; grid-row: 3; }
+
+.prompt {
+  grid-column: 2;
+  grid-row: 2;
+  border-radius: 18px;
+  background:
+    radial-gradient(60% 50% at 50% 40%, oklch(0.30 0.02 70), oklch(0.20 0.014 62));
+  border: 1px solid oklch(0.40 0.02 70);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+}
+.prompt .p-cn {
+  font-family: var(--f-cn);
+  font-weight: 700;
+  font-size: 56px;
+  color: var(--ink);
+  line-height: 1;
+}
+.prompt .p-q {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+.study-foot {
+  padding: 8px 20px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.study-foot .pinyin {
+  font-family: var(--f-cn);
+  font-size: 14px;
+  color: var(--ink-2);
+  letter-spacing: 0.04em;
+}
+.study-foot .skip {
+  font-family: var(--f-ui);
+  font-size: 12px;
+  color: var(--ink-3);
+  font-weight: 500;
+}
+
+.layout-notes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+.layout-notes h4 {
+  font-family: var(--f-ui);
+  font-weight: 600;
+  font-size: 18px;
+  margin-bottom: var(--s-2);
+}
+.layout-notes p { color: var(--ink-2); font-size: 14px; line-height: 1.55; }
+.note-item {
+  border-left: 2px solid var(--gold-deep);
+  padding: var(--s-2) var(--s-4);
+}
+.note-item .lbl {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+
+/* ──────────────── MOTION ──────────────── */
+.motion-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-5);
+}
+.motion-card {
+  border: 1px solid var(--hairline-soft);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  padding: var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+.motion-card h3 {
+  font-family: var(--f-ui);
+  font-weight: 600;
+  font-size: 18px;
+}
+.motion-card .desc { color: var(--ink-2); font-size: 14px; line-height: 1.55; }
+.motion-card .specs {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: 0.04em;
+  display: flex;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  border-top: 1px dashed var(--hairline-soft);
+  padding-top: var(--s-3);
+}
+.motion-card .specs b { color: var(--ink); font-weight: 500; }
+
+.flip-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  background: var(--bg-deep);
+  border-radius: var(--r-md);
+  perspective: 1000px;
+}
+.flip-card {
+  width: 110px;
+  height: 154px;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: flip 2.6s cubic-bezier(0.7, 0, 0.3, 1) infinite;
+}
+@keyframes flip {
+  0%, 30% { transform: rotateY(0); }
+  55%, 100% { transform: rotateY(180deg); }
+}
+.flip-card .face {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-family: var(--f-cn);
+  backface-visibility: hidden;
+  border: 1px solid var(--hairline);
+}
+.flip-card .front {
+  background: var(--elevated);
+  font-size: 56px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.flip-card .back {
+  background: var(--surface);
+  transform: rotateY(180deg);
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.flip-card .back .py { font-family: var(--f-cn); font-size: 18px; color: var(--ink); font-weight: 600; }
+.flip-card .back .gl { font-family: var(--f-ui); font-size: 11px; color: var(--ink-3); margin-top: 4px; }
+
+.reveal-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  background: var(--bg-deep);
+  border-radius: var(--r-md);
+  position: relative;
+  overflow: hidden;
+}
+.reveal-stage::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(40% 60% at 50% 50%, oklch(0.86 0.16 82 / 0.35), transparent 70%);
+  animation: reveal-glow 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+.reveal-card {
+  width: 110px;
+  height: 154px;
+  border-radius: 14px;
+  background: radial-gradient(120% 80% at 50% 110%, oklch(0.40 0.10 70), oklch(0.20 0.04 60) 60%);
+  border: 1px solid var(--gold);
+  position: relative;
+  display: grid;
+  place-items: center;
+  font-family: var(--f-cn);
+  font-weight: 900;
+  font-size: 64px;
+  color: var(--ink);
+  animation: reveal-rise 4s cubic-bezier(0.34, 1.2, 0.4, 1) infinite;
+  text-shadow: 0 0 24px oklch(0.90 0.14 78 / 0.55);
+  z-index: 2;
+}
+@keyframes reveal-rise {
+  0%        { transform: translateY(40px) scale(0.9); opacity: 0; }
+  20%       { transform: translateY(0)     scale(1);   opacity: 1; }
+  78%, 100% { transform: translateY(0)     scale(1);   opacity: 1; }
+}
+@keyframes reveal-glow {
+  0%, 14%   { opacity: 0; }
+  22%, 78%  { opacity: 1; }
+  100%      { opacity: 0; }
+}
+
+/* ──────────────── FOOT ──────────────── */
+.colophon {
+  margin-top: var(--s-9);
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--hairline-soft);
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+@media (max-width: 1100px) {
+  .cards-rail { gap: var(--s-3); }
+  .cards-rail .tcg-card .glyph { font-size: 64px; }
+  .cards-rail .tcg-card.legend .glyph { font-size: 84px; }
+  .cards-rail .tcg-card.legend::after { font-size: 150px; }
+  .cards-rail .tcg-card.legend .ornament.t { top: 38px; }
+  .cards-rail .tcg-card.legend .ornament.b { bottom: 38px; }
+  .cards-rail .tcg-card { padding: var(--s-3); }
+  .cards-rail .tcg-card .pinyin { font-size: 12px; }
+  .cards-rail .tcg-card .gloss { font-size: 10px; }
+  .study-wrap { grid-template-columns: 1fr; }
+  .palette-grid { grid-template-columns: repeat(2, 1fr); }
+  .palette-grid.surfaces { grid-template-columns: repeat(2, 1fr); }
+  .palette-grid.semantic { grid-template-columns: repeat(2, 1fr); }
+  .tokens-grid { grid-template-columns: 1fr; }
+  .comp-grid { grid-template-columns: 1fr; }
+  .motion-grid { grid-template-columns: 1fr; }
+  .cn-feature { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<main class="page">
+
+<!-- ──────────────── COVER ──────────────── -->
+<section class="cover" data-screen-label="01 Cover">
+  <div class="crest">
+    <span class="dot"></span>
+    Style guide · v0.1 · Working draft
+  </div>
+  <h1>A quiet game of <span class="cn">字</span> — designed to be collected.</h1>
+  <p class="lede">
+    A visual system for a Chinese-character TCG masquerading as a study tool. Warm, tactile, restrained — the cards do the work. Anki's recall, Marvel Snap's depth, Stardew's coziness.
+  </p>
+  <div class="meta">
+    <div><b>Platform</b>Mobile · Portrait · Godot</div>
+    <div><b>Mode</b>Dark-first · WCAG AA body</div>
+    <div><b>Scope</b>HSK 2–5 · ~1,350 cards</div>
+    <div><b>Reach</b>Single-handed thumb zone</div>
+  </div>
+  <div class="cover-strip" aria-hidden="true">
+    <div style="background:var(--bg-deep)"></div>
+    <div style="background:var(--bg)"></div>
+    <div style="background:var(--surface)"></div>
+    <div style="background:var(--elevated)"></div>
+    <div style="background:oklch(0.32 0.014 65)"></div>
+    <div style="background:var(--ink-3)"></div>
+    <div style="background:var(--ink-2)"></div>
+    <div style="background:var(--ink)"></div>
+    <div style="background:var(--paper)"></div>
+    <div style="background:var(--gold-deep)"></div>
+    <div style="background:var(--gold)"></div>
+  </div>
+</section>
+
+<!-- ──────────────── PALETTE ──────────────── -->
+<section data-screen-label="02 Color">
+  <div class="eyebrow">01 — Foundations</div>
+  <h2 class="section-title">Color</h2>
+  <p class="section-lede">
+    A warm dark base — the orange undertone keeps the app from feeling clinical. Neutrals do almost everything; one amber accent is reserved for rare pulls and legendary moments. Use it sparingly enough that it still earns a small reaction.
+  </p>
+
+  <div class="palette-row">
+    <div class="row-label">Surfaces</div>
+    <div class="palette-grid surfaces">
+      <div class="swatch">
+        <div class="chip" style="background:var(--bg-deep)"></div>
+        <div class="body">
+          <div class="name">Background — deep</div>
+          <div class="role">App canvas, modal scrim base</div>
+          <div class="val">oklch(0.135 0.010 60)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background:var(--bg)"></div>
+        <div class="body">
+          <div class="name">Background</div>
+          <div class="role">Default screen background</div>
+          <div class="val">oklch(0.165 0.012 62)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background:var(--surface)"></div>
+        <div class="body">
+          <div class="name">Surface</div>
+          <div class="role">Cards at rest, sheets</div>
+          <div class="val">oklch(0.205 0.014 62)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background:var(--elevated)"></div>
+        <div class="body">
+          <div class="name">Elevated</div>
+          <div class="role">Selected, hover, popovers</div>
+          <div class="val">oklch(0.245 0.016 65)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background:oklch(0.32 0.014 65)"></div>
+        <div class="body">
+          <div class="name">Hairline</div>
+          <div class="role">Borders, dividers</div>
+          <div class="val">oklch(0.32 0.014 65)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background:var(--paper)"></div>
+        <div class="body">
+          <div class="name">Paper</div>
+          <div class="role">Primary button face — flipped card</div>
+          <div class="val">oklch(0.945 0.014 78)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="palette-row">
+    <div class="row-label">Text — on dark surfaces</div>
+    <div class="palette-grid">
+      <div class="swatch">
+        <div class="chip with-text" style="background:var(--surface);color:var(--ink)"><span>清</span></div>
+        <div class="body">
+          <div class="name">Ink — primary</div>
+          <div class="role">Headings, characters, key data</div>
+          <div class="val">oklch(0.965 0.006 82)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip with-text" style="background:var(--surface);color:var(--ink-2)"><span>清</span></div>
+        <div class="body">
+          <div class="name">Ink — secondary</div>
+          <div class="role">Body, definitions, pinyin</div>
+          <div class="val">oklch(0.78 0.012 78)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip with-text" style="background:var(--surface);color:var(--ink-3)"><span>清</span></div>
+        <div class="body">
+          <div class="name">Ink — muted</div>
+          <div class="role">Captions, hints, metadata</div>
+          <div class="val">oklch(0.56 0.012 72)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip with-text" style="background:var(--surface);color:var(--ink-4)"><span>清</span></div>
+        <div class="body">
+          <div class="name">Ink — disabled</div>
+          <div class="role">Disabled states only</div>
+          <div class="val">oklch(0.42 0.012 70)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="palette-row">
+    <div class="row-label">Accent — rare pull</div>
+    <div class="palette-grid surfaces">
+      <div class="swatch">
+        <div class="chip" style="background:var(--gold);box-shadow:inset 0 0 80px oklch(0.95 0.13 80 / 0.3)"></div>
+        <div class="body">
+          <div class="name">Gold</div>
+          <div class="role">Legendary glow, rare-pull moments</div>
+          <div class="val">oklch(0.80 0.135 76)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background:var(--gold-deep)"></div>
+        <div class="body">
+          <div class="name">Gold — deep</div>
+          <div class="role">Pressed states, foil shadows</div>
+          <div class="val">oklch(0.66 0.135 64)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background:radial-gradient(circle at 50% 50%, var(--gold-glow), transparent 70%)"></div>
+        <div class="body">
+          <div class="name">Gold — glow</div>
+          <div class="role">Diffuse aura, not a fill</div>
+          <div class="val">oklch(0.86 0.16 82 / 0.55)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="palette-row">
+    <div class="row-label">Semantic — answer feedback</div>
+    <div class="palette-grid semantic">
+      <div class="swatch">
+        <div class="chip" style="background:var(--correct)"></div>
+        <div class="body">
+          <div class="name">Correct — jade</div>
+          <div class="role">Right answer, mastery up</div>
+          <div class="val">oklch(0.74 0.105 158)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background:var(--incorrect)"></div>
+        <div class="body">
+          <div class="name">Incorrect — terracotta</div>
+          <div class="role">Wrong answer. Warm, not punishing.</div>
+          <div class="val">oklch(0.66 0.155 32)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background:var(--struggling)"></div>
+        <div class="body">
+          <div class="name">Struggling — ember</div>
+          <div class="role">Card decaying, due soon, leech</div>
+          <div class="val">oklch(0.78 0.115 70)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────── RARITY ──────────────── -->
+<section data-screen-label="03 Rarity">
+  <div class="eyebrow">02 — The card</div>
+  <h2 class="section-title">Five tiers of mastery</h2>
+  <p class="section-lede">
+    The same character — <span style="font-family:var(--f-cn);font-weight:600;color:var(--ink)">清</span> — at every stage of the player's relationship with it. Visual richness tracks real recall strength: a card you struggle with stays simple; one you've owned for months earns its full art. Tier transitions happen on review streaks, never on payments.
+  </p>
+
+  <div class="cards-rail">
+    <div class="card-cell">
+      <div class="tcg-card new">
+        <div class="top">
+          <span class="nt">NEW</span>
+          <span class="hsk">HSK 2</span>
+        </div>
+        <div class="glyph">清</div>
+        <div class="foot">
+          <div class="pinyin">qīng</div>
+          <div class="gloss">clear · pure</div>
+        </div>
+      </div>
+      <div class="tier-meta">
+        <div class="tier-name">New</div>
+        <div class="tier-desc">Just introduced. Cool indigo halo, "NEW" pulse — first-contact moment.</div>
+        <div class="tier-token">tier.new — 0 reviews</div>
+      </div>
+    </div>
+
+    <div class="card-cell">
+      <div class="tcg-card common">
+        <div class="top">
+          <span class="lvl">Lv 1</span>
+          <span class="hsk">HSK 2</span>
+        </div>
+        <div class="glyph">清</div>
+        <div class="foot">
+          <div class="pinyin">qīng</div>
+          <div class="gloss">clear · pure</div>
+        </div>
+      </div>
+      <div class="tier-meta">
+        <div class="tier-name">Common</div>
+        <div class="tier-desc">Learning. Standard frame, no decoration. The honest baseline.</div>
+        <div class="tier-token">tier.common — 1–4 reviews</div>
+      </div>
+    </div>
+
+    <div class="card-cell">
+      <div class="tcg-card uncommon">
+        <div class="top">
+          <span style="color:oklch(0.82 0.06 168)">Lv 2</span>
+          <span class="hsk" style="color:oklch(0.82 0.06 168);border-color:oklch(0.55 0.07 168 / 0.6)">HSK 2</span>
+        </div>
+        <div class="glyph">清</div>
+        <div class="foot">
+          <div class="pinyin">qīng</div>
+          <div class="gloss">clear · pure</div>
+        </div>
+      </div>
+      <div class="tier-meta">
+        <div class="tier-name">Uncommon</div>
+        <div class="tier-desc">Stable. Jade tint and a subtle diagonal foil pattern catches light.</div>
+        <div class="tier-token">tier.uncommon — 5–14 reviews</div>
+      </div>
+    </div>
+
+    <div class="card-cell">
+      <div class="tcg-card rare">
+        <div class="corner tl"></div>
+        <div class="corner tr"></div>
+        <div class="corner bl"></div>
+        <div class="corner br"></div>
+        <div class="top">
+          <span style="color:oklch(0.85 0.08 290)">Lv 3</span>
+          <span class="hsk" style="color:oklch(0.85 0.08 290);border-color:oklch(0.65 0.10 290 / 0.6)">HSK 2</span>
+        </div>
+        <div class="glyph">清</div>
+        <div class="foot">
+          <div class="pinyin" style="color:oklch(0.92 0.04 290)">qīng</div>
+          <div class="gloss" style="color:oklch(0.85 0.04 290)">clear · pure</div>
+        </div>
+      </div>
+      <div class="tier-meta">
+        <div class="tier-name">Rare</div>
+        <div class="tier-desc">Well-known. Violet depth, ornamental corners, a soft highlight behind the glyph.</div>
+        <div class="tier-token">tier.rare — 15–39 reviews</div>
+      </div>
+    </div>
+
+    <div class="card-cell">
+      <div class="tcg-card legend">
+        <div class="ornament t"></div>
+        <div class="top">
+          <span class="gold-tag">Mastered</span>
+          <span class="hsk" style="color:var(--gold);border-color:oklch(0.55 0.09 75 / 0.7)">HSK 2</span>
+        </div>
+        <div class="glyph">清</div>
+        <div class="ornament b"></div>
+        <div class="foot" style="text-align:center">
+          <div class="pinyin" style="color:var(--gold)">qīng</div>
+          <div class="gloss" style="color:oklch(0.92 0.05 80);opacity:0.85">clear · pure · quiet</div>
+        </div>
+      </div>
+      <div class="tier-meta">
+        <div class="tier-name gold">Legendary</div>
+        <div class="tier-desc">Mastered. Full-bleed ghost-character, gold border, breathing glow, ornamental rules.</div>
+        <div class="tier-token">tier.legend — 40+ reviews · stable interval</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────── TYPOGRAPHY ──────────────── -->
+<section data-screen-label="04 Type">
+  <div class="eyebrow">03 — Foundations</div>
+  <h2 class="section-title">Type</h2>
+  <p class="section-lede">
+    Two families do all the work. <b style="color:var(--ink)">Manrope</b> handles UI — clean, geometric, friendly. <b style="color:var(--ink)">Noto Serif SC</b> carries every Chinese character — its modulated strokes hold up at thumbnail (16px) and lead the screen at hero (160px). Mono is reserved for tokens, codes, and metadata that should feel like data.
+  </p>
+
+  <div class="type-grid">
+    <div class="row">
+      <div class="label">Display<span class="spec">Manrope · 700 · 56/56 · −3% tracking</span></div>
+      <div class="sample"><div class="t-display">Pull a pack.</div></div>
+    </div>
+    <div class="row">
+      <div class="label">H1<span class="spec">Manrope · 600 · 32/37 · −2%</span></div>
+      <div class="sample"><div class="t-h1">Today's review · 12 due</div></div>
+    </div>
+    <div class="row">
+      <div class="label">H2<span class="spec">Manrope · 600 · 22/28 · −1.2%</span></div>
+      <div class="sample"><div class="t-h2">Radical: 氵 (water, 3 strokes)</div></div>
+    </div>
+    <div class="row">
+      <div class="label">H3<span class="spec">Manrope · 600 · 17/23 · −0.5%</span></div>
+      <div class="sample"><div class="t-h3">Choose the matching definition</div></div>
+    </div>
+    <div class="row">
+      <div class="label">Body<span class="spec">Manrope · 400 · 15/22</span></div>
+      <div class="sample"><div class="t-body">When the river runs clear in autumn, the bottom is visible — this is one of the oldest senses of 清, present in poems from the Book of Songs onward.</div></div>
+    </div>
+    <div class="row">
+      <div class="label">Caption<span class="spec">Manrope · 500 · 12/16 · +4% tracking</span></div>
+      <div class="sample"><div class="t-caption">LAST SEEN 2 DAYS AGO · DUE NOW</div></div>
+    </div>
+    <div class="row">
+      <div class="label">Mono<span class="spec">JetBrains Mono · 400 · 13/18</span></div>
+      <div class="sample"><div class="t-mono">card.qīng.0214 · streak 7 · interval 11d</div></div>
+    </div>
+  </div>
+
+  <div class="cn-feature">
+    <div>
+      <div class="hero">清<span class="stroke-2">明</span></div>
+    </div>
+    <div>
+      <h4>Chinese display — the hero font</h4>
+      <p>Noto Serif SC at 700 weight is the default for any character display ≥ 24px. Its ink-trap modulation reads as "calligraphic" without becoming illegible at small sizes, and it ships every CJK glyph we'll need across HSK 2–5.</p>
+      <ul>
+        <li><b>Hero / pack reveal:</b> 96–160px, 700–900 weight</li>
+        <li><b>Card face:</b> 64–96px depending on tier, 700</li>
+        <li><b>Inline / answer chip:</b> 24–32px, 600</li>
+        <li><b>Thumbnail / list row:</b> 16–18px, 500 — never below 16px</li>
+        <li><b>Pinyin (Latin extended):</b> Noto Serif SC also covers tone marks; 500 weight, +6% tracking</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────── SPACING / RADIUS ──────────────── -->
+<section data-screen-label="05 Tokens">
+  <div class="eyebrow">04 — Foundations</div>
+  <h2 class="section-title">Spacing &amp; radius</h2>
+  <p class="section-lede">
+    A 4px base scale. Even values only past 16px so layouts compose cleanly. Card radius is its own token — every other surface relates to it.
+  </p>
+
+  <div class="tokens-grid">
+    <div class="tokens-block">
+      <h3>Spacing</h3>
+      <div class="desc">Base 4. Use s-3 (12px) inside dense elements, s-5 (24px) between groups, s-7 (48px) between sections.</div>
+      <div class="spacing-list">
+        <div class="spacing-row"><span class="name">s-1</span><span class="px">4 px</span><div class="bar" style="width:4px"></div></div>
+        <div class="spacing-row"><span class="name">s-2</span><span class="px">8 px</span><div class="bar" style="width:8px"></div></div>
+        <div class="spacing-row"><span class="name">s-3</span><span class="px">12 px</span><div class="bar" style="width:12px"></div></div>
+        <div class="spacing-row"><span class="name">s-4</span><span class="px">16 px</span><div class="bar" style="width:16px"></div></div>
+        <div class="spacing-row"><span class="name">s-5</span><span class="px">24 px</span><div class="bar" style="width:24px"></div></div>
+        <div class="spacing-row"><span class="name">s-6</span><span class="px">32 px</span><div class="bar" style="width:32px"></div></div>
+        <div class="spacing-row"><span class="name">s-7</span><span class="px">48 px</span><div class="bar" style="width:48px"></div></div>
+        <div class="spacing-row"><span class="name">s-8</span><span class="px">64 px</span><div class="bar" style="width:64px"></div></div>
+        <div class="spacing-row"><span class="name">s-9</span><span class="px">96 px</span><div class="bar" style="width:96px"></div></div>
+      </div>
+    </div>
+
+    <div class="tokens-block">
+      <h3>Radius</h3>
+      <div class="desc">Card radius (22px) anchors the system. Buttons sit one step softer. Pills are pure capsules.</div>
+      <div class="radius-list">
+        <div class="radius-cell"><div class="box" style="border-radius:4px"></div><div class="nm">r-xs</div><div class="vl">4 px · chips, tags</div></div>
+        <div class="radius-cell"><div class="box" style="border-radius:8px"></div><div class="nm">r-sm</div><div class="vl">8 px · inputs</div></div>
+        <div class="radius-cell"><div class="box" style="border-radius:12px"></div><div class="nm">r-md</div><div class="vl">12 px · buttons</div></div>
+        <div class="radius-cell"><div class="box" style="border-radius:18px"></div><div class="nm">r-lg</div><div class="vl">18 px · sheets</div></div>
+        <div class="radius-cell"><div class="box" style="border-radius:22px;border-color:var(--gold-deep)"></div><div class="nm" style="color:var(--gold)">r-card</div><div class="vl">22 px · THE card</div></div>
+        <div class="radius-cell"><div class="box" style="border-radius:28px"></div><div class="nm">r-xl</div><div class="vl">28 px · modals</div></div>
+        <div class="radius-cell"><div class="box" style="border-radius:999px"></div><div class="nm">r-pill</div><div class="vl">999 px · chips, progress</div></div>
+        <div class="radius-cell"><div class="box" style="border-radius:0"></div><div class="nm">r-none</div><div class="vl">0 · only edges-of-screen</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────── COMPONENTS ──────────────── -->
+<section data-screen-label="06 Components">
+  <div class="eyebrow">05 — Primitives</div>
+  <h2 class="section-title">Core UI</h2>
+  <p class="section-lede">
+    Every primitive is sized for thumb reach: 48px minimum touch height, generous tap targets, no fussy iconography. Buttons commit visually — primary is the warm cream of a flipped card, not a vivid brand color.
+  </p>
+
+  <div class="comp-grid">
+    <div class="comp-card">
+      <h3>Buttons — primary &amp; gold</h3>
+      <div class="demo">
+        <button class="btn btn-primary">Open today's pack</button>
+        <button class="btn gold">Reveal rare pull</button>
+      </div>
+      <div class="note">
+        Primary uses Paper for a tactile, "flipped card" feel. Gold appears at most once per screen — saving it for the rare-pull confirmation. Min height 48px.
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <h3>Buttons — secondary &amp; icon</h3>
+      <div class="demo">
+        <button class="btn btn-secondary">Skip for now</button>
+        <button class="btn-icon btn" aria-label="bookmark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+        </button>
+        <button class="btn-icon btn" aria-label="audio">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 9h3l5-4v14l-5-4H5z"/><path d="M16 8a5 5 0 0 1 0 8"/></svg>
+        </button>
+        <button class="btn-icon btn" aria-label="settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+        </button>
+      </div>
+      <div class="note">
+        Secondary is hairline-only — confident enough to be a real choice, quiet enough to defer. Icon buttons are a 48 × 48 elevated square, never floating without a surface.
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <h3>Chips — radical &amp; HSK level</h3>
+      <div class="demo">
+        <span class="chip radical">氵 · water</span>
+        <span class="chip radical">月 · moon</span>
+        <span class="chip radical">心 · heart</span>
+        <span class="chip hsk">HSK 2</span>
+        <span class="chip hsk">HSK 4</span>
+      </div>
+      <div class="note">
+        Radicals use Noto Serif SC at 13px to keep the glyph the protagonist. HSK chips are mono and gold-bordered to read as classification, not feedback.
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <h3>Chips — semantic</h3>
+      <div class="demo">
+        <span class="chip correct"><span class="dot"></span>Mastered</span>
+        <span class="chip incorrect"><span class="dot"></span>Forgot</span>
+        <span class="chip struggling"><span class="dot"></span>Due soon</span>
+        <span class="chip"><span class="dot" style="background:var(--ink-3)"></span>New</span>
+      </div>
+      <div class="note">
+        Outline-only with a colored dot. Saturation stays warm — terracotta over cherry red — so wrong answers don't feel like failures.
+      </div>
+    </div>
+
+    <div class="comp-card" style="grid-column: 1 / -1;">
+      <h3>Progress — pack opening &amp; mastery</h3>
+      <div class="demo" style="flex-direction:column;align-items:stretch;gap:var(--s-4);width:100%">
+        <div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:11px;letter-spacing:0.08em;color:var(--ink-3);margin-bottom:8px">
+            <span>TODAY · 7 OF 12</span><span>58%</span>
+          </div>
+          <div class="progress thick"><div style="width:58%"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:11px;letter-spacing:0.08em;color:var(--ink-3);margin-bottom:8px">
+            <span>清 · MASTERY</span><span>RARE → LEGENDARY</span>
+          </div>
+          <div class="progress"><div style="width:88%"></div></div>
+        </div>
+      </div>
+      <div class="note">
+        Two heights — 10px for milestone progress (today's pack), 6px for inline mastery on a card detail. Always uses gold gradient; never any other color.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────── STUDY LAYOUT ──────────────── -->
+<section data-screen-label="07 Study layout">
+  <div class="eyebrow">06 — The core loop</div>
+  <h2 class="section-title">Four-direction study</h2>
+  <p class="section-lede">
+    Prompt centered, four answers fanned to the cardinals. Distractors come from the same radical family, the same HSK level, or the player's own collection — never random. The whole board lives in the lower 75% of the screen so the thumb never reaches up.
+  </p>
+
+  <div class="study-wrap">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="status">
+          <span>9:41</span>
+          <div class="dots"><span></span><span></span><span></span><span></span></div>
+        </div>
+        <div class="study-top">
+          <div class="progress"><div style="width:42%"></div></div>
+          <div class="meta">5 / 12</div>
+        </div>
+
+        <div class="study-board">
+          <div class="answer up"><div class="a-cn">河</div><div class="a-py">hé · river</div></div>
+          <div class="answer left"><div class="a-cn">湖</div><div class="a-py">hú · lake</div></div>
+          <div class="prompt">
+            <div class="p-cn">清</div>
+            <div class="p-q">tap the meaning</div>
+          </div>
+          <div class="answer right"><div class="a-cn">海</div><div class="a-py">hǎi · sea</div></div>
+          <div class="answer down"><div class="a-cn">江</div><div class="a-py">jiāng · large river</div></div>
+        </div>
+
+        <div class="study-foot">
+          <div class="pinyin">qīng</div>
+          <div class="skip">Skip →</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layout-notes">
+      <div class="note-item">
+        <div class="lbl">Why a cross, not a 2×2 grid</div>
+        <p>The cardinal layout makes each answer feel like a direction the player commits to — closer to a fighting-game input than a quiz button. It also gives the prompt visual primacy (it's literally at the center of attention) and frees the corners for ambient state.</p>
+      </div>
+      <div class="note-item">
+        <div class="lbl">Thumb safety</div>
+        <p>The board occupies the lower ~75% of the viewport. Up/left/right/down answers all fall inside a 5cm thumb arc from a right-handed grip. The skip control sits bottom-right because dismissing should require a tiny extra commitment.</p>
+      </div>
+      <div class="note-item">
+        <div class="lbl">Distractor logic</div>
+        <p>Three of four distractors share the prompt's radical (here 氵). The fourth is a near-homophone or near-meaning — calibrated by the SRS engine so easy cards stay easy and shaky cards stay honest.</p>
+      </div>
+      <div class="note-item">
+        <div class="lbl">Feedback choreography</div>
+        <p>Correct: prompt and chosen answer both flash jade for 240ms, then dissolve. Incorrect: chosen answer flushes terracotta for 320ms, the right answer pulses jade once, prompt remains until the player taps to continue.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────── MOTION ──────────────── -->
+<section data-screen-label="08 Motion">
+  <div class="eyebrow">07 — Motion</div>
+  <h2 class="section-title">Two tempos</h2>
+  <p class="section-lede">
+    Almost all motion lives in two registers. <b style="color:var(--ink)">Common flip</b> is the rhythm of study — fast, snappy, repeatable hundreds of times in a session. <b style="color:var(--ink)">Rare reveal</b> is ceremony — it interrupts the rhythm to mark a moment.
+  </p>
+
+  <div class="motion-grid">
+    <div class="motion-card">
+      <h3>Common flip</h3>
+      <div class="flip-stage" aria-hidden="true">
+        <div class="flip-card">
+          <div class="face front">清</div>
+          <div class="face back"><div class="py">qīng</div><div class="gl">clear · pure</div></div>
+        </div>
+      </div>
+      <p class="desc">A 220ms Y-axis flip on a tight ease — feels like turning a card by the corner. Fast enough to be invisible during fluent recall, just enough motion to confirm the answer landed.</p>
+      <div class="specs">
+        <span><b>duration</b> 220 ms</span>
+        <span><b>easing</b> cubic-bezier(.7, 0, .3, 1)</span>
+        <span><b>axis</b> rotateY</span>
+        <span><b>haptic</b> light tick</span>
+      </div>
+    </div>
+
+    <div class="motion-card">
+      <h3>Rare reveal</h3>
+      <div class="reveal-stage" aria-hidden="true">
+        <div class="reveal-card">清</div>
+      </div>
+      <p class="desc">A 900ms rise from below with overshoot, gold glow blooming behind, character settling with a held breath. Used only on rarity promotions and pack pulls — never gratuitously. The pause after settling is the point.</p>
+      <div class="specs">
+        <span><b>duration</b> 900 ms + 600 ms hold</span>
+        <span><b>easing</b> spring (.34, 1.2, .4, 1)</span>
+        <span><b>layers</b> rise · glow · particle</span>
+        <span><b>haptic</b> medium · then heavy on settle</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="colophon">
+  <div>Style guide · v0.1 · Working draft</div>
+  <div>清 · qīng · clear, pure</div>
+</div>
+
+</main>
+</body>
+</html>
