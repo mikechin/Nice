@@ -71,3 +71,9 @@ horizontal_alignment = 1
 layout_mode = 2
 custom_minimum_size = Vector2(0, 64)
 text = "Start Run"
+
+[node name="DebugTierSampleButton" type="Button" parent="ModeContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 40)
+theme_override_font_sizes/font_size = 13
+text = "Debug: Tier Sample Pack"

@@ -13,8 +13,8 @@ var _maximum: int = 1
 var _fill_ratio: float = 0.0
 var _tween: Tween
 
-@export var fill_color: Color = Color(0.3, 0.8, 0.3)
-@export var background_color: Color = Color(0.2, 0.2, 0.2, 0.6)
+@export var fill_color: Color = UiTokens.GOLD
+@export var background_color: Color = UiTokens.PROGRESS_TRACK
 @export var animate_fill: bool = true
 @export var show_percentage: bool = false
 

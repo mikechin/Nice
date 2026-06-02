@@ -1,80 +1,158 @@
-## CardDisplay — Visual representation of a character card.
-## Handles card appearance, animations, and loot rarity effects.
+## CardDisplay — The single rendered card during the study interaction.
+## ChallengePresenter drives it: present_challenge → setup_for_challenge,
+## per-stage bonus rounds re-call setup_for_challenge to swap which field
+## is hidden, and the answer feedback methods are called on swipe.
+##
+## Visibility contract per challenge type — the field being TESTED is
+## always hidden so the card never leaks the answer:
+##   meaning   → glyph=character, pinyin shown, meaning hidden (it's the answer)
+##   character → glyph=meaning,   pinyin hidden (would give it away), meaning hidden
+##   pinyin    → glyph=character, pinyin hidden, meaning shown
+##   tone      → glyph=character, pinyin=toneless, meaning shown
 class_name CardDisplay
 extends Control
 
 signal animation_finished()
 
+# LootRarity is the legacy 4-state input from ChallengePresenter; CardTier
+# is the canonical 6-tier visual scheme. This table maps the legacy states
+# onto the visual tier closest in spirit so the style guide treatment
+# applies even before the call sites migrate to CardTier directly.
+const _LOOT_TO_TIER := {
+	SrsEnums.LootRarity.NEW_CARD: CollectionEnums.CardTier.NEW_CARD,
+	SrsEnums.LootRarity.COMMON: CollectionEnums.CardTier.COMMON,
+	SrsEnums.LootRarity.LEARNING: CollectionEnums.CardTier.UNCOMMON,
+	SrsEnums.LootRarity.ABOUT_TO_FORGET: CollectionEnums.CardTier.RARE,
+}
+
 var card_data: CharacterData
 var loot_rarity: SrsEnums.LootRarity = SrsEnums.LootRarity.COMMON
-var visual_state: CardVisualState
+var current_challenge_type: String = ""
 
 var _tween: Tween
 
-@onready var _character_label: Label = $CharacterLabel if has_node("CharacterLabel") else null
-@onready var _prompt_label: Label = $PromptLabel if has_node("PromptLabel") else null
-@onready var _pinyin_label: Label = $PinyinLabel if has_node("PinyinLabel") else null
-@onready var _rarity_border: Panel = $RarityBorder if has_node("RarityBorder") else null
+@onready var _frame: Panel = $Frame if has_node("Frame") else null
+@onready var _glyph_label: Label = $Frame/VBox/GlyphLabel if has_node("Frame/VBox/GlyphLabel") else null
+@onready var _pinyin_label: Label = $Frame/VBox/PinyinLabel if has_node("Frame/VBox/PinyinLabel") else null
+@onready var _meaning_label: Label = $Frame/VBox/MeaningLabel if has_node("Frame/VBox/MeaningLabel") else null
+@onready var _tier_label: Label = $Frame/TierLabel if has_node("Frame/TierLabel") else null
 
 
+## Show the full card (no field hidden). Used for reveal states; not
+## currently called during the challenge flow.
 func setup(data: CharacterData, rarity: SrsEnums.LootRarity) -> void:
 	card_data = data
 	loot_rarity = rarity
-	_update_display()
+	current_challenge_type = ""
+	_show_full()
+	_apply_tier_style()
 
 
+## Configure for a challenge — hides the field being tested. See class
+## docstring for the per-type visibility table.
 func setup_for_challenge(data: CharacterData, challenge_type: String, rarity: SrsEnums.LootRarity) -> void:
 	card_data = data
 	loot_rarity = rarity
-
-	# Show different info based on challenge type
-	if _character_label:
-		match challenge_type:
-			"meaning":
-				_character_label.text = data.character
-			"character":
-				_character_label.text = data.meaning
-			"pinyin":
-				_character_label.text = data.character
-			"tone":
-				_character_label.text = data.get_base_pinyin()
-			_:
-				_character_label.text = data.character
-
-	if _pinyin_label:
-		_pinyin_label.visible = challenge_type != "pinyin" and challenge_type != "tone"
-		if _pinyin_label.visible:
-			_pinyin_label.text = data.pinyin
-
-	_apply_rarity_style()
+	current_challenge_type = challenge_type
+	if data == null:
+		return
+	_apply_challenge_visibility(data, challenge_type)
+	_apply_tier_style()
 
 
-func _update_display() -> void:
+func _show_full() -> void:
 	if card_data == null:
 		return
-	if _character_label:
-		_character_label.text = card_data.character
+	if _glyph_label:
+		_glyph_label.text = card_data.character
+		_glyph_label.visible = true
 	if _pinyin_label:
 		_pinyin_label.text = card_data.pinyin
-	_apply_rarity_style()
+		_pinyin_label.visible = true
+	if _meaning_label:
+		_meaning_label.text = card_data.meaning
+		_meaning_label.visible = true
 
 
-func _apply_rarity_style() -> void:
-	if _rarity_border == null:
+func _apply_challenge_visibility(data: CharacterData, challenge_type: String) -> void:
+	var plan := compute_field_state(data, challenge_type)
+	if plan.is_empty():
 		return
-	var color := Color.WHITE
-	match loot_rarity:
-		SrsEnums.LootRarity.COMMON:
-			color = Color(0.7, 0.7, 0.7)
-		SrsEnums.LootRarity.LEARNING:
-			color = Color(0.3, 0.7, 1.0)
-		SrsEnums.LootRarity.ABOUT_TO_FORGET:
-			color = Color(1.0, 0.4, 0.1)
-		SrsEnums.LootRarity.NEW_CARD:
-			color = Color(1.0, 0.85, 0.0)
+	if _glyph_label:
+		_glyph_label.text = plan["glyph_text"]
+		_glyph_label.visible = plan["glyph_visible"]
+	if _pinyin_label:
+		_pinyin_label.text = plan["pinyin_text"]
+		_pinyin_label.visible = plan["pinyin_visible"]
+	if _meaning_label:
+		_meaning_label.text = plan["meaning_text"]
+		_meaning_label.visible = plan["meaning_visible"]
 
-	_rarity_border.modulate = color
 
+## Pure helper: returns the visibility/text plan for a challenge type.
+## Extracted so the visibility contract can be tested without instantiating
+## the scene (the @onready labels need a scene tree to resolve).
+static func compute_field_state(data: CharacterData, challenge_type: String) -> Dictionary:
+	if data == null:
+		return {}
+	# "meaning" challenge layout is the default; each branch overrides.
+	var glyph_text := data.character
+	var glyph_visible := true
+	var pinyin_text := data.pinyin
+	var pinyin_visible := true
+	var meaning_text := data.meaning
+	var meaning_visible := false
+
+	match challenge_type:
+		"meaning":
+			pass
+		"character":
+			# Meaning IS the prompt; both character and pinyin would leak
+			# the answer when 4 character options share readings.
+			glyph_text = data.meaning
+			pinyin_visible = false
+			meaning_visible = false
+		"pinyin":
+			pinyin_visible = false
+			meaning_visible = true
+		"tone":
+			pinyin_text = data.get_base_pinyin()
+			meaning_visible = true
+
+	return {
+		"glyph_text": glyph_text,
+		"glyph_visible": glyph_visible,
+		"pinyin_text": pinyin_text,
+		"pinyin_visible": pinyin_visible,
+		"meaning_text": meaning_text,
+		"meaning_visible": meaning_visible,
+	}
+
+
+## Apply the canonical tier visual (frame StyleBox + tier label accent).
+## Sourced from the design system via CardTierStyler. Use this from new code;
+## legacy callers still flow through setup() / setup_for_challenge() which
+## translate LootRarity to CardTier internally.
+func apply_tier(tier: CollectionEnums.CardTier) -> void:
+	if _frame:
+		_frame.add_theme_stylebox_override("panel", CardTierStyler.style_for(tier))
+	if _tier_label:
+		_tier_label.text = CardTierStyler.label_for(tier)
+		_tier_label.add_theme_color_override("font_color", CardTierStyler.accent_for(tier))
+		_tier_label.add_theme_font_size_override("font_size", CardTierStyler.tier_label_font_size(tier))
+		var badge: StyleBox = CardTierStyler.tier_label_badge_for(tier)
+		if badge != null:
+			_tier_label.add_theme_stylebox_override("normal", badge)
+		else:
+			_tier_label.remove_theme_stylebox_override("normal")
+
+
+func _apply_tier_style() -> void:
+	var tier: int = _LOOT_TO_TIER.get(loot_rarity, CollectionEnums.CardTier.COMMON)
+	apply_tier(tier)
+
+
+# -- Feedback / animations (driven by ChallengePresenter) --
 
 func show_correct_feedback() -> void:
 	_kill_tween()
@@ -101,8 +179,7 @@ func show_srs_rare_effect() -> void:
 	_tween.tween_property(self, "modulate:a", 1.0, 0.3)
 
 
-func show_radical_highlight(radical: String) -> void:
-	# Visual cue that a radical was activated
+func show_radical_highlight(_radical: String) -> void:
 	_kill_tween()
 	_tween = create_tween()
 	_tween.tween_property(self, "scale", Vector2(1.1, 1.1), 0.15)

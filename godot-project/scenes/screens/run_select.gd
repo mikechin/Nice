@@ -8,6 +8,7 @@ extends Control
 @onready var _due_count_label: Label = $DueCountLabel if has_node("DueCountLabel") else null
 @onready var _back_button: Button = $BackButton if has_node("BackButton") else null
 @onready var _title_label: Label = $TitleLabel if has_node("TitleLabel") else null
+@onready var _debug_tier_button: Button = $ModeContainer/DebugTierSampleButton if has_node("ModeContainer/DebugTierSampleButton") else null
 
 
 func _ready() -> void:
@@ -16,6 +17,8 @@ func _ready() -> void:
 		_start_button.pressed.connect(_on_start_pressed)
 	if _back_button:
 		_back_button.pressed.connect(_on_back_pressed)
+	if _debug_tier_button:
+		_debug_tier_button.pressed.connect(_on_debug_tier_sample_pressed)
 
 	_update_descriptions()
 	_update_due_count()
@@ -56,6 +59,29 @@ func _start_run() -> void:
 	SignalBus.screen_transition_requested.emit("game")
 
 
+func _on_debug_tier_sample_pressed() -> void:
+	# Builds a 4-card pack with one card per visual tier so the
+	# CardDisplay rendering can be verified end-to-end.
+	AudioManager.play_sfx("button_tap")
+	var sample_cards := _pick_debug_sample_cards(4)
+	if sample_cards.size() < 4:
+		push_warning("run_select.gd: character_db has fewer than 4 cards; debug pack will be short")
+	var pack := GameState.review_scheduler.curate_debug_tier_sample_pack(sample_cards)
+	GameState.current_pack = pack
+	GameState.start_run()
+	SignalBus.screen_transition_requested.emit("game")
+
+
+func _pick_debug_sample_cards(count: int) -> Array[CharacterData]:
+	var picked: Array[CharacterData] = []
+	if GameState.character_db == null:
+		return picked
+	var all := GameState.character_db.get_all()
+	for i in mini(count, all.size()):
+		picked.append(all[i])
+	return picked
+
+
 func _on_back_pressed() -> void:
 	SignalBus.screen_transition_requested.emit("main_menu")
 
@@ -71,3 +97,5 @@ func _warn_missing_nodes() -> void:
 		push_warning("run_select.gd: missing node _back_button")
 	if _title_label == null:
 		push_warning("run_select.gd: missing node _title_label")
+	if _debug_tier_button == null:
+		push_warning("run_select.gd: missing node _debug_tier_button")

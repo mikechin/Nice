@@ -6,7 +6,7 @@ extends Control
 
 @onready var _challenge_presenter: ChallengePresenter = $ChallengePresenter if has_node("ChallengePresenter") else null
 @onready var _progress_bar: Control = $ProgressBar if has_node("ProgressBar") else null
-@onready var _card_prompt_label: Label = $CardPromptLabel if has_node("CardPromptLabel") else null
+@onready var _card_display: CardDisplay = $CardDisplay if has_node("CardDisplay") else null
 @onready var _challenge_type_label: Label = $ChallengeTypeLabel if has_node("ChallengeTypeLabel") else null
 @onready var _answer_labels: Dictionary = {
 	"up": $AnswerUp if has_node("AnswerUp") else null,
@@ -94,13 +94,10 @@ func _present_next_card() -> void:
 		card_id, challenge_type, now
 	)
 
-	if _card_prompt_label:
-		_card_prompt_label.remove_theme_color_override("font_color")
-
 	_in_bonus_stage = false
 
 	if _challenge_presenter:
-		_challenge_presenter.setup(_answer_generator, null, null, _bonus_manager, _rng)
+		_challenge_presenter.setup(_answer_generator, _card_display, null, _bonus_manager, _rng)
 		_challenge_presenter.present_challenge(card_data, challenge_type, loot_rarity)
 
 
@@ -119,11 +116,8 @@ func _on_answer_button_pressed(direction: String) -> void:
 
 
 func _on_card_presented(card_data: Dictionary, challenge_type: String) -> void:
-	# Show the card prompt
-	if _card_prompt_label:
-		_card_prompt_label.text = _challenge_presenter.get_challenge_prompt(
-			_challenge_presenter._current_card, challenge_type
-		) if _challenge_presenter else ""
+	# CardDisplay is driven directly by ChallengePresenter — this handler
+	# only updates the answer buttons and the per-stage type label.
 	if _challenge_type_label:
 		var type_labels: Dictionary = {
 			"meaning": "What does this mean?",
@@ -170,12 +164,8 @@ func _on_challenge_completed(card_id: String, challenge_type: String, correct: b
 			SignalBus.card_effect_requested.emit("tier_promotion", {"card_id": card_id})
 
 		AudioManager.play_correct()
-		if _card_prompt_label:
-			_card_prompt_label.add_theme_color_override("font_color", Color(0.2, 1.0, 0.2))
 	else:
 		AudioManager.play_wrong()
-		if _card_prompt_label:
-			_card_prompt_label.add_theme_color_override("font_color", Color(1.0, 0.2, 0.2))
 
 
 func _on_bonus_round_started(_card_id: String) -> void:
@@ -249,7 +239,7 @@ func _warn_missing_nodes() -> void:
 		push_warning("game_screen.gd: missing node _challenge_presenter")
 	if _progress_bar == null:
 		push_warning("game_screen.gd: missing node _progress_bar")
-	if _card_prompt_label == null:
-		push_warning("game_screen.gd: missing node _card_prompt_label")
+	if _card_display == null:
+		push_warning("game_screen.gd: missing node _card_display")
 	if _challenge_type_label == null:
 		push_warning("game_screen.gd: missing node _challenge_type_label")

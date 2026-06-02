@@ -218,3 +218,79 @@ func test_get_new_card_ids_excludes_reviewed() -> void:
 	var new_ids := scheduler.get_new_card_ids()
 	assert_int(new_ids.size()).is_equal(1)
 	assert_str(new_ids[0]).is_equal("c2")
+
+
+# -- debug tier overrides --
+
+func test_set_debug_tier_override_returned_by_get_loot_rarity() -> void:
+	scheduler.register_card("c1", "好")
+	# Without override, an unreviewed card-state isn't NEW (it's been
+	# registered) — record one review so it's in COMMON territory.
+	scheduler.record_review("c1", "meaning", FsrsAlgorithm.Rating.EASY, _now)
+	scheduler.set_debug_tier_override("c1", SrsEnums.LootRarity.NEW_CARD)
+	var rarity := scheduler.get_loot_rarity("c1", "meaning", _now)
+	assert_int(rarity).is_equal(SrsEnums.LootRarity.NEW_CARD)
+
+
+func test_clear_debug_tier_overrides_restores_computed_rarity() -> void:
+	scheduler.register_card("c1", "好")
+	scheduler.set_debug_tier_override("c1", SrsEnums.LootRarity.COMMON)
+	scheduler.clear_debug_tier_overrides()
+	# Brand new (no review history) → NEW_CARD
+	var rarity := scheduler.get_loot_rarity("c1", "meaning", _now)
+	assert_int(rarity).is_equal(SrsEnums.LootRarity.NEW_CARD)
+
+
+func test_override_works_for_unregistered_card() -> void:
+	# The debug pack registers cards explicitly, but the override should
+	# take precedence even if the lookup happens before registration.
+	scheduler.set_debug_tier_override("ghost", SrsEnums.LootRarity.LEARNING)
+	var rarity := scheduler.get_loot_rarity("ghost", "meaning", _now)
+	assert_int(rarity).is_equal(SrsEnums.LootRarity.LEARNING)
+
+
+# -- curate_debug_tier_sample_pack --
+
+func _make_card(ch: String) -> CharacterData:
+	return CharacterData.from_dict({
+		"character": ch, "pinyin": "x", "tone": 1,
+		"meaning": "m", "hsk_level": 2, "radicals": [],
+	})
+
+
+func test_debug_tier_sample_pack_has_one_card_per_tier() -> void:
+	var sample: Array[CharacterData] = [
+		_make_card("一"), _make_card("二"), _make_card("三"), _make_card("四"),
+	]
+	var pack := scheduler.curate_debug_tier_sample_pack(sample)
+
+	assert_int(pack.get_total_count()).is_equal(4)
+	assert_str(pack.pack_type).is_equal("debug")
+
+	var tiers_seen: Array[int] = []
+	for cid in pack.presentation_order:
+		tiers_seen.append(scheduler.get_loot_rarity(cid, "meaning", _now))
+	# All four tiers represented exactly once.
+	for tier in [
+		SrsEnums.LootRarity.COMMON,
+		SrsEnums.LootRarity.LEARNING,
+		SrsEnums.LootRarity.ABOUT_TO_FORGET,
+		SrsEnums.LootRarity.NEW_CARD,
+	]:
+		assert_int(tiers_seen.count(tier)).is_equal(1)
+
+
+func test_debug_tier_sample_pack_registers_cards_for_review_recording() -> void:
+	var sample: Array[CharacterData] = [_make_card("一"), _make_card("二")]
+	scheduler.curate_debug_tier_sample_pack(sample)
+	# Both characters must be in card_states so record_review accepts the answer.
+	assert_bool(scheduler.card_states.has("一")).is_true()
+	assert_bool(scheduler.card_states.has("二")).is_true()
+
+
+func test_debug_tier_sample_pack_clears_prior_overrides() -> void:
+	scheduler.set_debug_tier_override("stale", SrsEnums.LootRarity.NEW_CARD)
+	var sample: Array[CharacterData] = [_make_card("一")]
+	scheduler.curate_debug_tier_sample_pack(sample)
+	# Stale override is wiped so old debug runs don't leak forward.
+	assert_bool(scheduler._debug_tier_overrides.has("stale")).is_false()

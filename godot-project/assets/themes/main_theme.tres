@@ -1,0 +1,186 @@
+[gd_resource type="Theme" load_steps=18 format=3]
+
+[ext_resource type="FontFile" path="res://assets/fonts/Manrope-VariableFont.ttf" id="1_manrope"]
+[ext_resource type="FontFile" path="res://assets/fonts/NotoSerifSC-VariableFont.ttf" id="2_noto_serif_sc"]
+[ext_resource type="FontFile" path="res://assets/fonts/JetBrainsMono-VariableFont.ttf" id="3_jetbrains_mono"]
+
+[sub_resource type="FontVariation" id="FontVariation_default"]
+base_font = ExtResource("1_manrope")
+fallbacks = Array[Font]([ExtResource("2_noto_serif_sc")])
+
+; ── PRIMARY BUTTON — paper face ─────────────────────────────
+[sub_resource type="StyleBoxFlat" id="SBF_primary_normal"]
+content_margin_left = 22.0
+content_margin_top = 13.0
+content_margin_right = 22.0
+content_margin_bottom = 13.0
+bg_color = Color(0.949, 0.925, 0.890, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="SBF_primary_hover"]
+content_margin_left = 22.0
+content_margin_top = 13.0
+content_margin_right = 22.0
+content_margin_bottom = 13.0
+bg_color = Color(0.890, 0.859, 0.820, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="SBF_primary_pressed"]
+content_margin_left = 22.0
+content_margin_top = 14.0
+content_margin_right = 22.0
+content_margin_bottom = 12.0
+bg_color = Color(0.890, 0.859, 0.820, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+; ── SECONDARY BUTTON — hairline outline ─────────────────────
+[sub_resource type="StyleBoxFlat" id="SBF_secondary_normal"]
+content_margin_left = 22.0
+content_margin_top = 13.0
+content_margin_right = 22.0
+content_margin_bottom = 13.0
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.220, 0.192, 0.169, 0.698)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="SBF_secondary_hover"]
+content_margin_left = 22.0
+content_margin_top = 13.0
+content_margin_right = 22.0
+content_margin_bottom = 13.0
+bg_color = Color(1, 1, 1, 0.04)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.357, 0.329, 0.302, 0.8)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+; ── ICON BUTTON — elevated 48x48 ────────────────────────────
+[sub_resource type="StyleBoxFlat" id="SBF_icon_normal"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.149, 0.122, 0.094, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.220, 0.192, 0.169, 0.349)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="SBF_icon_hover"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.173, 0.145, 0.118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.220, 0.192, 0.169, 0.698)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+; ── PANEL / SHEET surfaces ──────────────────────────────────
+[sub_resource type="StyleBoxFlat" id="SBF_panel"]
+content_margin_left = 24.0
+content_margin_top = 24.0
+content_margin_right = 24.0
+content_margin_bottom = 24.0
+bg_color = Color(0.110, 0.086, 0.067, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.220, 0.192, 0.169, 0.349)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+; ── PROGRESS BAR — pack opening + mastery ───────────────────
+[sub_resource type="StyleBoxFlat" id="SBF_progress_bg"]
+bg_color = Color(0.200, 0.173, 0.153, 0.698)
+corner_radius_top_left = 999
+corner_radius_top_right = 999
+corner_radius_bottom_right = 999
+corner_radius_bottom_left = 999
+
+[sub_resource type="StyleBoxFlat" id="SBF_progress_fill"]
+bg_color = Color(0.937, 0.694, 0.306, 1)
+corner_radius_top_left = 999
+corner_radius_top_right = 999
+corner_radius_bottom_right = 999
+corner_radius_bottom_left = 999
+
+[resource]
+default_font = SubResource("FontVariation_default")
+default_font_size = 15
+
+Button/styles/normal = SubResource("SBF_secondary_normal")
+Button/styles/hover = SubResource("SBF_secondary_hover")
+Button/styles/pressed = SubResource("SBF_secondary_hover")
+Button/styles/focus = SubResource("SBF_secondary_hover")
+Button/styles/disabled = SubResource("SBF_secondary_normal")
+Button/colors/font_color = Color(0.961, 0.953, 0.937, 1)
+Button/colors/font_hover_color = Color(0.961, 0.953, 0.937, 1)
+Button/colors/font_pressed_color = Color(0.961, 0.953, 0.937, 1)
+Button/colors/font_disabled_color = Color(0.318, 0.298, 0.275, 1)
+Button/font_sizes/font_size = 15
+
+PrimaryButton/base_type = &"Button"
+PrimaryButton/styles/normal = SubResource("SBF_primary_normal")
+PrimaryButton/styles/hover = SubResource("SBF_primary_hover")
+PrimaryButton/styles/pressed = SubResource("SBF_primary_pressed")
+PrimaryButton/styles/focus = SubResource("SBF_primary_hover")
+PrimaryButton/styles/disabled = SubResource("SBF_primary_normal")
+PrimaryButton/colors/font_color = Color(0.086, 0.063, 0.047, 1)
+PrimaryButton/colors/font_hover_color = Color(0.086, 0.063, 0.047, 1)
+PrimaryButton/colors/font_pressed_color = Color(0.086, 0.063, 0.047, 1)
+PrimaryButton/font_sizes/font_size = 15
+
+IconButton/base_type = &"Button"
+IconButton/styles/normal = SubResource("SBF_icon_normal")
+IconButton/styles/hover = SubResource("SBF_icon_hover")
+IconButton/styles/pressed = SubResource("SBF_icon_hover")
+IconButton/styles/focus = SubResource("SBF_icon_hover")
+IconButton/styles/disabled = SubResource("SBF_icon_normal")
+IconButton/colors/font_color = Color(0.961, 0.953, 0.937, 1)
+IconButton/font_sizes/font_size = 15
+
+Label/colors/font_color = Color(0.737, 0.717, 0.686, 1)
+Label/font_sizes/font_size = 15
+
+PanelContainer/styles/panel = SubResource("SBF_panel")
+
+ProgressBar/styles/background = SubResource("SBF_progress_bg")
+ProgressBar/styles/fill = SubResource("SBF_progress_fill")
+ProgressBar/colors/font_color = Color(0.475, 0.451, 0.427, 1)
+ProgressBar/font_sizes/font_size = 11

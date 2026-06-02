@@ -8,6 +8,11 @@ var fsrs: FsrsAlgorithm
 var card_states: Dictionary = {}  # card_id -> CardState
 var _pack_curator: PackCurator
 
+## Debug-only: when populated, get_loot_rarity returns the override
+## instead of computing from SRS state. Used by the Tier Sample debug
+## pack to render one card per visual tier without faking SRS history.
+var _debug_tier_overrides: Dictionary = {}  # card_id -> SrsEnums.LootRarity
+
 
 func _init() -> void:
 	fsrs = FsrsAlgorithm.new()
@@ -102,6 +107,8 @@ func select_challenge_type(card_id: String) -> String:
 
 ## Determine loot rarity for a card in the current session.
 func get_loot_rarity(card_id: String, challenge_type: String, now: float) -> SrsEnums.LootRarity:
+	if _debug_tier_overrides.has(card_id):
+		return _debug_tier_overrides[card_id]
 	if card_id not in card_states:
 		return SrsEnums.LootRarity.NEW_CARD
 
@@ -134,3 +141,50 @@ func deserialize_all(data: Array) -> void:
 	for entry in data:
 		load_card_state(entry)
 	_pack_curator._card_states = card_states
+
+
+# -- Debug helpers -------------------------------------------------------
+
+func set_debug_tier_override(card_id: String, tier: SrsEnums.LootRarity) -> void:
+	_debug_tier_overrides[card_id] = tier
+
+
+func clear_debug_tier_overrides() -> void:
+	_debug_tier_overrides.clear()
+
+
+## Build a 4-card pack with one card per LootRarity tier, used to
+## visually verify CardDisplay renders each tier correctly. Each card
+## is registered in card_states (so record_review doesn't drop the
+## answer) and gets a tier override so get_loot_rarity returns the
+## forced tier regardless of SRS state.
+func curate_debug_tier_sample_pack(sample_cards: Array[CharacterData]) -> PackData:
+	clear_debug_tier_overrides()
+	var pack := PackData.new()
+	pack.pack_id = "debug_tier_sample"
+	pack.created_at = Time.get_unix_time_from_system()
+	pack.pack_type = "debug"
+
+	var tier_order: Array[SrsEnums.LootRarity] = [
+		SrsEnums.LootRarity.COMMON,
+		SrsEnums.LootRarity.LEARNING,
+		SrsEnums.LootRarity.ABOUT_TO_FORGET,
+		SrsEnums.LootRarity.NEW_CARD,
+	]
+
+	var slots := mini(sample_cards.size(), tier_order.size())
+	for i in slots:
+		var card := sample_cards[i]
+		var card_id := card.get_card_id()
+		register_card(card_id, card.character)
+		set_debug_tier_override(card_id, tier_order[i])
+		match tier_order[i]:
+			SrsEnums.LootRarity.NEW_CARD:
+				pack.new_cards.append(card_id)
+			SrsEnums.LootRarity.ABOUT_TO_FORGET:
+				pack.struggling_cards.append(card_id)
+			_:
+				pack.common_cards.append(card_id)
+
+	pack.build_presentation_order()
+	return pack
