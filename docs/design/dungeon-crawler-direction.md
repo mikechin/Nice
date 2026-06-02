@@ -12,7 +12,7 @@
 
 Exactly one thing is non-negotiable: **the review signal feeding FSRS stays honest.** The instant the player answers a card, FSRS records the real result — win, lose, die, retry, whatever. Everything stacked on top (hearts, loss, random grades, staking) can be as gamey and punishing as the design wants. That clean signal is what makes the backend *real* instead of decorative, and it's the source of the long-term retention hook.
 
-- **Missing a card = losing that chance for the card** in the run — **no retry; you move on (resolved 2026-06-02).** The FSRS grade logs that one attempt, always. Misses being final is what makes an encounter a *hunt* (defeat the mob, loot the card) instead of a combo-grind.
+- **Missing a card = losing that chance for the card** in the run — **no retry; you move on (resolved 2026-06-02).** The FSRS grade logs that one attempt, always. A wrong answer is a logged review *and* lost combat tempo (your ATB doesn't charge, the mobs grind you) — never a free re-try.
 - FSRS remains the single source of truth for what a card is and how strong it is.
 
 ---
@@ -20,17 +20,17 @@ Exactly one thing is non-negotiable: **the review signal feeding FSRS stays hone
 ## The Core Loop
 
 ```
-TOWN ──▶ enter dungeon ──▶ room-by-room (FSRS-drawn cards) ──▶ extract points ──▶ BOSS
-  ▲                              │ miss = lose a heart                  │
-  │                              │ 0 hearts = die = lose haul + stake   │
-  │                         correct = stash a raw card copy             │
+TOWN ──▶ enter dungeon ──▶ room-by-room (ATB fights vs mobs) ──▶ extract points ──▶ BOSS
+  ▲                              │ wrong/slow = mobs chip your HP        │
+  │                              │ 0 HP = die = lose haul + stake        │
+  │                         clear mobs → loot drop (random cards)        │
   │                                                                     │
   └──◀── grade / shatter / equip ◀── EXTRACT (answer your way out) ◀────┘
 ```
 
 1. **Enter a run** with a loadout (equipped graded cards) and optionally **staked** graded instances to access deeper floors.
-2. **Crawl room by room.** Each room is an FSRS-drawn card challenge (reusing `src/swipe/`). Correct → stash a *raw* (ungraded) copy. Miss → lose a heart.
-3. **Hearts = mistakes allowed.** Lose them all → die → **lose the haul + any staked instances.** (FSRS still recorded every answer.)
+2. **Crawl room by room.** Each room is an **ATB fight** (reusing `src/swipe/` for the answer input): answer FSRS-drawn due cards to charge your gauge and attack 1–3 mobs; clear them → a **loot drop** of random card instances. The cards you *answer* are due reviews; the cards you *loot* are the drop — two different things (see Encounters).
+3. **Player HP — mobs chip it** on their ATB timer (wrong/slow answers cost you tempo → HP). HP hits 0 → die → **lose the haul + any staked instances.** (FSRS still recorded every answer.)
 4. **Extract only at extract points** (between depths) or by beating the boss — never mid-depth. This prevents bailing before the SRS-needed cards surface.
 5. **Extraction = "answer your way out," up to your carry cap.** You can only extract your best **N** cards — the cap is a gear/meta stat that grows (see **Meta Progression**); triage the rest at the door. The escape is a review gauntlet over what you keep, with a **greed tax**: the fuller your bag toward the cap, the harder the escape (cap = the hard ceiling, greed tax = the cost curve up to it). Anti-hoarding + final tension spike + SRS reinforcement on the just-earned cards. You can die *at the door*.
 6. **Back in town:** grade keepers (costs currency), shatter junk (yields currency), manage loadout, view the binder.
@@ -47,7 +47,7 @@ TOWN ──▶ enter dungeon ──▶ room-by-room (FSRS-drawn cards) ──▶
 
 **Ship 1.0 with ONE pre-rendered dungeon.** The *layout* is hand-built and fixed; the *cards filling each room are drawn live from FSRS every run.* Replayability is real without procedural generation — your due cards, loadout, branch picks, and chosen depth all vary run-to-run. **Procedural layout is unnecessary because the scheduler already procedurally selects the content.** This de-risks 1.0 enormously. More dungeons = post-1.0 themed content (a radical-themed floor, an HSK sub-band floor).
 
-**Room = a space with a mob encounter; each card answered = one FSRS review.** A room holds an FF7-style battle of 1–3 mobs (see **Encounters**); each mob/card is one honest FSRS commit. The *card* is the atomic unit, not the room.
+**Room = an ATB fight vs. 1–3 mobs; each card answered = one FSRS review.** A room holds a battle (see **Encounters**) where you answer due cards to fuel attacks; **every answer is one honest FSRS commit**, and clearing the mobs yields a loot drop. The *review* is the atomic unit, not the room — and it's decoupled from the loot.
 
 **Run shape:** `TOWN → enter → segment → elite → [extract gate: leave or push] → segment → elite → … → boss`. A *segment* is a few encounter rooms; **elites escalate 3 → 5 → 7** hits to clear (exact counts = playtest). After every elite: bank the haul and go home, or descend. **Depth = position along the fixed path** — later rooms pull lower-stability cards + harder challenge types (the locked depth-biases-the-draw rule). **Forward-only; no backtracking** — matches extraction tension (you extract or push, never retreat).
 
@@ -57,13 +57,13 @@ TOWN ──▶ enter dungeon ──▶ room-by-room (FSRS-drawn cards) ──▶
 
 | Room | What happens |
 |---|---|
-| **Encounter** | An FF7-style battle vs. 1–3 mobs that *are* the answer options (see **Encounters**). Strike the right mob → it drops its card; wrong → it hits you (lose a heart). |
+| **Encounter** | An ATB battle vs. 1–3 mobs (see **Encounters**). Answer due cards → charge ATB → attack; clear all mobs → a loot drop. Wrong/slow → mobs chip your HP. |
 | **Trial** (timed) | An encounter with a *soft* countdown (pressure, not instant-fail). Better reward. Where the `+timer` passive earns its slot. |
 | **Cache** | A small shard / bonus-raw pickup (telegraphed). |
 | **Elite** | HP-bar fight (below). Gateway to an extract point. |
 | **Boss** | The cloze finale (see The Boss). Ends the run. |
 
-**Elite fight — N *total* correct hits (LOCKED 2026-06-02).** The elite has an HP bar sized to **3 / 5 / 7** correct answers (escalating per elite; playtest exact). **Each correct answer = one hit on the bar; each wrong answer = you take damage (lose a heart).** No combo/streak requirement — it's a *cumulative total*, not consecutive, so a single slip doesn't wipe progress. Win = bar emptied → extract or continue; lose = hearts hit zero → die (lose haul + stake). FSRS logs every first attempt regardless. *(Future idea, parked: make elites fight in a structurally distinct way — not just "a longer regular room.")*
+**Elite fight — a tanky enemy (revised 2026-06-02 to Model A).** An elite is a single high-HP mob that hits harder: the same ATB loop, just longer — answer to charge, attack, out-damage it before it grinds your HP down. Fight length emerges from its HP vs. your attack power (no fixed "N hits" count now that correct answers charge ATB rather than land direct hits). Beating it gates an extract point and a fatter loot drop. FSRS logs every answer regardless. *(Future idea, parked: give elites a structurally distinct fight — affixes, phases — not merely more HP.)*
 
 **Timer = a per-room property, not a global clock (LOCKED).** Most rooms are calm; trial rooms (and optionally elites) carry the soft countdown. This keeps the baseline pressure-free, makes timed rooms a real tension spike, and gives the `+answer-timer` passive clear situational value — confirming the user's "a timer on *some* rooms" instinct.
 
@@ -76,6 +76,7 @@ TOWN ──▶ enter dungeon ──▶ room-by-room (FSRS-drawn cards) ──▶
   - **Colored** = you've extracted at least one copy. Permanent — you lose *instances*, never *discovery*.
   - **Grade badge** shows your *best* PSA grade for that character → the binder is also a trophy case (chase "PSA-10 你").
 - **Instances:** disposable graded copies — the consumable, spendable, **stakeable** game objects. You stake/burn/fuse *instances*, never characters. Instances are re-farmable (review the character again → pull another copy), so any loss floor is **time, not permanent progress** — which is what makes the aggressive stake-on-death model survivable.
+- **Reviews ≠ loot (the Model-A decoupling, 2026-06-02).** The cards you *answer* in a fight are due reviews → they feed the **binder** (knowledge, honest FSRS). The cards you *loot* from a defeated mob are random drops → **instances** (the game economy). The thing you learn is not the thing you collect — which is what lets loot be a proper variable-ratio reward without distorting the review signal.
 
 ---
 
@@ -94,7 +95,7 @@ The loop closes itself: **commons** (front-loaded easy FSRS cards — weak by de
 
 ## Power Model
 
-- **Base power = a flat baseline per effect** — *not* mastery-derived and *not* depth-derived (a raw heart-card = +1 heart for everyone). This keeps the two principles below clean: depth never hands out power, and mastery's contribution is realized at the grading station, not baked into the raw card.
+- **Base power = a flat baseline per effect** — *not* mastery-derived and *not* depth-derived (a raw HP-card = +max HP for everyone). This keeps the two principles below clean: depth never hands out power, and mastery's contribution is realized at the grading station, not baked into the raw card.
 - **Mastery (FSRS stability) gates power *through the grade roll*, not the base.** A well-mastered card doesn't start stronger — it *grades better* (see Grading). Demonstrated, sustained learning shows up as better PSA odds, so a hard card just learned at depth 5 (low stability) grades poorly and stays weak even when graded; front-loaded easy cards likewise stay weak. ✅ (intended — the property survives, just routed through grading)
 - **Depth gates access/rarity only** — deeper = rarer, less-seen characters and harder challenge types. Depth biases the FSRS *draw*; it hands out neither base power nor grade odds.
 - **Rarity = HSK tier (intrinsic, fixed per character).** common = HSK 1, uncommon = HSK 2, rare = HSK 3, epic = HSK 4. Rarity is *what the card is* — it sets drop depth, shard/craft value, the ability-family pool, and **the grade-band ceiling** (see Grading). It does **not** scale base power: two cards with the same effect share a base and differ only in how high they can grade. A card's identity is **rarity × grade** (TCG-style: a pristine PSA-10 common and a beat-up rare both exist). *(At the HSK-3 launch scope you ship common→rare; **epic rides in with the HSK-4 stretch.**)*
@@ -123,42 +124,43 @@ The loop closes itself: **commons** (front-loaded easy FSRS cards — weak by de
 
 **The core move: a correct answer is the trigger.** Equipped power never fires on its own and never bypasses knowing the card — it only *amplifies a correct answer*. This is the answer to "abilities should tie into matching the card correctly": they are correctness-conditional amplifiers, so the only way to spend power is to know the answer.
 
-- **Normal rooms — JRPG mob encounters (see Encounters).** 1–3 mobs with HP; pick a target, answer its facets to drop it, loot its card; miss → it retaliates (lose a heart). Your **2 passives** live here as always-on whole-run stats — but since mobs now carry HP, your **3 actives** matter here too: damage-per-correct-answer thins mobs faster (less retaliation, more haul survives).
-- **Elites & boss — a bigger HP bar.** Same grammar scaled up: each **correct answer deals damage = your active power**; a miss costs a heart. Burn the bar down before it burns you. Normal-room mobs are just small versions of this same fight, with target choice and loot drops.
+- **All fights — ATB combat (see Encounters).** A correct answer charges your ATB; a ready gauge attacks a chosen mob for damage = your **active power**; mobs chip your **HP bar** on their own timer. Clear the mobs → a loot drop.
+- **Elites & boss = bigger HP / more mobs** — the same ATB loop scaled up (elite = a tanky enemy; boss = the cloze gauntlet wearing the combat skin).
 
 **Two classes, two distinct sinks:**
 
 | Class | Slots | Sink | Examples | Grade scales… |
 |---|---|---|---|---|
-| **Passive** (statives) | 2 | Survival + economy, whole run | +1 heart, +answer-timer, −greed tax, +shatter yield | the magnitude (+1 → +2 hearts at PSA 9) |
-| **Active** (verbs) | 3 | Damage-per-correct-answer, set-pieces | hit harder (flat ×), radical-multiplier (×N when the answer's radical matches), tone crit | the magnitude (bigger ×, higher crit) |
+| **Passive** (statives) | 2 | Survival + economy, whole run | +max HP, +ATB charge-rate, −greed tax, +loot/shatter find | the magnitude (+10 → +20 max HP at PSA 9) |
+| **Active** (verbs) | 3 | Attack damage + on-hit effects | hit harder (flat ×), radical-multiplier (×N when the answer's radical matches), tone crit | the magnitude (bigger ×, higher crit) |
 
-- **No mana/cooldown UI for damage actives — the correct answer *is* the charge.** This also resolves the active-ability economy for offense: you cast by answering right. (Pure *utility* actives — reveal-a-hint, skip-a-card — would still want limited charges; that's the only piece left open here.)
+- **No separate mana/cooldown — the correct answer *charges your ATB*, and a ready gauge spends on an attack.** You cast by answering right. (Pure *utility* actives — reveal-a-hint, skip-a-card — would still want limited charges; that's the only piece left open here.)
 - **Knowledge stays the true wall.** Power decides how *fast* correct answers resolve a fight; it never answers for you. Deep cards are low-stability (hard), so even a maxed kit can't burn the boss without actually knowing the deep cards — power amplifies skill, it doesn't replace it.
-- **`+answer-timer` → a per-*room* soft clock (RESOLVED 2026-06-02).** The timer is a **room property**, not global: trial rooms (and optionally elites) carry a *soft* countdown (pressure, not instant-fail); most rooms are calm. The 慢 *slow* passive extends the clock exactly there, giving it clear situational value. See **Dungeon Structure**.
+- **The soft clock is now the mob ATB itself (revised 2026-06-02 to Model A).** Every fight has time pressure baked in — enemy gauges fill on a timer and they hit you, so answering fast *is* the clock (no separate countdown needed). Trial rooms crank the enemy ATB for extra pressure; the 慢 *slow* passive slows enemy gauges / speeds yours. See **Encounters**.
 
 ---
 
-## Encounters — JRPG Mob Battles (HP, Targets, Loot Drops)
+## Encounters — ATB Combat, Knowledge-Fueled (Model A)
 
-**Revised 2026-06-02 — pivoted from one-shot "mobs = options" to a JRPG combat layer.** Normal rooms are **FF7-style battles vs. 1–3 mobs**, lightly **timed** (ATB pressure, not instant-fail). Each mob is a real combat target with **HP** and is **bound to a character** — the card it drops when it dies. This is a deliberate trade: it gives up the zero-code "mobs ARE the answer options" reskin in exchange for **kill-order tactics**, which is exactly what makes a *capped haul* (see Meta Progression) matter — focus-fire the rare-drop mob before the ATB clock or a miss costs you.
+**Revised 2026-06-02 (Model A — supersedes both "mobs = answer options" and "mob HP = facet chain").** Playtest killed the facet-chain idea: chaining facets of *one* character leaks the answer — the card shows every field but the tested one, so "what does 红 mean? → red" immediately followed by "which character is red? → 红" gives itself away. The fix is to **decouple the review from the enemy** and make combat a proper **ATB (active-time-battle) loop** — which is also what makes this read as a *looter* instead of a flashcard in a costume.
 
-**The loop:**
-1. **1–3 mobs** appear, each showing the character/loot it guards and its **HP** (a small bar = a few correct answers).
-2. **Pick a target** — the mob you want to bring down. You're quizzed on **that mob's character**, and each HP point is a **different facet** of it (meaning → pinyin → tone), so a multi-HP mob is the existing **bonus-round chain** turned into a health bar. Distinct facet per hit = **no massing** → the FSRS signal stays honest.
-3. **Answer via the swipe MC** (`src/swipe/card_display.gd` — the 4-option recognition input is reused intact, now as the *answer* widget rather than the mobs themselves). Correct → one HP off the targeted mob. Wrong → a mob **retaliates (lose a heart)** — no retry; FSRS logs the one attempt.
-4. A mob at **0 HP dies and drops its card** into your field bag. Clear the encounter's 1–3 mobs → 1–3 cards → pick a telegraphed exit.
+**The model:**
+- **Both sides have HP bars.** You (one player **HP bar** — replaces discrete hearts) vs. **1–3 mobs**, each with its own HP.
+- **Knowledge is your ATB fuel.** A due-card prompt is always up. **Answer correctly → your ATB gauge fills; answer wrong → no charge (lost tempo).** Either way the attempt logs to FSRS exactly once (honest, no retry). The cards you answer are *due reviews* — whatever the scheduler serves — **not** the mobs.
+- **Gauge ready → you attack** a mob of your choice (target tactics) for damage = your **active power**.
+- **Mobs attack on their own ATB timer** → they chip your HP. This *is* the soft clock: out-damage them before they grind you down. Slow or wrong answers cost tempo, which costs HP.
+- **Defeat all 1–3 mobs → a loot drop**: a roll on a loot table for **random card instances** (rarity/quantity tuned). The mobs are not the cards — the *drop* is the loot. Die (HP 0) → lose haul + stake.
+
+**Why this is the looter model (and the others weren't):**
+- **Variable loot is the genre's engine.** "Kill → random drop" is the dopamine loop; the old "answer 红 → get 红" was deterministic vending.
+- **Decoupling matches the locked two-layer economy AND kills the leak.** Answered cards = honest due reviews → knowledge/binder; looted cards = random instances → the disposable economy. You serve whatever's due (no facet-chaining, no leak), and loot is independent.
+- **The power layer needs HP to act on.** Actives = attack damage/abilities; passives = max HP / defense / ATB charge-rate. Model A is the substrate that makes the loadout matter in *every* fight, not just elites.
 
 **What's reused vs. net-new:**
-- **Reused:** the swipe MC answer input (and its visibility contract), the **bonus-round multi-stage chain** (now a mob's HP bar), the challenge-type variety.
-- **Net-new (the JRPG layer):** mob sprites with HP bars, **target selection**, mob **retaliation**, and the ATB clock. This is real new combat code — the accepted cost of target tactics.
+- **Reused:** `AnswerInput` (the answer-a-card core — still the heartbeat), the honest `record_review` commit, the swipe / answer-generator, the card display.
+- **Net-new:** player HP, mob HP, the two ATB gauges (yours fills on correct answers, theirs on a timer), attack/damage resolution, and a **loot table** that rolls card instances on victory. (`ChallengeChain` / facet-HP is retired for combat.)
 
-**Why the pivot earns its cost:**
-- **Target choice is the tactic.** With a capped haul you can't take everything; deciding *which* mob to kill first (the rare-drop, before it flees or the clock runs out) is the moment-to-moment game. One-shot recognition had no such decision.
-- **Actives now matter everywhere.** Mob HP means **damage-per-correct-answer (your 3 actives)** speeds normal encounters too, not just elites/boss — kill faster = less retaliation = more haul survives. Your offense stat is always live.
-- **Still honest.** You only loot by answering correctly; each HP hit is a distinct facet; a miss is final.
-
-**Tuning (open):** turn order (pick-target-then-answer, as above, vs. answer-a-shared-prompt-then-assign-the-strike); mob HP sizing per rarity; mobs-per-encounter distribution; ATB clock length; decoys in the swipe options so picks aren't trivial; visible-roaming vs. random-on-walk presentation. *(Parked optional layer: mob **type** = challenge type — a 'tone' mob tests tone.)*
+**Tuning (open):** ATB fill-per-correct vs. mob ATB rate (the core difficulty knob); whether a wrong answer merely denies charge or also gives the mob a free swing; player/mob HP sizing; attack damage vs. active power; loot-table rarity/quantity curves; and ATB time-pressure vs. the speed-based FSRS rating (watch that rushing doesn't distort Easy/Hard). *(Parked: mob types/affixes, visible-roaming vs. random encounter.)*
 
 ---
 
@@ -302,7 +304,7 @@ Ship both: chaining as the recurring super, the cloze gauntlet as the boss. Asse
 | **Exit** | Enter the dungeon with the current loadout (= the stake). |
 
 - **Shop stock = a mix of "known-instances" + "consumables," explicitly NOT new-character unlocks (LOCKED 2026-06-02).** You cannot buy knowledge and cannot buy your way past the craft — it sells only *raw* instances of characters you've already met, so it **feeds the crafter, never bypasses it.** The shop just smooths the RNG of *finding* the right ingredient. This preserves *binder = genuinely learned.*
-- **Hearts reset to full each run** (extraction-roguelike standard) → no heal building; the four above are complete. *(If hearts ever persist between runs, a rest/heal service slots in — parked.)*
+- **HP resets to full each run** (extraction-roguelike standard) → no heal building; the four above are complete. *(If HP ever persists between runs, a rest/heal service slots in — parked.)*
 - **Shard sinks now concrete:** the **crafter** (shard fee + ingredients consumed) and the **shop** (instances, bundles, consumables). The currency loop is closed.
 
 ---
@@ -350,17 +352,17 @@ Ship both: chaining as the recurring super, the cloze gauntlet as the boss. Asse
 - Boss: **cloze gauntlet** — pre-authored HSK bank indexed by blank-fill, queried for **haul-solvable** sentences (haul = the answer bank; **selection, not generation**); **min-haul gate** (below → haul-review + binder distractors); **blanks scale 2→5 with HSK**; combat = elite model (correct = hit, miss = take a hit), HP ≈ 5–10 answers; **review mixed in** for pacing + reinforcement. Word-chaining = recurring super. No generative grammar.
 - Loadout: **5 graded instances — fixed 2 passive + 3 active** (slots grow via meta). **Loadout = stake** (extraction-shooter — all 5 brought are all 5 risked). The loss-model's "staked instances" = the equipped loadout (one pool).
 - Depth: gated by **loadout grade-weight** (a ceiling); descend via **at-the-gate push-your-luck** (leave vs. one more depth). Self-smooths difficulty — weak loadout → shallow runs → easy due cards.
-- Power sink: **a correct answer is the trigger** — power amplifies correct answers, never bypasses them. Passives = whole-run survival/economy stats; actives = damage-per-correct-answer in elite/boss **HP-bar** fights. Knowledge stays the wall.
-- Grading/power: **base = flat per effect** (not mastery/depth/rarity-derived); **grade sets effect magnitude** (+1 → +2 hearts) via the PSA roll. **The grade band has two caps: rarity (HSK tier) sets the ceiling, mastery (FSRS stability) sets the reach within it** — top = `min(rarity-cap, mastery-cap)`, so PSA 10 needs a rare card *and* mastery.
+- Power sink: **a correct answer is the trigger** — power amplifies correct answers, never bypasses them. In Model-A ATB combat: a correct answer **charges your ATB**, a ready gauge **attacks** (damage = actives); passives = max HP / defense / ATB charge-rate / economy. Knowledge stays the wall.
+- Grading/power: **base = flat per effect** (not mastery/depth/rarity-derived); **grade sets effect magnitude** (e.g. +10 → +20 max HP) via the PSA roll. **The grade band has two caps: rarity (HSK tier) sets the ceiling, mastery (FSRS stability) sets the reach within it** — top = `min(rarity-cap, mastery-cap)`, so PSA 10 needs a rare card *and* mastery.
 - Rarity: **= HSK tier, intrinsic & fixed** (common HSK1 / uncommon HSK2 / rare HSK3 / epic HSK4). Drives drop depth, value, ability pool, and the grade-band ceiling — **not** base power. Card identity = **rarity × grade** (TCG rarity × condition). Revises the old Phase-1 "rarity = mastery" into two axes. The **min/max meta** = chase rare HSK-3/4 cards × grade them high × build synergy. Launch ships common→rare; epic = HSK-4 stretch.
-- No retry: **a miss is final — you move on** (FSRS logs the one attempt). Makes an encounter a hunt (defeat mob → loot card), not a combo-grind.
-- Encounters (normal rooms): **JRPG-style timed battles vs. 1–3 mobs with HP** (revised 2026-06-02 from one-shot "mobs = options"). Each mob is **bound to its loot card**; pick a target → answer that character's facets (HP = the bonus-round chain, distinct facet per hit = no massing) → 0 HP drops the card; a miss → the mob retaliates (lose a heart), no retry. The swipe MC is reused as the *answer* input; net-new = mob HP, target selection, retaliation, ATB. **Target choice is the tactic** that makes a capped haul matter. 1–3 mobs → 1–3 cards.
+- No retry: **a miss is final — you move on** (FSRS logs the one attempt). A wrong answer = a logged review + lost ATB tempo (the mobs grind you), never a free re-try.
+- Encounters (normal rooms) — **Model A, ATB combat (LOCKED 2026-06-02; supersedes "mobs = options" AND "mob HP = facet chain").** Both sides have **HP bars** (player HP replaces discrete hearts) vs. 1–3 mobs. **Correct answer → charges your ATB; wrong → no charge (lost tempo); every answer logs to FSRS once.** Ready gauge → **attack a chosen mob** (damage = actives); mobs hit you on their own ATB timer (the soft clock). **Clear all mobs → a loot drop of *random* card instances** — mobs are NOT the cards. **Decoupling**: answered cards = due reviews (binder/knowledge); looted cards = random drops (instances) — kills the facet-leak and gives true looter dopamine. Net-new: player/mob HP, two ATB gauges, attack resolution, loot table. `ChallengeChain`/facet-HP retired for combat.
 - Dungeon: **one pre-rendered run-map for 1.0** (Slay-the-Spire structure in a Zelda *ALttP* costume); fixed layout, **cards drawn live from FSRS** so replayability needs no procedural gen. Room = one card. Run = segments → elites → extract gates → boss; **depth = position along the path**; forward-only. More dungeons = post-1.0 themed content.
 - Branching: **telegraphed icons** — each fork previews its room type (informed risk/reward).
-- Elite: **HP bar of N *total* correct hits (3/5/7, escalating; playtest)** — correct = a hit, wrong = take damage/lose a heart; **no streak/combo**. Clear → extract or continue.
+- Elite (Model A): **a tanky single mob** — bigger HP, hits harder; same ATB loop, just longer (fight length = its HP vs. your attack power, not a fixed hit count). Clear → extract point + a fatter loot drop. *(Distinct elite mechanics — affixes/phases — parked.)*
 - Timer: **per-room property, not global** — trial rooms (and optionally elites) carry a *soft* countdown (pressure, not instant-fail); the `+timer` passive extends it there.
 - Town: **four-building Zelda hub** — **Crafter** (shard + grade; grading is town-exclusive), **Home** (assemble loadout = stake + view binder), **Shop** (shards-priced **raw instances of already-encountered chars** + ingredient/consumable deals; **never new/undiscovered chars, never grades** — feeds the crafter, never bypasses it), **Exit**. Hearts reset to full per run → no heal building.
-- Combat model: **JRPG HP + target choice (LOCKED 2026-06-02)** — mobs/elites/boss are HP bars; a correct answer deals damage, a miss costs a heart; for normal mobs you pick which to focus. Actives (damage-per-correct-answer) now matter in every fight, not just elite/boss. Accepted cost: a real combat layer over the old free reskin.
+- Combat model: **Model A — knowledge-fueled ATB (LOCKED 2026-06-02).** Player HP + 1–3 mob HP bars; correct answers charge your ATB, a ready gauge attacks a chosen mob (damage = actives), mobs hit you on their own timer; clear all → random loot drop. Replaces discrete hearts with a player HP bar and decouples the answered card from the looted card. This is the looter-extraction substrate the whole power/economy layer plugs into.
 - Carry cap: **the haul is capped, and the cap is a meta stat that grows (LOCKED 2026-06-02).** Extract only your best N; triage the rest at the door. Cap = hard ceiling (gear/meta), greed tax = the soft cost curve up to it. Bigger cap = richer boss + more crafting, but a harder escape.
 - Meta progression: **a blend of three ratchets (LOCKED 2026-06-02)** — (1) **knowledge gates the ceiling** (binder/mastery milestones unlock slots, depth, cap), (2) **town-buys fill it in** (meta-currency → slot/heart/cap/odds upgrades, Hades-mirror), (3) **the graded-card bench is the buffer** (Tarkov stash). **Un-loseable principle: death never costs knowledge, mastery, or permanent unlocks** — only instances. Carry cap is the headline stat all three feed.
 
@@ -374,4 +376,4 @@ Ship both: chaining as the recurring super, the cloze gauntlet as the boss. Asse
 - **Connection-set details** — exact pool/membership data per axis (esp. curated phonetic-series and semantic-field sets), and whether crafts can *re-craft* an already-graded instance to push higher. Radical "set" *deck-level* bonuses (5× 氵 in loadout) still open.
 - **Dungeon tuning & content** — structure locked (one pre-rendered run-map; resolved 2026-06-02). Residual: segment length, room counts per segment, number of elites before the boss, the exact branch-icon menu, and the roster of post-1.0 themed dungeons.
 - **Distinct elite combat** — v1 elites are "a regular room you must clear N times." Future: give elites a structurally different fight (not merely longer). Parked per user.
-- **Encounter tuning** — model revised 2026-06-02 to **JRPG HP + target choice** (see Encounters). Residual: turn order (pick-then-answer vs. answer-then-assign-strike), mob HP sizing per rarity, mobs-per-encounter distribution, ATB clock length, decoys in the swipe options, visible-roaming vs. random-on-walk presentation. *(Parked optional layer: mob-type = challenge-type. Retry-on-miss resolved: misses are final.)*
+- **Encounter tuning** — model locked 2026-06-02 to **Model A ATB combat** (see Encounters). Residual: ATB fill-per-correct vs. enemy ATB rate (core difficulty knob), whether a wrong answer also gives the mob a free swing, player/mob HP sizing, attack-damage vs. active-power curves, loot-table rarity/quantity, and ATB time-pressure vs. the speed-based rating. *(Parked: mob types/affixes, visible-roaming vs. random encounter. Retry-on-miss resolved: misses are final.)*
