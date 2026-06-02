@@ -13,9 +13,25 @@ extends Control
 func _ready() -> void:
 	_warn_missing_nodes()
 	_connect_buttons()
+	_add_debug_combat_button()
 	_update_displays()
 	GameState.check_daily_reset()
 	AudioManager.play_music("main_menu")
+
+
+## DEBUG (M1): temporary entry into the combat vertical slice. Built in code
+## so it doesn't touch main_menu.tscn; remove once the dungeon run-map (M2)
+## provides the real entry.
+func _add_debug_combat_button() -> void:
+	var vbox := get_node_or_null("VBoxContainer")
+	if vbox == null:
+		return
+	var btn := Button.new()
+	btn.text = "▶ Combat (debug)"
+	btn.pressed.connect(func() -> void:
+		AudioManager.play_sfx("button_tap")
+		SignalBus.screen_transition_requested.emit("combat"))
+	vbox.add_child(btn)
 
 
 func _connect_buttons() -> void:
