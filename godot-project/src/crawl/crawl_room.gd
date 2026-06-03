@@ -1,30 +1,43 @@
 ## CrawlRoom — the spatial dungeon-crawl screen (Phase 3, crawler pivot 2026-06-03).
 ##
-## ALttP-style top-down room you walk around in (FFVI for the battles):
-##   - Walk the room (arrow keys / d-pad), fenced by wall collision.
+## ALttP-style top-down space you walk around in (FFVI for the battles):
+##   - Two rooms joined by a corridor — a start room and a far room — laid out
+##     wider than the 1920×1080 frame, so a hero-following Camera2D scrolls the
+##     view as you cross. Walls fence the rooms; the corridor mouth is the only
+##     way between them.
 ##   - Every step accrues toward a randomized threshold → a **random encounter**:
 ##     the screen swaps to the existing ATB battle, whose victory banner is the
 ##     "spoils", then returns here (the hero restored where they stood).
-##   - A **Warden** guards the **extraction door** (contact-based): walk into it
-##     and press Enter to choose the fight. Beating it opens the door.
+##   - The far room holds the **extraction door**, guarded by a **Warden**
+##     (contact-based): walk into it and press Enter to choose the fight. Beating
+##     it opens the door.
 ##   - Walk into the open door → extract (bank the haul) → results.
 ##
 ## Combat + the M3 economy are reused unchanged — this screen only owns moving
 ## through space and deciding which fight to launch. State that must survive the
 ## crawl→battle→crawl scene swaps lives on RunState (run = HP/haul/economy,
-## CrawlState = hero position + warden status). Built in code; Node2D world; the
-## single room fits the 1920×1080 frame, so no camera yet. Input via the built-in
-## ui_* actions (keyboard + gamepad), so it's already control-scheme-agnostic.
+## CrawlState = hero position + warden status). Built in code; Node2D world.
+## Input via the built-in ui_* actions (keyboard + gamepad), so it's already
+## control-scheme-agnostic.
 class_name CrawlRoom
 extends Node2D
 
 const HERO_SPEED := 430.0
 const HERO_SIZE := Vector2(74, 98)              # ~half the combat hero box (placeholder)
 const HERO_COLOR := Color(0.30, 0.46, 0.62)
+# The world is two rooms wide. ROOM_RECT is the start room (hero spawns here);
+# ROOM_B is the far room holding the exit + warden; CORRIDOR bridges the gap
+# between them. The whole span (~3.5k px) is far wider than the 1920 viewport, so
+# the camera scrolls as you walk end to end.
 const ROOM_RECT := Rect2(200, 170, 1520, 740)
+const ROOM_B := Rect2(2120, 170, 1520, 740)
+const CORRIDOR := Rect2(1720, 420, 400, 240)
 const WALL_THICK := 26.0
 const FLOOR_COLOR := Color(0.12, 0.11, 0.15)
+const CORRIDOR_COLOR := Color(0.10, 0.09, 0.13)   # a shade dimmer — reads as a passage
+const VOID_COLOR := Color(0.04, 0.038, 0.055)     # backdrop beyond the rooms
 const WALL_COLOR := Color(0.34, 0.31, 0.42)
+const CAMERA_SMOOTH_SPEED := 7.0
 
 # Pixels of movement between random encounters (rolled per interval).
 const ENCOUNTER_MIN_DIST := 750.0
@@ -38,6 +51,7 @@ const DOOR_OPEN_COLOR := Color(0.30, 0.62, 0.38)
 
 var _cs: CrawlState
 var _hero: CharacterBody2D
+var _camera: Camera2D
 var _warden: Area2D
 var _door: Area2D
 var _status: Label
@@ -69,12 +83,14 @@ func _ready() -> void:
 	_rng = RandomNumberGenerator.new()
 	_rng.randomize()
 
+	_build_backdrop()
 	_build_floor()
 	_build_walls()
 	_build_door()
 	if not _cs.warden_defeated:
 		_build_warden()
 	_build_hero()
+	_build_camera()
 	_build_hud()
 	_build_bag()
 	_roll_next_encounter()
@@ -186,16 +202,35 @@ func _on_door_body_entered(body: Node) -> void:
 
 # -- build -------------------------------------------------------------------
 
+## A large dark plate behind everything so the area the camera reveals beyond the
+## rooms (the world is shorter than the viewport vertically) reads as void, not a
+## rendering gap.
+func _build_backdrop() -> void:
+	var top_left := Vector2(ROOM_RECT.position.x - WALL_THICK, ROOM_RECT.position.y - WALL_THICK) - Vector2(900, 900)
+	var bottom_right := Vector2(ROOM_B.end.x + WALL_THICK, ROOM_B.end.y + WALL_THICK) + Vector2(900, 900)
+	var bd := ColorRect.new()
+	bd.color = VOID_COLOR
+	bd.position = top_left
+	bd.size = bottom_right - top_left
+	add_child(bd)
+
+
 func _build_floor() -> void:
-	var floor_rect := ColorRect.new()
-	floor_rect.color = FLOOR_COLOR
-	floor_rect.position = ROOM_RECT.position
-	floor_rect.size = ROOM_RECT.size
-	add_child(floor_rect)
+	_add_floor(ROOM_RECT, FLOOR_COLOR)
+	_add_floor(CORRIDOR, CORRIDOR_COLOR)
+	_add_floor(ROOM_B, FLOOR_COLOR)
+
+
+func _add_floor(rect: Rect2, color: Color) -> void:
+	var fr := ColorRect.new()
+	fr.color = color
+	fr.position = rect.position
+	fr.size = rect.size
+	add_child(fr)
 
 
 func _build_walls() -> void:
-	for r in wall_rects(ROOM_RECT, WALL_THICK):
+	for r in world_wall_rects(ROOM_RECT, ROOM_B, CORRIDOR, WALL_THICK):
 		_add_wall(r)
 
 
@@ -217,8 +252,9 @@ func _add_wall(rect: Rect2) -> void:
 
 func _build_door() -> void:
 	_door = Area2D.new()
-	# Just inside the top wall, centered — the hero walks up to it.
-	_door.position = Vector2(ROOM_RECT.position.x + ROOM_RECT.size.x * 0.5, ROOM_RECT.position.y + DOOR_SIZE.y * 0.5)
+	# Just inside the far room's top wall, centered — the hero crosses the whole
+	# world and walks up to it.
+	_door.position = Vector2(ROOM_B.position.x + ROOM_B.size.x * 0.5, ROOM_B.position.y + DOOR_SIZE.y * 0.5)
 	var shape := CollisionShape2D.new()
 	var rs := RectangleShape2D.new()
 	rs.size = DOOR_SIZE
@@ -240,7 +276,7 @@ func _build_door() -> void:
 
 func _build_warden() -> void:
 	_warden = Area2D.new()
-	_warden.position = Vector2(ROOM_RECT.position.x + ROOM_RECT.size.x * 0.5, ROOM_RECT.position.y + 230)
+	_warden.position = Vector2(ROOM_B.position.x + ROOM_B.size.x * 0.5, ROOM_B.position.y + 230)
 	var shape := CollisionShape2D.new()
 	var rs := RectangleShape2D.new()
 	rs.size = WARDEN_SIZE
@@ -276,6 +312,22 @@ func _build_hero() -> void:
 	vis.position = -HERO_SIZE * 0.5
 	_hero.add_child(vis)
 	add_child(_hero)
+
+
+## A Camera2D parented to the hero so the view tracks them, smoothed for a soft
+## follow and limited to the world bounds so it never scrolls past the walls.
+## (The world is shorter than the viewport vertically, so it effectively scrolls
+## horizontally as you cross from the start room to the far room.)
+func _build_camera() -> void:
+	_camera = Camera2D.new()
+	_camera.position_smoothing_enabled = true
+	_camera.position_smoothing_speed = CAMERA_SMOOTH_SPEED
+	_camera.limit_left = int(ROOM_RECT.position.x - WALL_THICK)
+	_camera.limit_top = int(ROOM_RECT.position.y - WALL_THICK)
+	_camera.limit_right = int(ROOM_B.end.x + WALL_THICK)
+	_camera.limit_bottom = int(ROOM_B.end.y + WALL_THICK)
+	_hero.add_child(_camera)
+	_camera.make_current()
 
 
 func _build_hud() -> void:
@@ -354,3 +406,29 @@ static func wall_rects(room: Rect2, thickness: float) -> Array[Rect2]:
 ## The hero's spawn — bottom-center of the room, as if walking in from a door.
 static func spawn_point(room: Rect2, hero_size: Vector2) -> Vector2:
 	return Vector2(room.position.x + room.size.x * 0.5, room.end.y - hero_size.y)
+
+
+## Walls fencing the two-room world. `left` and `right` are the rooms (same
+## y-band); `corridor` bridges left.end.x → right.position.x. Each room is fully
+## boxed except where its facing wall opens onto the corridor mouth, and the
+## corridor itself is capped top and bottom so you can't leak out of the passage.
+## Pure for tests.
+static func world_wall_rects(left: Rect2, right: Rect2, corridor: Rect2, thickness: float) -> Array[Rect2]:
+	var t := thickness
+	var walls: Array[Rect2] = []
+	# Left room: full top / bottom / left; right wall split around the mouth.
+	walls.append(Rect2(left.position.x - t, left.position.y - t, left.size.x + t * 2.0, t))        # top
+	walls.append(Rect2(left.position.x - t, left.end.y, left.size.x + t * 2.0, t))                 # bottom
+	walls.append(Rect2(left.position.x - t, left.position.y, t, left.size.y))                      # left
+	walls.append(Rect2(left.end.x, left.position.y, t, corridor.position.y - left.position.y))     # right, above mouth
+	walls.append(Rect2(left.end.x, corridor.end.y, t, left.end.y - corridor.end.y))                # right, below mouth
+	# Corridor: capped top and bottom.
+	walls.append(Rect2(corridor.position.x, corridor.position.y - t, corridor.size.x, t))          # corridor top
+	walls.append(Rect2(corridor.position.x, corridor.end.y, corridor.size.x, t))                   # corridor bottom
+	# Right room: full top / bottom / right; left wall split around the mouth.
+	walls.append(Rect2(right.position.x - t, right.position.y - t, right.size.x + t * 2.0, t))      # top
+	walls.append(Rect2(right.position.x - t, right.end.y, right.size.x + t * 2.0, t))               # bottom
+	walls.append(Rect2(right.end.x, right.position.y, t, right.size.y))                             # right
+	walls.append(Rect2(right.position.x - t, right.position.y, t, corridor.position.y - right.position.y))  # left, above mouth
+	walls.append(Rect2(right.position.x - t, corridor.end.y, t, right.end.y - corridor.end.y))      # left, below mouth
+	return walls

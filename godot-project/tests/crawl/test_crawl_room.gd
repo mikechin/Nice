@@ -34,6 +34,34 @@ func test_spawn_point_is_inside_the_room() -> void:
 	assert_bool(room.has_point(CrawlRoom.spawn_point(room, Vector2(40, 50)))).is_true()
 
 
+func _in_any_wall(walls: Array, p: Vector2) -> bool:
+	for w in walls:
+		if w.has_point(p):
+			return true
+	return false
+
+
+func test_world_is_wider_than_the_viewport() -> void:
+	# End-to-end is meant to need scrolling: the world spans well past 1920px.
+	assert_float(CrawlRoom.ROOM_B.end.x - CrawlRoom.ROOM_RECT.position.x).is_greater(1920.0)
+
+
+func test_world_wall_rects_box_two_rooms_and_a_corridor() -> void:
+	var walls := CrawlRoom.world_wall_rects(CrawlRoom.ROOM_RECT, CrawlRoom.ROOM_B, CrawlRoom.CORRIDOR, CrawlRoom.WALL_THICK)
+	assert_int(walls.size()).is_equal(12)
+	# A real wall is solid: the start room's left edge blocks.
+	assert_bool(_in_any_wall(walls, Vector2(CrawlRoom.ROOM_RECT.position.x - CrawlRoom.WALL_THICK * 0.5, 540.0))).is_true()
+
+
+func test_corridor_mouth_connects_the_two_rooms() -> void:
+	var walls := CrawlRoom.world_wall_rects(CrawlRoom.ROOM_RECT, CrawlRoom.ROOM_B, CrawlRoom.CORRIDOR, CrawlRoom.WALL_THICK)
+	# A straight line at the corridor's mid-height from the start room into the far
+	# room crosses no wall — the passage is genuinely open both ends.
+	var mid_y := CrawlRoom.CORRIDOR.position.y + CrawlRoom.CORRIDOR.size.y * 0.5
+	for x in [1700.0, CrawlRoom.ROOM_RECT.end.x, 1920.0, CrawlRoom.CORRIDOR.end.x, 2140.0]:
+		assert_bool(_in_any_wall(walls, Vector2(x, mid_y))).is_false()
+
+
 func test_scene_builds_hero_inside_room() -> void:
 	var room: CrawlRoom = auto_free(CrawlRoom.new())
 	add_child(room)
@@ -91,6 +119,25 @@ func test_overflowing_haul_forces_the_bag_open_on_entry() -> void:
 	await get_tree().process_frame
 	assert_bool(room._bag_open).is_true()
 	assert_bool(room._bag.is_open()).is_true()
+
+
+func test_camera_follows_hero_and_is_world_limited() -> void:
+	RunState.begin_run()
+	var room: CrawlRoom = auto_free(CrawlRoom.new())
+	add_child(room)
+	assert_object(room._camera).is_not_null()
+	assert_object(room._camera.get_parent()).is_same(room._hero)   # tracks the hero
+	assert_int(room._camera.limit_left).is_equal(int(CrawlRoom.ROOM_RECT.position.x - CrawlRoom.WALL_THICK))
+	assert_int(room._camera.limit_right).is_equal(int(CrawlRoom.ROOM_B.end.x + CrawlRoom.WALL_THICK))
+
+
+func test_exit_and_warden_live_in_the_far_room() -> void:
+	RunState.begin_run()
+	RunState.crawl.warden_defeated = false
+	var room: CrawlRoom = auto_free(CrawlRoom.new())
+	add_child(room)
+	assert_bool(CrawlRoom.ROOM_B.has_point(room._door.position)).is_true()
+	assert_bool(CrawlRoom.ROOM_B.has_point(room._warden.position)).is_true()
 
 
 func test_hero_restored_to_saved_position() -> void:
