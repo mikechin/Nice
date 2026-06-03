@@ -19,18 +19,19 @@ func _ready() -> void:
 	AudioManager.play_music("main_menu")
 
 
-## DEBUG (M1): temporary entry into the combat vertical slice. Built in code
-## so it doesn't touch main_menu.tscn; remove once the dungeon run-map (M2)
-## provides the real entry.
+## DEBUG (M2): temporary entry into the dungeon run. Built in code so it
+## doesn't touch main_menu.tscn; becomes the Town "enter dungeon" door once the
+## hub (M4) lands. Starts a fresh run and drops into the run-map screen.
 func _add_debug_combat_button() -> void:
 	var vbox := get_node_or_null("VBoxContainer")
 	if vbox == null:
 		return
 	var btn := Button.new()
-	btn.text = "▶ Combat (debug)"
+	btn.text = "▶ Dungeon (debug)"
 	btn.pressed.connect(func() -> void:
 		AudioManager.play_sfx("button_tap")
-		SignalBus.screen_transition_requested.emit("combat"))
+		RunState.begin_run()
+		SignalBus.screen_transition_requested.emit("dungeon_map"))
 	vbox.add_child(btn)
 
 

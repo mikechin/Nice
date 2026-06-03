@@ -51,10 +51,19 @@ var _answer_input: AnswerInput
 var _rng: RandomNumberGenerator
 var _combat: CombatState
 
+# Dungeon context (null when launched standalone / from the debug button).
+# When present, HP is seeded from and written back to the run, the card queue
+# is depth-biased, and the result routes back to the map / into a debrief
+# rather than showing the in-scene banner.
+var _run: DungeonRun = null
+var _room: RoomNode = null
+
 var _card_queue: Array[String] = []
 var _queue_index: int = 0
 var _busy: bool = false
 var _finished: bool = false
+var _answered: int = 0   # answer tally reported back to the run
+var _correct: int = 0
 
 # stage nodes
 var _battlefield: Control
@@ -86,11 +95,21 @@ func _ready() -> void:
 	_answer_input.setup(_answer_generator, null, null)
 	_answer_input.answered.connect(_on_answered)
 
+	# Pick up the active dungeon run, if any. Without one this is a standalone
+	# fight (debug / tests) with a fresh full-HP pool and a flat card draw.
+	if RunState.has_active_run():
+		_run = RunState.run
+		_room = RunState.current_room
+
 	_build_stage()
 	_build_play_area()
 	_build_info_panel()
-	_card_queue = _pick_card_ids(50)
-	_combat = CombatState.create(PLAYER_HP, _build_mobs(), ATB_PER_CORRECT, ATTACK_DAMAGE, HERO_ACCURACY, HERO_BLOCK)
+	_card_queue = _build_card_queue()
+	var max_hp := _run.max_hp if _run != null else PLAYER_HP
+	_combat = CombatState.create(max_hp, _build_mobs(), ATB_PER_CORRECT, ATTACK_DAMAGE, HERO_ACCURACY, HERO_BLOCK)
+	if _run != null:
+		# Carry the run's current HP into the room (resets to full only per run).
+		_combat.player_hp = clampi(_run.hp, 1, _combat.player_max_hp)
 	_build_combatants()
 	if _card_queue.is_empty() or _combat.current_mob() == null:
 		_show_result("No cards / mobs available to fight.")
@@ -112,7 +131,17 @@ func _process(delta: float) -> void:
 
 # -- setup -------------------------------------------------------------------
 
+## Encounters field 1–3 ordinary mobs; an elite is a single tanky mob and the
+## boss is tankier still (a Model-A stub until M6's cloze gauntlet replaces it).
+## The honest answer→ATB loop is identical across all three — only HP/attack
+## scale, so fight length emerges from the bars (no special-cased combat code).
 func _build_mobs() -> Array[CombatMob]:
+	if _room != null and _room.type == DungeonEnums.RoomType.ELITE:
+		return [CombatMob.create("Warden", _rng.randi_range(14, 18), _rng.randi_range(3, 5),
+			_rng.randf_range(0.035, 0.05), MOB_ACCURACY)]
+	if _room != null and _room.type == DungeonEnums.RoomType.BOSS:
+		return [CombatMob.create("Boss", _rng.randi_range(22, 28), _rng.randi_range(4, 6),
+			_rng.randf_range(0.03, 0.045), MOB_ACCURACY)]
 	var mobs: Array[CombatMob] = []
 	for i in _rng.randi_range(1, MAX_MOBS):
 		var hp := _rng.randi_range(4, 7)
@@ -120,6 +149,19 @@ func _build_mobs() -> Array[CombatMob]:
 		var rate := _rng.randf_range(0.03, 0.055)  # ~18–33s per strike
 		mobs.append(CombatMob.create("Mob %d" % (i + 1), hp, atk, rate, MOB_ACCURACY))
 	return mobs
+
+
+## Build the prompt queue. In a dungeon room the draw is depth-biased (deeper
+## rooms dredge up lower-stability cards — the locked depth-biases-the-draw
+## rule); standalone falls back to a flat due+new pick. Either way prompts are
+## due reviews (knowledge), NOT the mobs and NOT the loot.
+func _build_card_queue() -> Array[String]:
+	if _run != null and _room != null:
+		var now := Time.get_unix_time_from_system()
+		var ids := DepthDraw.draw(GameState.review_scheduler, now, _room.depth, 50)
+		if not ids.is_empty():
+			return ids
+	return _pick_card_ids(50)
 
 
 ## Prompts are due reviews (knowledge) — NOT the mobs and NOT the loot.
@@ -196,7 +238,14 @@ func _on_answered(card_id: String, challenge_type: String, correct: bool, rating
 	# THE honest FSRS commit — every first attempt, win or lose.
 	var now := Time.get_unix_time_from_system()
 	GameState.review_scheduler.record_review(card_id, challenge_type, rating, now)
-	AudioManager.play_correct() if correct else AudioManager.play_wrong()
+	if correct:
+		AudioManager.play_correct()
+	else:
+		AudioManager.play_wrong()
+
+	_answered += 1
+	if correct:
+		_correct += 1
 
 	_combat.answer(correct)                       # correct charges the ATB gauge
 	if _combat.player_attack_ready():
@@ -235,18 +284,55 @@ func _finish() -> void:
 	for dir in DIRECTIONS:
 		if _answer_buttons.has(dir):
 			_answer_buttons[dir].disabled = true
-	if _combat.outcome() == CombatState.Outcome.LOST:
+	if _run != null:
+		_finish_run_room()
+	elif _combat.outcome() == CombatState.Outcome.LOST:
 		_show_result("You died. Haul lost.")
 	else:
 		var loot := _roll_loot()
 		_show_result("Victory!\nLoot (%d): %s" % [loot.size(), ", ".join(loot) if not loot.is_empty() else "—"])
 
 
+## Report this room's result into the active run, then route on: a cleared
+## room returns to the map (pick the next branch / extract gate); death ends
+## the run in a debrief. The run decides win/loss from the surviving HP.
+func _finish_run_room() -> void:
+	var won := _combat.outcome() == CombatState.Outcome.WON
+	# Keep this explicitly Array[String]: an inline `... if won else []` infers
+	# the var as Array[String] but feeds it an *untyped* [] on a loss, which
+	# fails the runtime type check the moment you die in a room.
+	var loot: Array[String] = []
+	if won:
+		loot = _roll_loot()
+	_run.apply_room_result(_combat.player_hp, loot, _answered, _correct)
+	if _run.is_over():  # HP hit 0 → died → haul forfeit
+		_show_result("You died. Haul lost.")
+		_after_run_beat(1.6, "results", true)
+	else:
+		_run.map.mark_current_cleared()
+		var banner := "Victory!\nLoot (%d): %s" % [loot.size(), ", ".join(loot) if not loot.is_empty() else "—"]
+		_show_result(banner)
+		_after_run_beat(1.2, "dungeon_map", false)
+
+
+## Hold the result banner for `delay` seconds, then transition. `end_run`
+## stamps the debrief into GameState so ResultsScreen can read it on _ready.
+func _after_run_beat(delay: float, screen: String, end_run: bool) -> void:
+	var go := func() -> void:
+		if end_run:
+			GameState.end_run(_run.to_summary())  # stamp the debrief first…
+			RunState.clear_run()                  # …then drop the finished run
+		SignalBus.screen_transition_requested.emit(screen)
+	get_tree().create_timer(delay).timeout.connect(go)
+
+
 ## Loot is a RANDOM drop on victory — decoupled from the cards you answered.
+## Returns card ids (== character) so the haul stores real ids; instances and
+## rarity rolls arrive in M3 (per D7 this is where RarityRoll will hook in).
 func _roll_loot() -> Array[String]:
 	var pool: Array[String] = []
 	for cd in GameState.character_db.get_all():
-		pool.append(cd.character)
+		pool.append(cd.get_card_id())
 	pool.shuffle()
 	return pool.slice(0, mini(_rng.randi_range(1, 3), pool.size()))
 

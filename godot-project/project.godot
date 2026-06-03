@@ -23,6 +23,7 @@ config/features=PackedStringArray("4.6", "Mobile")
 
 SignalBus="*res://src/autoload/signal_bus.gd"
 GameState="*res://src/autoload/game_state.gd"
+RunState="*res://src/autoload/run_state.gd"
 SaveManager="*res://src/autoload/save_manager.gd"
 AudioManager="*res://src/autoload/audio_manager.gd"
 ScreenNavigator="*res://src/autoload/screen_navigator.gd"

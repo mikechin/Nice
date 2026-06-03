@@ -50,6 +50,11 @@ func _display_results() -> void:
 	if _result_data.is_empty():
 		return
 
+	if _result_data.get("mode", "") == "dungeon":
+		_display_dungeon_results()
+		SaveManager.save_game()
+		return
+
 	if _title_label:
 		_title_label.text = "Run Complete!"
 
@@ -71,6 +76,40 @@ func _display_results() -> void:
 		_hand_cards_label.text = _format_hand_cards(hand)
 
 	SaveManager.save_game()
+
+
+## Dungeon-run debrief. Reuses the existing stat labels: title = the outcome,
+## then accuracy / depth+rooms / haul, and the carried card list. Death forfeits
+## the haul (haul lost); extraction banks it. Knowledge is never lost either way
+## — the FSRS commits already landed in combat.
+func _display_dungeon_results() -> void:
+	var extracted: bool = _result_data.get("extracted", false)
+
+	if _title_label:
+		_title_label.text = "Extracted!" if extracted else "You Died"
+
+	if _accuracy_label:
+		var accuracy: float = _result_data.get("accuracy", 0.0)
+		var answered: int = _result_data.get("answered", 0)
+		_accuracy_label.text = "Accuracy: %.0f%%  (%d answered)" % [accuracy * 100.0, answered]
+
+	if _rounds_label:
+		var depth: int = _result_data.get("depth", 0)
+		var rooms: int = _result_data.get("rooms_cleared", 0)
+		_rounds_label.text = "Depth %d · %d room%s cleared" % [depth, rooms, "" if rooms == 1 else "s"]
+
+	var banked: Array = _result_data.get("banked_card_ids", [])
+	var carried: Array = _result_data.get("haul_card_ids", [])
+	if _power_label:
+		if extracted:
+			var cap: int = _result_data.get("carry_cap", 0)
+			_power_label.text = "Haul banked: %d/%d card%s" % [banked.size(), cap, "" if banked.size() == 1 else "s"]
+		else:
+			_power_label.text = "Haul lost: %d card%s forfeit" % [carried.size(), "" if carried.size() == 1 else "s"]
+
+	if _hand_cards_label:
+		var shown: Array = banked if extracted else carried
+		_hand_cards_label.text = "  ".join(shown) if not shown.is_empty() else "—"
 
 
 ## "好  Power 8\n大  Power 4" — one line per HandCard, sorted strongest first
