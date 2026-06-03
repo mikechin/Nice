@@ -3,7 +3,7 @@ extends GdUnitTestSuite
 
 
 func test_common_is_not_eligible() -> void:
-	assert_bool(BonusTrigger.is_eligible(SrsEnums.LootRarity.COMMON)).is_false()
+	assert_bool(BonusTrigger.is_eligible(SrsEnums.LootRarity.KNOWN)).is_false()
 
 
 func test_learning_about_to_forget_new_are_eligible() -> void:
@@ -16,7 +16,7 @@ func test_common_never_triggers() -> void:
 	# Even with a forced-low RNG, COMMON should refuse to fire.
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 1
-	var outcome := BonusTrigger.roll(SrsEnums.LootRarity.COMMON, rng)
+	var outcome := BonusTrigger.roll(SrsEnums.LootRarity.KNOWN, rng)
 	assert_int(outcome).is_equal(BonusEnums.BonusOutcome.NOT_TRIGGERED)
 
 

@@ -26,7 +26,11 @@ static func string_to_challenge_type(s: String) -> ChallengeType:
 	return ChallengeType.MEANING
 
 ## Loot rarity derived from SRS state during a run.
-enum LootRarity { COMMON, LEARNING, ABOUT_TO_FORGET, NEW_CARD }
+## The notable SRS reads that get special study treatment; KNOWN (formerly
+## COMMON) is the silent default — a routine, well-mastered review with no
+## flourish. NOTE: this is a read of *how well you know a card*, distinct from
+## EconomyEnums.Rarity (the rolled print-rarity of a dropped instance).
+enum LootRarity { KNOWN, LEARNING, ABOUT_TO_FORGET, NEW_CARD }
 
 static func state_name(state: CardSrsState) -> String:
 	match state:

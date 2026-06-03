@@ -1,7 +1,7 @@
 ## BonusTrigger — Decides whether a card kicks off a bonus round.
 ##
 ## Spec: rare/epic-tier cards have a 20% chance to trigger a bonus round on
-## a correct primary-challenge answer. Commons (mastered routine reviews)
+## a correct primary-challenge answer. KNOWN cards (mastered routine reviews)
 ## never trigger — that would slow down the rhythmic flow that makes
 ## opening a pack feel good.
 ##
@@ -10,7 +10,7 @@ class_name BonusTrigger
 extends RefCounted
 
 
-## Loot rarities that are eligible to fire a bonus round. COMMON is excluded
+## Loot rarities that are eligible to fire a bonus round. KNOWN is excluded
 ## by design — the bonus round is the dopamine spike for non-routine cards.
 const ELIGIBLE_RARITIES: Array = [
 	SrsEnums.LootRarity.LEARNING,

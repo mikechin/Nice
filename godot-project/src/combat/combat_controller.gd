@@ -19,6 +19,9 @@ const DIRECTIONS: Array[String] = ["up", "down", "left", "right"]
 const PLAYER_HP := 30
 const ATB_PER_CORRECT := 0.34
 const ATTACK_DAMAGE := 3
+const DAMAGE_SPREAD := 1          # hits roll ATTACK_DAMAGE ± this (2–4) for texture
+const CRIT_CHANCE := 0.15         # 15% of landed hits crit (the design-sanctioned RNG)
+const CRIT_MULTIPLIER := 2.0      # crits double the rolled damage
 const HERO_ACCURACY := 0.9       # correct answers almost always land; cards → 1.0
 const HERO_BLOCK := 0.25         # chance to block an incoming mob hit; cards raise
 const MOB_ACCURACY := 0.8        # mobs miss ~20%; cards can lower further
@@ -64,6 +67,15 @@ var _busy: bool = false
 var _finished: bool = false
 var _answered: int = 0   # answer tally reported back to the run
 var _correct: int = 0
+# Loot-roll context (M3): consecutive-correct streak and whether any clutch
+# (ABOUT_TO_FORGET) card was recalled this room — both bias the rarity roll up.
+var _streak: int = 0
+var _clutch: bool = false
+var _current_loot_rarity: SrsEnums.LootRarity = SrsEnums.LootRarity.KNOWN
+# DEBUG aid: in a debug build (editor / debug export) mark the correct answer
+# with a ★ to speed playtesting. Always false in a release export, so the hint
+# never ships; flip to `true` here to force it on regardless.
+var _debug_reveal_answer: bool = OS.is_debug_build()
 
 # stage nodes
 var _battlefield: Control
@@ -107,6 +119,9 @@ func _ready() -> void:
 	_card_queue = _build_card_queue()
 	var max_hp := _run.max_hp if _run != null else PLAYER_HP
 	_combat = CombatState.create(max_hp, _build_mobs(), ATB_PER_CORRECT, ATTACK_DAMAGE, HERO_ACCURACY, HERO_BLOCK)
+	_combat.damage_spread = DAMAGE_SPREAD
+	_combat.crit_chance = CRIT_CHANCE
+	_combat.crit_multiplier = CRIT_MULTIPLIER
 	if _run != null:
 		# Carry the run's current HP into the room (resets to full only per run).
 		_combat.player_hp = clampi(_run.hp, 1, _combat.player_max_hp)
@@ -144,7 +159,9 @@ func _build_mobs() -> Array[CombatMob]:
 			_rng.randf_range(0.03, 0.045), MOB_ACCURACY)]
 	var mobs: Array[CombatMob] = []
 	for i in _rng.randi_range(1, MAX_MOBS):
-		var hp := _rng.randi_range(4, 7)
+		# Ordinary mobs die in 1–2 hits (HP scales off the hero's hit damage),
+		# so encounters stay snappy — the wall is the cards, not mob bulk.
+		var hp := _rng.randi_range(ATTACK_DAMAGE, ATTACK_DAMAGE * 2)
 		var atk := _rng.randi_range(2, 4)
 		var rate := _rng.randf_range(0.03, 0.055)  # ~18–33s per strike
 		mobs.append(CombatMob.create("Mob %d" % (i + 1), hp, atk, rate, MOB_ACCURACY))
@@ -193,6 +210,7 @@ func _present_next() -> void:
 	var challenge_type := GameState.review_scheduler.select_challenge_type(card_id)
 	var now := Time.get_unix_time_from_system()
 	var rarity: SrsEnums.LootRarity = GameState.review_scheduler.get_loot_rarity(card_id, challenge_type, now)
+	_current_loot_rarity = rarity  # remembered so a correct clutch recall can bias loot
 	_busy = false
 	_answer_input.present(card_data, challenge_type, rarity, true)
 	_populate_answers()
@@ -209,9 +227,13 @@ func _next_card_id() -> String:
 func _populate_answers() -> void:
 	var answers := _answer_input.get_current_answers()
 	_challenge_label.text = _prompt_for(answers.get("challenge_type", ""))
+	var correct_dir: String = answers.get("correct_direction", "")
 	for dir in DIRECTIONS:
 		var btn: Button = _answer_buttons[dir]
-		btn.text = answers.get(dir, "")
+		var label: String = answers.get(dir, "")
+		if _debug_reveal_answer and dir == correct_dir and label != "":
+			label = "★ " + label
+		btn.text = label
 		btn.disabled = false
 
 
@@ -238,6 +260,9 @@ func _on_answered(card_id: String, challenge_type: String, correct: bool, rating
 	# THE honest FSRS commit — every first attempt, win or lose.
 	var now := Time.get_unix_time_from_system()
 	GameState.review_scheduler.record_review(card_id, challenge_type, rating, now)
+	# Encountering a card in a run records it in the permanent binder (factual
+	# "seen"), independent of the FSRS ledger and of whether you survive.
+	GameState.binder.record_seen(card_id)
 	if correct:
 		AudioManager.play_correct()
 	else:
@@ -246,6 +271,13 @@ func _on_answered(card_id: String, challenge_type: String, correct: bool, rating
 	_answered += 1
 	if correct:
 		_correct += 1
+		_streak += 1
+		# A correctly recalled about-to-forget card is the clutch win that
+		# weights this room's loot rolls up (RarityRoll).
+		if _current_loot_rarity == SrsEnums.LootRarity.ABOUT_TO_FORGET:
+			_clutch = true
+	else:
+		_streak = 0
 
 	_combat.answer(correct)                       # correct charges the ATB gauge
 	if _combat.player_attack_ready():
@@ -290,7 +322,7 @@ func _finish() -> void:
 		_show_result("You died. Haul lost.")
 	else:
 		var loot := _roll_loot()
-		_show_result("Victory!\nLoot (%d): %s" % [loot.size(), ", ".join(loot) if not loot.is_empty() else "—"])
+		_show_result("Victory!\nLoot (%d): %s" % [loot.size(), _loot_label(loot)])
 
 
 ## Report this room's result into the active run, then route on: a cleared
@@ -298,10 +330,10 @@ func _finish() -> void:
 ## the run in a debrief. The run decides win/loss from the surviving HP.
 func _finish_run_room() -> void:
 	var won := _combat.outcome() == CombatState.Outcome.WON
-	# Keep this explicitly Array[String]: an inline `... if won else []` infers
-	# the var as Array[String] but feeds it an *untyped* [] on a loss, which
+	# Keep this explicitly typed: an inline `... if won else []` infers the var
+	# from the _roll_loot() branch but feeds it an *untyped* [] on a loss, which
 	# fails the runtime type check the moment you die in a room.
-	var loot: Array[String] = []
+	var loot: Array[CardInstance] = []
 	if won:
 		loot = _roll_loot()
 	_run.apply_room_result(_combat.player_hp, loot, _answered, _correct)
@@ -310,7 +342,7 @@ func _finish_run_room() -> void:
 		_after_run_beat(1.6, "results", true)
 	else:
 		_run.map.mark_current_cleared()
-		var banner := "Victory!\nLoot (%d): %s" % [loot.size(), ", ".join(loot) if not loot.is_empty() else "—"]
+		var banner := "Victory!\nLoot (%d): %s" % [loot.size(), _loot_label(loot)]
 		_show_result(banner)
 		_after_run_beat(1.2, "dungeon_map", false)
 
@@ -326,15 +358,33 @@ func _after_run_beat(delay: float, screen: String, end_run: bool) -> void:
 	get_tree().create_timer(delay).timeout.connect(go)
 
 
-## Loot is a RANDOM drop on victory — decoupled from the cards you answered.
-## Returns card ids (== character) so the haul stores real ids; instances and
-## rarity rolls arrive in M3 (per D7 this is where RarityRoll will hook in).
-func _roll_loot() -> Array[String]:
+## Loot is a RANDOM drop on victory — decoupled from the cards you answered
+## (answered = due reviews → knowledge; looted = random drops → economy). Each
+## drop rolls its own rarity (M3, decision D7): depth, this room's correct
+## streak, and any clutch recall all bias the roll up. Instances drop raw —
+## grading is a town craft (M4).
+func _roll_loot() -> Array[CardInstance]:
 	var pool: Array[String] = []
 	for cd in GameState.character_db.get_all():
 		pool.append(cd.get_card_id())
 	pool.shuffle()
-	return pool.slice(0, mini(_rng.randi_range(1, 3), pool.size()))
+	var depth := _room.depth if _room != null else 0
+	var n := mini(_rng.randi_range(1, 3), pool.size())
+	var drops: Array[CardInstance] = []
+	for i in n:
+		var rarity := RarityRoll.roll(depth, _streak, _clutch, _rng)
+		drops.append(CardInstance.create(pool[i], rarity, depth))
+	return drops
+
+
+## "好 [R], 大 [C]" — compact loot list for the victory banner.
+func _loot_label(loot: Array) -> String:
+	if loot.is_empty():
+		return "—"
+	var parts: Array[String] = []
+	for ci in loot:
+		parts.append(ci.display_label())
+	return ", ".join(parts)
 
 
 # -- animations --------------------------------------------------------------
@@ -360,7 +410,13 @@ func _hero_strike(res: Dictionary) -> void:
 	if int(res.get("outcome", -1)) == CombatState.AttackOutcome.HIT:
 		_shake(_mob_views[idx], _mob_origins[idx])
 		_flash(_mob_bodies[idx], MOB_COLOR)
-		_float_text(anchor, "-%d" % int(res.get("damage", 0)), Color(1.0, 0.55, 0.3), 46)
+		var dmg := int(res.get("damage", 0))
+		if res.get("crit", false):
+			# Crits read louder: gold, bigger, an extra shake.
+			_shake(_mob_views[idx], _mob_origins[idx])
+			_float_text(anchor, "-%d CRIT!" % dmg, Color(1.0, 0.85, 0.2), 62)
+		else:
+			_float_text(anchor, "-%d" % dmg, Color(1.0, 0.55, 0.3), 46)
 	else:
 		_float_text(anchor, "Miss", Color(0.72, 0.72, 0.72), 34)
 

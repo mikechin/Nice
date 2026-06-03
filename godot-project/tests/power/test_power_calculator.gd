@@ -9,7 +9,7 @@ func test_base_power_inverted_curve() -> void:
 	var new_power := PowerCalculator.base_power(SrsEnums.LootRarity.NEW_CARD)
 	var atf_power := PowerCalculator.base_power(SrsEnums.LootRarity.ABOUT_TO_FORGET)
 	var learn_power := PowerCalculator.base_power(SrsEnums.LootRarity.LEARNING)
-	var common_power := PowerCalculator.base_power(SrsEnums.LootRarity.COMMON)
+	var common_power := PowerCalculator.base_power(SrsEnums.LootRarity.KNOWN)
 
 	assert_bool(new_power > atf_power).is_true()
 	assert_bool(atf_power > learn_power).is_true()
@@ -57,4 +57,4 @@ func test_total_power_clamps_at_zero() -> void:
 	penalty.source = PowerEnums.BoostSource.RADICAL_MATCHUP
 	penalty.amount = -50
 	var boosts: Array[PowerBoost] = [penalty]
-	assert_int(PowerCalculator.total_power(SrsEnums.LootRarity.COMMON, boosts)).is_equal(0)
+	assert_int(PowerCalculator.total_power(SrsEnums.LootRarity.KNOWN, boosts)).is_equal(0)

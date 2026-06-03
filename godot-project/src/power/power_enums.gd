@@ -17,7 +17,7 @@ enum BoostSource {
 
 ## Base power keyed by SrsEnums.LootRarity. Inverted curve — see file header.
 const BASE_POWER: Dictionary = {
-	SrsEnums.LootRarity.COMMON: 1,            ## Mastered routine reviews — filler
+	SrsEnums.LootRarity.KNOWN: 1,            ## Mastered routine reviews — filler
 	SrsEnums.LootRarity.LEARNING: 4,          ## Mid-range, still being drilled
 	SrsEnums.LootRarity.ABOUT_TO_FORGET: 5,   ## Comeback cards — strong
 	SrsEnums.LootRarity.NEW_CARD: 7,          ## First-time reveal — strongest

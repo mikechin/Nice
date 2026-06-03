@@ -90,7 +90,7 @@ func test_common_loot_resolves_immediately_on_correct() -> void:
 	)
 	_presenter.bonus_round_started.connect(func(_c: String) -> void: bonus_starts[0] += 1)
 
-	_presenter.present_challenge(_card, "meaning", SrsEnums.LootRarity.COMMON)
+	_presenter.present_challenge(_card, "meaning", SrsEnums.LootRarity.KNOWN)
 	_submit_correct()
 
 	assert_int(resolved.size()).is_equal(1)
@@ -98,7 +98,7 @@ func test_common_loot_resolves_immediately_on_correct() -> void:
 	assert_bool(resolved[0]["correct"]).is_true()
 	assert_int(resolved[0]["boosts"].size()).is_equal(0)
 	# COMMON loot rarity → weakest base power.
-	assert_int(resolved[0]["base_power"]).is_equal(PowerEnums.BASE_POWER[SrsEnums.LootRarity.COMMON])
+	assert_int(resolved[0]["base_power"]).is_equal(PowerEnums.BASE_POWER[SrsEnums.LootRarity.KNOWN])
 	assert_int(bonus_starts[0]).is_equal(0)
 
 

@@ -100,16 +100,34 @@ func _display_dungeon_results() -> void:
 
 	var banked: Array = _result_data.get("banked_card_ids", [])
 	var carried: Array = _result_data.get("haul_card_ids", [])
+	var banked_instances: Array = _result_data.get("banked_instances", [])
+	var shards: int = _result_data.get("shards_gained", 0)
 	if _power_label:
 		if extracted:
 			var cap: int = _result_data.get("carry_cap", 0)
-			_power_label.text = "Haul banked: %d/%d card%s" % [banked.size(), cap, "" if banked.size() == 1 else "s"]
+			var line := "Haul banked: %d/%d card%s" % [banked.size(), cap, "" if banked.size() == 1 else "s"]
+			if shards > 0:
+				line += "   ·   +%d shards" % shards
+			_power_label.text = line
 		else:
 			_power_label.text = "Haul lost: %d card%s forfeit" % [carried.size(), "" if carried.size() == 1 else "s"]
 
 	if _hand_cards_label:
-		var shown: Array = banked if extracted else carried
-		_hand_cards_label.text = "  ".join(shown) if not shown.is_empty() else "—"
+		if extracted:
+			_hand_cards_label.text = _format_banked(banked_instances) if not banked_instances.is_empty() else "—"
+		else:
+			_hand_cards_label.text = "  ".join(carried) if not carried.is_empty() else "—"
+
+
+## "好 [R]   大 [C]" — banked instances tagged with their rolled rarity, the
+## headline of an extraction (the haul is what you came for).
+static func _format_banked(instances: Array) -> String:
+	var parts: Array[String] = []
+	for row in instances:
+		if row is Dictionary:
+			var ci := CardInstance.from_dict(row)
+			parts.append(ci.display_label())
+	return "   ".join(parts)
 
 
 ## "好  Power 8\n大  Power 4" — one line per HandCard, sorted strongest first

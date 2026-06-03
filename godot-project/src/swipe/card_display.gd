@@ -20,13 +20,13 @@ signal animation_finished()
 # applies even before the call sites migrate to CardTier directly.
 const _LOOT_TO_TIER := {
 	SrsEnums.LootRarity.NEW_CARD: CollectionEnums.CardTier.NEW_CARD,
-	SrsEnums.LootRarity.COMMON: CollectionEnums.CardTier.COMMON,
+	SrsEnums.LootRarity.KNOWN: CollectionEnums.CardTier.COMMON,
 	SrsEnums.LootRarity.LEARNING: CollectionEnums.CardTier.UNCOMMON,
 	SrsEnums.LootRarity.ABOUT_TO_FORGET: CollectionEnums.CardTier.RARE,
 }
 
 var card_data: CharacterData
-var loot_rarity: SrsEnums.LootRarity = SrsEnums.LootRarity.COMMON
+var loot_rarity: SrsEnums.LootRarity = SrsEnums.LootRarity.KNOWN
 var current_challenge_type: String = ""
 
 var _tween: Tween

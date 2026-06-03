@@ -183,7 +183,7 @@ func test_loot_rarity_common_review() -> void:
 	scheduler.record_review("c1", "meaning", FsrsAlgorithm.Rating.GOOD, _now)
 	# Right after a GOOD review, retrievability should be high -> COMMON
 	var rarity := scheduler.get_loot_rarity("c1", "meaning", _now + 1.0)
-	assert_int(rarity).is_equal(SrsEnums.LootRarity.COMMON)
+	assert_int(rarity).is_equal(SrsEnums.LootRarity.KNOWN)
 
 
 # -- select_challenge_type --
@@ -234,7 +234,7 @@ func test_set_debug_tier_override_returned_by_get_loot_rarity() -> void:
 
 func test_clear_debug_tier_overrides_restores_computed_rarity() -> void:
 	scheduler.register_card("c1", "好")
-	scheduler.set_debug_tier_override("c1", SrsEnums.LootRarity.COMMON)
+	scheduler.set_debug_tier_override("c1", SrsEnums.LootRarity.KNOWN)
 	scheduler.clear_debug_tier_overrides()
 	# Brand new (no review history) → NEW_CARD
 	var rarity := scheduler.get_loot_rarity("c1", "meaning", _now)
@@ -272,7 +272,7 @@ func test_debug_tier_sample_pack_has_one_card_per_tier() -> void:
 		tiers_seen.append(scheduler.get_loot_rarity(cid, "meaning", _now))
 	# All four tiers represented exactly once.
 	for tier in [
-		SrsEnums.LootRarity.COMMON,
+		SrsEnums.LootRarity.KNOWN,
 		SrsEnums.LootRarity.LEARNING,
 		SrsEnums.LootRarity.ABOUT_TO_FORGET,
 		SrsEnums.LootRarity.NEW_CARD,

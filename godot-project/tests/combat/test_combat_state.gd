@@ -52,6 +52,46 @@ func test_hero_attack_can_miss_and_still_spends_gauge() -> void:
 	assert_int(res["outcome"]).is_equal(CombatState.AttackOutcome.MISS)
 	assert_int(s.mobs[0].hp).is_equal(5)        # no damage on a miss
 	assert_float(s.player_atb).is_equal(0.0)    # but the gauge is still spent
+	assert_bool(res["crit"]).is_false()
+
+
+func test_no_crit_or_spread_keeps_flat_base_damage() -> void:
+	# Defaults (spread 0, crit 0) → exactly attack_damage, never a crit.
+	var s := _state(10, [_mob(20, 1, 0.0)], 3, 1.0)
+	s.answer(true)
+	s.answer(true)
+	var res := s.player_attack()
+	assert_int(res["damage"]).is_equal(3)
+	assert_bool(res["crit"]).is_false()
+
+
+func test_damage_spread_rolls_within_attack_range() -> void:
+	var s := _state(10, [_mob(20, 1, 0.0)], 3, 1.0)  # base dmg 3, always hits
+	s.damage_spread = 1                              # → rolls 2..4
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 5
+	s.rng = rng
+	s.answer(true)
+	s.answer(true)
+	var res := s.player_attack()
+	var dmg: int = res["damage"]
+	assert_int(dmg).is_greater_equal(2)
+	assert_int(dmg).is_less_equal(4)
+	assert_bool(res["crit"]).is_false()
+	assert_int(s.mobs[0].hp).is_equal(20 - dmg)      # mob took exactly the rolled damage
+
+
+func test_crit_multiplies_damage() -> void:
+	var s := _state(10, [_mob(20, 1, 0.0)], 3, 1.0)  # base dmg 3, always hits
+	s.damage_spread = 0
+	s.crit_chance = 1.0                              # force every hit to crit
+	s.crit_multiplier = 2.0
+	s.answer(true)
+	s.answer(true)
+	var res := s.player_attack()
+	assert_bool(res["crit"]).is_true()
+	assert_int(res["damage"]).is_equal(6)            # 3 × 2
+	assert_int(s.mobs[0].hp).is_equal(14)            # 20 − 6
 
 
 func test_attack_not_ready_is_empty() -> void:

@@ -24,7 +24,7 @@ func test_card_display_is_control() -> void:
 
 func test_default_loot_rarity() -> void:
 	var display := CardDisplay.new()
-	assert_int(display.loot_rarity).is_equal(SrsEnums.LootRarity.COMMON)
+	assert_int(display.loot_rarity).is_equal(SrsEnums.LootRarity.KNOWN)
 	display.free()
 
 

@@ -23,7 +23,10 @@ var player_max_hp: int = 30
 var player_hp: int = 30
 var player_atb: float = 0.0        # 0..1; at 1.0 an attack is ready
 var atb_per_correct: float = 0.34  # ~3 correct answers fill the gauge
-var attack_damage: int = 1         # damage per landed attack (the player's active power)
+var attack_damage: int = 1         # base damage per landed attack (the player's active power)
+var damage_spread: int = 0         # ± range rolled around attack_damage per hit (0 = flat)
+var crit_chance: float = 0.0       # chance a landed hit crits (sanctioned RNG; never punishes recall)
+var crit_multiplier: float = 2.0   # crit damage multiplier
 var hero_accuracy: float = 0.9     # chance a hero attack lands (cards push → 1.0)
 var hero_block_chance: float = 0.2 # chance to block an incoming mob hit (cards raise)
 
@@ -89,8 +92,10 @@ func answer(correct: bool) -> void:
 
 
 ## Spend a full gauge to strike the current target. Returns a result dict
-## {outcome, mob, mob_index, damage} — outcome HIT or MISS (a miss still
-## spends the gauge). Returns {} if not ready or no live target.
+## {outcome, mob, mob_index, damage, crit} — outcome HIT or MISS (a miss still
+## spends the gauge). On a hit, damage is rolled within ±damage_spread of
+## attack_damage and may crit (crit_chance → ×crit_multiplier). Returns {} if
+## not ready or no live target.
 func player_attack() -> Dictionary:
 	if is_over() or not player_attack_ready():
 		return {}
@@ -100,11 +105,23 @@ func player_attack() -> Dictionary:
 	var idx := _target_index
 	player_atb = 0.0
 	if rng.randf() >= hero_accuracy:
-		return {"outcome": AttackOutcome.MISS, "mob": m, "mob_index": idx, "damage": 0}
-	m.take_damage(attack_damage)
+		return {"outcome": AttackOutcome.MISS, "mob": m, "mob_index": idx, "damage": 0, "crit": false}
+	var dmg := _roll_attack_damage()
+	var is_crit := rng.randf() < crit_chance
+	if is_crit:
+		dmg = maxi(1, int(round(dmg * crit_multiplier)))
+	m.take_damage(dmg)
 	if not m.is_alive():
 		_retarget()
-	return {"outcome": AttackOutcome.HIT, "mob": m, "mob_index": idx, "damage": attack_damage}
+	return {"outcome": AttackOutcome.HIT, "mob": m, "mob_index": idx, "damage": dmg, "crit": is_crit}
+
+
+## Roll a single hit's base damage: attack_damage ± damage_spread, floored at 1.
+## With damage_spread 0 this is exactly attack_damage (the flat default).
+func _roll_attack_damage() -> int:
+	var lo := maxi(1, attack_damage - damage_spread)
+	var hi := maxi(lo, attack_damage + damage_spread)
+	return rng.randi_range(lo, hi)
 
 
 ## Advance real time: fill each live mob's gauge; a ready mob resolves an

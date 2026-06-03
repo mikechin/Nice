@@ -124,7 +124,7 @@ func get_loot_rarity(card_id: String, challenge_type: String, now: float) -> Srs
 	if state == FsrsAlgorithm.State.LEARNING or state == FsrsAlgorithm.State.RELEARNING:
 		return SrsEnums.LootRarity.LEARNING
 
-	return SrsEnums.LootRarity.COMMON
+	return SrsEnums.LootRarity.KNOWN
 
 
 ## Serialize all card states for saving.
@@ -166,7 +166,7 @@ func curate_debug_tier_sample_pack(sample_cards: Array[CharacterData]) -> PackDa
 	pack.pack_type = "debug"
 
 	var tier_order: Array[SrsEnums.LootRarity] = [
-		SrsEnums.LootRarity.COMMON,
+		SrsEnums.LootRarity.KNOWN,
 		SrsEnums.LootRarity.LEARNING,
 		SrsEnums.LootRarity.ABOUT_TO_FORGET,
 		SrsEnums.LootRarity.NEW_CARD,

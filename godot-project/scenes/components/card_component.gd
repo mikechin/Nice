@@ -13,7 +13,7 @@ signal card_setup_complete()
 @onready var _tier_label: Label = $TierLabel if has_node("TierLabel") else null
 
 var _card_data: CharacterData
-var _rarity: SrsEnums.LootRarity = SrsEnums.LootRarity.COMMON
+var _rarity: SrsEnums.LootRarity = SrsEnums.LootRarity.KNOWN
 var _current_answers: Dictionary = {}
 
 
@@ -21,7 +21,7 @@ func _ready() -> void:
 	_warn_missing_nodes()
 
 
-func setup(card_data: CharacterData, rarity: SrsEnums.LootRarity = SrsEnums.LootRarity.COMMON) -> void:
+func setup(card_data: CharacterData, rarity: SrsEnums.LootRarity = SrsEnums.LootRarity.KNOWN) -> void:
 	_card_data = card_data
 	_rarity = rarity
 
@@ -101,7 +101,7 @@ func _update_labels() -> void:
 func _apply_rarity_style() -> void:
 	var color := Color.WHITE
 	match _rarity:
-		SrsEnums.LootRarity.COMMON:
+		SrsEnums.LootRarity.KNOWN:
 			color = Color(0.7, 0.7, 0.7)
 		SrsEnums.LootRarity.LEARNING:
 			color = Color(0.3, 0.7, 1.0)

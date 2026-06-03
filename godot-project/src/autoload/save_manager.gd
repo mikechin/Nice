@@ -5,7 +5,7 @@ extends Node
 
 const SAVE_PATH: String = "user://save_data.json"
 const SRS_SAVE_PATH: String = "user://srs_data.json"
-const SAVE_VERSION: int = 1
+const SAVE_VERSION: int = 2  # v2 adds the persistent economy (inventory/wallet/binder)
 
 signal save_completed()
 signal load_completed()
