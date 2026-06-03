@@ -14,6 +14,7 @@ func _ready() -> void:
 	_warn_missing_nodes()
 	_connect_buttons()
 	_add_debug_combat_button()
+	_add_debug_crawl_button()
 	_update_displays()
 	GameState.check_daily_reset()
 	AudioManager.play_music("main_menu")
@@ -32,6 +33,21 @@ func _add_debug_combat_button() -> void:
 		AudioManager.play_sfx("button_tap")
 		RunState.begin_run()
 		SignalBus.screen_transition_requested.emit("dungeon_map"))
+	vbox.add_child(btn)
+
+
+## DEBUG (crawler slice): drop straight into the spatial crawl room to walk
+## around with the arrow keys. Temporary, like the dungeon button above.
+func _add_debug_crawl_button() -> void:
+	var vbox := get_node_or_null("VBoxContainer")
+	if vbox == null:
+		return
+	var btn := Button.new()
+	btn.text = "▶ Crawl (debug)"
+	btn.pressed.connect(func() -> void:
+		AudioManager.play_sfx("button_tap")
+		RunState.begin_run()
+		SignalBus.screen_transition_requested.emit("crawl"))
 	vbox.add_child(btn)
 
 
