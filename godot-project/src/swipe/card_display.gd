@@ -81,12 +81,26 @@ func _apply_challenge_visibility(data: CharacterData, challenge_type: String) ->
 	if _glyph_label:
 		_glyph_label.text = plan["glyph_text"]
 		_glyph_label.visible = plan["glyph_visible"]
+		_glyph_label.add_theme_font_size_override("font_size", _glyph_font_size(plan["glyph_text"]))
 	if _pinyin_label:
 		_pinyin_label.text = plan["pinyin_text"]
 		_pinyin_label.visible = plan["pinyin_visible"]
 	if _meaning_label:
 		_meaning_label.text = plan["meaning_text"]
 		_meaning_label.visible = plan["meaning_visible"]
+
+
+## The glyph slot is sized for single characters (96pt). When it instead
+## holds a meaning string (the 'character' challenge prompt, e.g. "toward,
+## direction"), long text overflows — scale the font down by length so it
+## fits and wraps inside the card.
+func _glyph_font_size(text: String) -> int:
+	var n := text.length()
+	if n <= 2:
+		return 96
+	elif n <= 6:
+		return 56
+	return 36
 
 
 ## Pure helper: returns the visibility/text plan for a challenge type.

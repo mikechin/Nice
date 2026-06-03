@@ -11,16 +11,18 @@ var label: String = "Mob"
 var max_hp: int = 3
 var hp: int = 3
 var attack: int = 1        # damage dealt to the player when its gauge fills
+var accuracy: float = 0.85 # chance its attack lands (below → MISS); cards can lower it
 var atb: float = 0.0       # 0..1; at 1.0 the mob is ready to strike
 var atb_rate: float = 0.0  # gauge units filled per second
 
 
-static func create(label_: String, hp_: int, attack_: int, atb_rate_: float) -> CombatMob:
+static func create(label_: String, hp_: int, attack_: int, atb_rate_: float, accuracy_: float = 0.85) -> CombatMob:
 	var m := CombatMob.new()
 	m.label = label_
 	m.max_hp = maxi(1, hp_)
 	m.hp = m.max_hp
 	m.attack = maxi(0, attack_)
+	m.accuracy = clampf(accuracy_, 0.0, 1.0)
 	m.atb_rate = maxf(0.0, atb_rate_)
 	m.atb = 0.0
 	return m

@@ -51,3 +51,9 @@ func test_create_clamps_minimums() -> void:
 	assert_int(m.max_hp).is_equal(1)
 	assert_int(m.attack).is_equal(0)
 	assert_float(m.atb_rate).is_equal(0.0)
+
+
+func test_accuracy_defaults_and_clamps() -> void:
+	assert_float(CombatMob.create("M", 3, 1, 0.0).accuracy).is_equal(0.85)
+	assert_float(CombatMob.create("M", 3, 1, 0.0, 1.5).accuracy).is_equal(1.0)
+	assert_float(CombatMob.create("M", 3, 1, 0.0, -0.5).accuracy).is_equal(0.0)
