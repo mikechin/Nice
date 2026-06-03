@@ -29,12 +29,34 @@ var desired_retention: float = 0.9
 var maximum_interval: int = 36500
 var enable_short_term: bool = true
 
+## Interval fuzz (ts-fsrs `apply_fuzz`). Spreads scheduled intervals by a few
+## percent so a batch of cards learned in one session doesn't all fall due on the
+## exact same day (review-load pileups). Off by default so the pure schedule
+## stays deterministic for tests; the live ReviewScheduler turns it on. The RNG
+## is injectable and seeded so a given run is reproducible.
+var enable_fuzz: bool = false
+var rng := RandomNumberGenerator.new()
+
+## Fixed default seed: fuzz only needs to de-correlate cards from each other
+## within a run, not vary run-to-run, and a fixed seed keeps scheduling
+## reproducible/debuggable. Override `rng.seed` for a different stream.
+const FUZZ_SEED: int = 0x9E3779B9
+
+## ts-fsrs fuzz bands: [interval_start, interval_end, factor]. Wider intervals
+## fuzz by a smaller fraction.
+const FUZZ_RANGES := [
+	[2.5, 7.0, 0.15],
+	[7.0, 20.0, 0.1],
+	[20.0, 36500.0, 0.05],
+]
+
 ## Decay and factor derived from w[20].
 var _decay: float
 var _factor: float
 
 
 func _init() -> void:
+	rng.seed = FUZZ_SEED
 	_update_decay_factor()
 
 
@@ -88,9 +110,11 @@ func next_difficulty(d: float, rating: int) -> float:
 	var delta_d := -weights[6] * (g - 3.0)
 	# Linear damping toward boundaries
 	var linear_damping := delta_d * (10.0 - d) / 9.0
-	# Mean reversion toward D_0(3)
-	var d0_g3 := init_difficulty(Rating.GOOD)
-	var new_d := weights[7] * d0_g3 + (1.0 - weights[7]) * (d + linear_damping)
+	# Mean reversion toward D_0(Easy). ts-fsrs reverts difficulty toward the
+	# initial difficulty of an EASY first answer, not GOOD — reverting toward
+	# GOOD biases mature difficulty upward over the long run.
+	var d0_easy := init_difficulty(Rating.EASY)
+	var new_d := weights[7] * d0_easy + (1.0 - weights[7]) * (d + linear_damping)
 	return clampf(new_d, 1.0, 10.0)
 
 
@@ -126,12 +150,39 @@ func short_term_stability(s: float, rating: int) -> float:
 # Interval calculation
 # ---------------------------------------------------------------------------
 
-## Calculate the next review interval in days from stability and desired retention.
+## Calculate the next review interval in days from stability and desired
+## retention. Pure and deterministic — fuzz (if any) is applied separately.
 func next_interval(stability: float) -> int:
 	if stability < S_MIN:
 		return 1
 	var interval := (pow(desired_retention, 1.0 / _decay) - 1.0) / _factor * stability
 	return clampi(roundi(interval), 1, maximum_interval)
+
+
+## Apply ts-fsrs interval fuzz: jitter `interval` within a band that widens with
+## the interval, so cards scheduled together spread out instead of stacking on one
+## day. A no-op when fuzz is disabled or the interval is under 3 days (too short to
+## meaningfully spread). `elapsed_days` guards against rescheduling earlier than
+## the time already waited.
+func apply_fuzz(interval: int, elapsed_days: float = 0.0) -> int:
+	if not enable_fuzz or interval < 3:
+		return interval
+	var ivl := float(interval)
+	var delta := 1.0
+	for band in FUZZ_RANGES:
+		delta += band[2] * maxf(minf(ivl, band[1]) - band[0], 0.0)
+	var min_ivl := maxi(2, roundi(ivl - delta))
+	var max_ivl := mini(roundi(ivl + delta), maximum_interval)
+	if ivl > elapsed_days:
+		min_ivl = maxi(min_ivl, int(elapsed_days) + 1)
+	min_ivl = mini(min_ivl, max_ivl)
+	# Uniform pick in [min_ivl, max_ivl]; randf() is [0, 1) so int() floors.
+	return mini(min_ivl + int(rng.randf() * float(max_ivl - min_ivl + 1)), max_ivl)
+
+
+## The interval stored after a review: the base interval, fuzzed when enabled.
+func _scheduled_interval(stability: float, elapsed_days: float) -> int:
+	return apply_fuzz(next_interval(stability), elapsed_days)
 
 
 # ---------------------------------------------------------------------------
@@ -185,7 +236,7 @@ func review(card: Dictionary, rating: int, now: float) -> Dictionary:
 			result["scheduled_days"] = 0
 		else:
 			result["state"] = State.REVIEW
-			result["scheduled_days"] = next_interval(s)
+			result["scheduled_days"] = _scheduled_interval(s, elapsed_days)
 	elif elapsed_days == 0.0 and enable_short_term and state != State.REVIEW:
 		# Short-term review (same day, still in learning/relearning)
 		s = short_term_stability(s, rating)
@@ -195,7 +246,7 @@ func review(card: Dictionary, rating: int, now: float) -> Dictionary:
 			result["scheduled_days"] = 0
 		else:
 			result["state"] = State.REVIEW
-			result["scheduled_days"] = next_interval(s)
+			result["scheduled_days"] = _scheduled_interval(s, elapsed_days)
 	elif rating == Rating.AGAIN:
 		# Lapse — forgot the card
 		var floor_s := s / exp(weights[17] * weights[18]) if weights.size() > 18 else s
@@ -209,7 +260,7 @@ func review(card: Dictionary, rating: int, now: float) -> Dictionary:
 		s = next_stability_after_success(d, s, r, rating)
 		d = next_difficulty(d, rating)
 		result["state"] = State.REVIEW
-		result["scheduled_days"] = next_interval(s)
+		result["scheduled_days"] = _scheduled_interval(s, elapsed_days)
 
 	result["stability"] = s
 	result["difficulty"] = d

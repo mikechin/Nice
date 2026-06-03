@@ -16,6 +16,7 @@ var _debug_tier_overrides: Dictionary = {}  # card_id -> SrsEnums.LootRarity
 
 func _init() -> void:
 	fsrs = FsrsAlgorithm.new()
+	fsrs.enable_fuzz = true   # live scheduling spreads due dates; tests use the raw algorithm
 	_pack_curator = PackCurator.new(fsrs, card_states)
 
 

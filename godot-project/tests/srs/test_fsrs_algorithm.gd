@@ -251,3 +251,69 @@ func test_maximum_interval_respected() -> void:
 	var now := 1700000000.0
 	var result := fsrs.review(card, FsrsAlgorithm.Rating.EASY, now)
 	assert_int(result["scheduled_days"]).is_less_equal(fsrs.maximum_interval)
+
+
+# -- difficulty mean reversion target --
+
+func test_difficulty_mean_reverts_toward_easy_not_good() -> void:
+	# ts-fsrs reverts difficulty toward D_0(Easy), not D_0(Good). A GOOD answer
+	# carries no difficulty delta, so iterating next_difficulty exposes the
+	# reversion fixed point — it must settle at the EASY baseline.
+	var d0_easy := fsrs.init_difficulty(FsrsAlgorithm.Rating.EASY)
+	var d0_good := fsrs.init_difficulty(FsrsAlgorithm.Rating.GOOD)
+	assert_float(d0_easy).is_less(d0_good)   # EASY is the lower target
+	var d := 9.0
+	for _i in 30000:
+		d = fsrs.next_difficulty(d, FsrsAlgorithm.Rating.GOOD)
+	assert_float(d).is_equal_approx(d0_easy, 0.05)
+	assert_float(absf(d - d0_easy)).is_less(absf(d - d0_good))
+
+
+# -- interval fuzz --
+
+func test_apply_fuzz_is_noop_when_disabled() -> void:
+	fsrs.enable_fuzz = false
+	assert_int(fsrs.apply_fuzz(50)).is_equal(50)
+
+
+func test_apply_fuzz_leaves_short_intervals_exact() -> void:
+	fsrs.enable_fuzz = true
+	# Under 3 days there's nothing meaningful to spread.
+	assert_int(fsrs.apply_fuzz(1)).is_equal(1)
+	assert_int(fsrs.apply_fuzz(2)).is_equal(2)
+
+
+func test_apply_fuzz_stays_within_band() -> void:
+	fsrs.enable_fuzz = true
+	# For ivl=100: delta = 1 + .15*(7-2.5) + .1*(20-7) + .05*(100-20) = 6.975,
+	# so the fuzzed value lands in [93, 107].
+	for _i in 200:
+		var f := fsrs.apply_fuzz(100)
+		assert_int(f).is_greater_equal(93)
+		assert_int(f).is_less_equal(107)
+
+
+func test_apply_fuzz_respects_maximum_interval() -> void:
+	fsrs.enable_fuzz = true
+	fsrs.maximum_interval = 100
+	for _i in 50:
+		assert_int(fsrs.apply_fuzz(100)).is_less_equal(100)
+
+
+func test_fuzz_spreads_identical_intervals() -> void:
+	# The point of fuzz: a batch of cards with the same interval shouldn't all
+	# fall due on one day. Fuzzing the same interval yields more than one value.
+	fsrs.enable_fuzz = true
+	var seen := {}
+	for _i in 100:
+		seen[fsrs.apply_fuzz(60)] = true
+	assert_int(seen.size()).is_greater(1)
+
+
+func test_review_intervals_are_deterministic_without_fuzz() -> void:
+	# Fuzz is off by default, so the scheduled interval is the exact base interval.
+	var card := fsrs.init_card()
+	var now := 1700000000.0
+	var a := fsrs.review(card, FsrsAlgorithm.Rating.EASY, now)
+	var b := fsrs.review(card, FsrsAlgorithm.Rating.EASY, now)
+	assert_int(a["scheduled_days"]).is_equal(b["scheduled_days"])
