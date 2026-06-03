@@ -294,3 +294,61 @@ func test_debug_tier_sample_pack_clears_prior_overrides() -> void:
 	scheduler.curate_debug_tier_sample_pack(sample)
 	# Stale override is wiped so old debug runs don't leak forward.
 	assert_bool(scheduler._debug_tier_overrides.has("stale")).is_false()
+
+
+# -- debug seeding (playtest aids) --
+
+func test_debug_reset_all_new_makes_every_card_new() -> void:
+	scheduler.register_card("c1", "好")
+	scheduler.record_review("c1", "meaning", FsrsAlgorithm.Rating.GOOD, _now)
+	assert_bool(scheduler.card_states["c1"].is_new()).is_false()  # reviewed → not new
+	var n := scheduler.debug_reset_all_new()
+	assert_int(n).is_equal(1)
+	assert_bool(scheduler.card_states["c1"].is_new()).is_true()   # wiped back to new
+	# Still registered, so a teach-beat commit will actually record.
+	assert_bool(scheduler.card_states.has("c1")).is_true()
+
+
+func test_debug_seed_steady_state_has_no_new_cards() -> void:
+	for i in 60:
+		scheduler.register_card("c%d" % i, "字")
+	scheduler.debug_seed_steady_state(_now)
+	for card_id in scheduler.card_states:
+		assert_bool(scheduler.card_states[card_id].is_new()).is_false()
+
+
+func test_debug_seed_steady_state_is_a_realistic_mix() -> void:
+	# Seed a population and tally what combat would actually SHOW per card: the
+	# weakest-by-stability facet drives both the format and the loot rarity.
+	for i in 240:
+		scheduler.register_card("c%d" % i, "字")
+	scheduler.debug_seed_steady_state(_now)
+	var known := 0
+	var clutch := 0
+	var learning := 0
+	var new_count := 0
+	for card_id in scheduler.card_states:
+		var ct := scheduler.select_challenge_type(card_id)
+		match scheduler.get_loot_rarity(card_id, ct, _now):
+			SrsEnums.LootRarity.KNOWN: known += 1
+			SrsEnums.LootRarity.ABOUT_TO_FORGET: clutch += 1
+			SrsEnums.LootRarity.LEARNING: learning += 1
+			SrsEnums.LootRarity.NEW_CARD: new_count += 1
+	# Mature deck: mostly KNOWN recall, a clutch minority, a few in learning, no new.
+	assert_int(new_count).is_equal(0)
+	assert_int(known).is_greater(clutch + learning)   # KNOWN is the clear majority
+	assert_int(clutch).is_greater(0)                  # but clutch is present (lapses)...
+	assert_int(learning).is_greater(0)                # ...and so is learning
+
+
+func test_debug_seed_steady_state_clutch_facet_drives_recognition() -> void:
+	# A lapsed facet is both the weakest (so it's the one shown) and below the
+	# clutch bar (so it reads ABOUT_TO_FORGET, feeding the limit gauge).
+	scheduler.register_card("c1", "好")
+	var cs: CardState = scheduler.card_states["c1"]
+	for ct in cs.states.keys():
+		cs.states[ct] = scheduler._known_facet(_now)
+	cs.states["tone"] = scheduler._lapsed_facet(_now)
+	assert_str(scheduler.select_challenge_type("c1")).is_equal("tone")          # weakest
+	assert_int(scheduler.get_loot_rarity("c1", "tone", _now)) \
+		.is_equal(SrsEnums.LootRarity.ABOUT_TO_FORGET)

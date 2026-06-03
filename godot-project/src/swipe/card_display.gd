@@ -14,17 +14,6 @@ extends Control
 
 signal animation_finished()
 
-# LootRarity is the legacy 4-state input from ChallengePresenter; CardTier
-# is the canonical 6-tier visual scheme. This table maps the legacy states
-# onto the visual tier closest in spirit so the style guide treatment
-# applies even before the call sites migrate to CardTier directly.
-const _LOOT_TO_TIER := {
-	SrsEnums.LootRarity.NEW_CARD: CollectionEnums.CardTier.NEW_CARD,
-	SrsEnums.LootRarity.KNOWN: CollectionEnums.CardTier.COMMON,
-	SrsEnums.LootRarity.LEARNING: CollectionEnums.CardTier.UNCOMMON,
-	SrsEnums.LootRarity.ABOUT_TO_FORGET: CollectionEnums.CardTier.RARE,
-}
-
 var card_data: CharacterData
 var loot_rarity: SrsEnums.LootRarity = SrsEnums.LootRarity.KNOWN
 var current_challenge_type: String = ""
@@ -58,6 +47,14 @@ func setup_for_challenge(data: CharacterData, challenge_type: String, rarity: Sr
 		return
 	_apply_challenge_visibility(data, challenge_type)
 	_apply_tier_style()
+
+
+## Reveal the whole card — the answer included. Used by the teach beat: the
+## prompt is shown with the answer hidden, then this flips it fully visible.
+func reveal() -> void:
+	_show_full()
+	if _glyph_label:
+		_glyph_label.add_theme_font_size_override("font_size", 96)
 
 
 func _show_full() -> void:
@@ -161,9 +158,34 @@ func apply_tier(tier: CollectionEnums.CardTier) -> void:
 			_tier_label.remove_theme_stylebox_override("normal")
 
 
+## Cards get a STANDARD look by default; only the two dopamine states earn
+## flair (a distinct frame accent + badge) — a new discovery and a clutch
+## about-to-forget recall. The routine states (KNOWN / LEARNING) stay plain so
+## the special ones pop. No more gem-tier names on the study card.
 func _apply_tier_style() -> void:
-	var tier: int = _LOOT_TO_TIER.get(loot_rarity, CollectionEnums.CardTier.COMMON)
+	match loot_rarity:
+		SrsEnums.LootRarity.NEW_CARD:
+			_apply_flair(CollectionEnums.CardTier.NEW_CARD, "✦ NEW")
+		SrsEnums.LootRarity.ABOUT_TO_FORGET:
+			_apply_flair(CollectionEnums.CardTier.RARE, "⚡ CLUTCH")
+		_:
+			_apply_standard()
+
+
+## The honest baseline frame, no rarity badge — for routine reviews.
+func _apply_standard() -> void:
+	apply_tier(CollectionEnums.CardTier.COMMON)
+	if _tier_label:
+		_tier_label.text = ""
+		_tier_label.visible = false
+
+
+## A flaired frame + a custom badge for the dopamine states.
+func _apply_flair(tier: CollectionEnums.CardTier, badge_text: String) -> void:
 	apply_tier(tier)
+	if _tier_label:
+		_tier_label.visible = true
+		_tier_label.text = badge_text
 
 
 # -- Feedback / animations (driven by ChallengePresenter) --

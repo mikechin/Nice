@@ -15,6 +15,7 @@ func _ready() -> void:
 	_connect_buttons()
 	_add_debug_combat_button()
 	_add_debug_crawl_button()
+	_add_debug_srs_buttons()
 	_update_displays()
 	GameState.check_daily_reset()
 	AudioManager.play_music("main_menu")
@@ -49,6 +50,36 @@ func _add_debug_crawl_button() -> void:
 		RunState.begin_run()
 		SignalBus.screen_transition_requested.emit("crawl"))
 	vbox.add_child(btn)
+
+
+## DEBUG (playtest aids): seed the SRS ledger to either extreme so the scaffold
+## states are observable on demand. "Reset" makes every card brand-new (watch
+## TEACH → 2-option → 4-option from scratch); "Steady" seeds a mature HSK1–2 deck
+## (no new, no clutch, all 4-option recall). Both persist immediately. Temporary,
+## like the buttons above — folds into a dev menu later.
+func _add_debug_srs_buttons() -> void:
+	var vbox := get_node_or_null("VBoxContainer")
+	if vbox == null:
+		return
+
+	var reset_btn := Button.new()
+	reset_btn.text = "↺ Reset SRS (all new)"
+	reset_btn.pressed.connect(func() -> void:
+		AudioManager.play_sfx("button_tap")
+		var n := GameState.review_scheduler.debug_reset_all_new()
+		SaveManager.save_game()
+		reset_btn.text = "↺ Reset SRS — %d cards new ✓" % n)
+	vbox.add_child(reset_btn)
+
+	var steady_btn := Button.new()
+	steady_btn.text = "✓ Seed steady HSK1–2"
+	steady_btn.pressed.connect(func() -> void:
+		AudioManager.play_sfx("button_tap")
+		var now := Time.get_unix_time_from_system()
+		var n := GameState.review_scheduler.debug_seed_steady_state(now)
+		SaveManager.save_game()
+		steady_btn.text = "✓ Seeded %d cards (steady) ✓" % n)
+	vbox.add_child(steady_btn)
 
 
 func _connect_buttons() -> void:

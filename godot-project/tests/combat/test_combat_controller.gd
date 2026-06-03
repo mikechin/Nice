@@ -18,6 +18,12 @@ func test_ready_builds_playable_combat() -> void:
 	assert_int(ctrl._mob_views.size()).is_greater(0)
 	assert_object(ctrl._hero_view).is_not_null()
 	assert_int(ctrl._answer_buttons.size()).is_equal(4)
-	# A prompt is up, so input is live and answers are populated.
-	assert_bool(ctrl._answer_input.is_active()).is_true()
-	assert_bool(ctrl._answer_input.get_current_answers().has("correct_direction")).is_true()
+	# The limit-break gauge + button are wired and start un-armed.
+	assert_object(ctrl._limit_bar).is_not_null()
+	assert_object(ctrl._limit_button).is_not_null()
+	assert_bool(ctrl._limit_button.disabled).is_true()
+	# A card is presented in some valid mode: either a teach beat (first-sight
+	# cards) or the live answer flow. Which one depends on the deck's SRS state,
+	# so accept both rather than assuming a fresh all-new deck.
+	assert_object(ctrl._card_display.card_data).is_not_null()
+	assert_bool(ctrl._teaching or ctrl._answer_input.is_active()).is_true()

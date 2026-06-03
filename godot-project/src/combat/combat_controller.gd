@@ -22,11 +22,14 @@ const ATTACK_DAMAGE := 3
 const DAMAGE_SPREAD := 1          # hits roll ATTACK_DAMAGE ± this (2–4) for texture
 const CRIT_CHANCE := 0.15         # 15% of landed hits crit (the design-sanctioned RNG)
 const CRIT_MULTIPLIER := 2.0      # crits double the rolled damage
+const LIMIT_PER_CLUTCH := 0.2     # clutch recalls charge the LIMIT bar by this (< ATB_PER_CORRECT)
+const LIMIT_DAMAGE := ATTACK_DAMAGE * 4   # limit break: big flat damage to EVERY mob
 const HERO_ACCURACY := 0.9       # correct answers almost always land; cards → 1.0
 const HERO_BLOCK := 0.25         # chance to block an incoming mob hit; cards raise
 const MOB_ACCURACY := 0.8        # mobs miss ~20%; cards can lower further
 const MAX_MOBS := 3
 const FEEDBACK_DELAY := 0.5
+const MAX_NEW_PER_FIGHT := 3     # teach at most this many first-sight cards per fight
 
 # --- stage layout ---
 const MOB_SIZE := Vector2(96, 130)
@@ -45,9 +48,10 @@ const CARD_SIZE := Vector2(530, 350)
 const ANSWER_BTN := Vector2(520, 74)
 const ANSWER_START := Vector2(1180, 556)
 const ANSWER_GAP := 16
-# Hero readout docks bottom-left, beneath the foreground hero.
-const INFO_PANEL_POS := Vector2(28, 828)
-const INFO_PANEL_SIZE := Vector2(348, 224)
+# Hero readout docks bottom-left, beneath the foreground hero (taller now to
+# hold the LIMIT gauge + unleash button under HP/ATB).
+const INFO_PANEL_POS := Vector2(28, 712)
+const INFO_PANEL_SIZE := Vector2(348, 340)
 
 var _answer_generator: AnswerGenerator
 var _answer_input: AnswerInput
@@ -77,6 +81,16 @@ var _current_loot_rarity: SrsEnums.LootRarity = SrsEnums.LootRarity.KNOWN
 # never ships; flip to `true` here to force it on regardless.
 var _debug_reveal_answer: bool = OS.is_debug_build()
 
+# Scaffolded teaching: a first-sight card is taught (reveal block) before it's
+# tested. While the teach beat is up the combat clock pauses (mobs hold) so
+# learning isn't punished.
+var _paused: bool = false
+var _teaching: bool = false
+var _teach_revealed: bool = false
+var _teach_card_id: String = ""
+var _teach_ct: String = ""
+var _teach_button: Button
+
 # stage nodes
 var _battlefield: Control
 var _hero_view: Control
@@ -91,6 +105,8 @@ var _mob_origins: Array[Vector2] = []
 
 # center play area + hero info panel
 var _player_atb_bar: ProgressBar
+var _limit_bar: ProgressBar
+var _limit_button: Button
 var _card_display: CardDisplay
 var _challenge_label: Label
 var _answer_buttons: Dictionary = {}
@@ -122,9 +138,14 @@ func _ready() -> void:
 	_combat.damage_spread = DAMAGE_SPREAD
 	_combat.crit_chance = CRIT_CHANCE
 	_combat.crit_multiplier = CRIT_MULTIPLIER
+	_combat.limit_per_clutch = LIMIT_PER_CLUTCH
+	_combat.limit_damage = LIMIT_DAMAGE
 	if _run != null:
 		# Carry the run's current HP into the room (resets to full only per run).
 		_combat.player_hp = clampi(_run.hp, 1, _combat.player_max_hp)
+		# LIMIT charge likewise survives encounters within a run (a fresh run /
+		# new dungeon instance starts at 0 — see DungeonRun.create).
+		_combat.limit = clampf(_run.limit, 0.0, 1.0)
 	_build_combatants()
 	if _card_queue.is_empty() or _combat.current_mob() == null:
 		_show_result("No cards / mobs available to fight.")
@@ -135,7 +156,7 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	if _finished or _combat == null:
+	if _finished or _combat == null or _paused:
 		return
 	for ev in _combat.tick(delta):  # mob gauges fill; ready mobs resolve an attack
 		_animate_mob_attack(ev)
@@ -173,12 +194,29 @@ func _build_mobs() -> Array[CombatMob]:
 ## rule); standalone falls back to a flat due+new pick. Either way prompts are
 ## due reviews (knowledge), NOT the mobs and NOT the loot.
 func _build_card_queue() -> Array[String]:
+	var ids: Array[String] = []
 	if _run != null and _room != null:
 		var now := Time.get_unix_time_from_system()
-		var ids := DepthDraw.draw(GameState.review_scheduler, now, _room.depth, 50)
-		if not ids.is_empty():
-			return ids
-	return _pick_card_ids(50)
+		ids = DepthDraw.draw(GameState.review_scheduler, now, _room.depth, 50)
+	if ids.is_empty():
+		ids = _pick_card_ids(50)
+	return _ration_new(ids)
+
+
+## Cap how many brand-new (teach) cards a single fight introduces so a fresh
+## deck isn't a wall of reveal beats — and so the fight stays winnable (taught
+## cards cycle back as answerable 2-option recognition that charges the ATB).
+func _ration_new(ids: Array[String]) -> Array[String]:
+	var out: Array[String] = []
+	var new_count := 0
+	for id in ids:
+		var cs: CardState = GameState.review_scheduler.card_states.get(id)
+		if cs == null or cs.is_new():
+			if new_count >= MAX_NEW_PER_FIGHT:
+				continue
+			new_count += 1
+		out.append(id)
+	return out
 
 
 ## Prompts are due reviews (knowledge) — NOT the mobs and NOT the loot.
@@ -211,9 +249,84 @@ func _present_next() -> void:
 	var now := Time.get_unix_time_from_system()
 	var rarity: SrsEnums.LootRarity = GameState.review_scheduler.get_loot_rarity(card_id, challenge_type, now)
 	_current_loot_rarity = rarity  # remembered so a correct clutch recall can bias loot
+
+	# Scaffold by strength: teach first-sight cards, ease weak ones in with 2
+	# options, demand full recall (4) once they're strong.
+	match _format_for(card_id, challenge_type):
+		ChallengeScaffold.Format.TEACH:
+			_present_teach(card_data, challenge_type)
+		ChallengeScaffold.Format.RECOGNIZE:
+			_present_quiz(card_data, challenge_type, rarity, 2)
+		_:
+			_present_quiz(card_data, challenge_type, rarity, 4)
+
+
+func _format_for(card_id: String, challenge_type: String) -> ChallengeScaffold.Format:
+	var cs: CardState = GameState.review_scheduler.card_states.get(card_id)
+	if cs == null:
+		return ChallengeScaffold.Format.TEACH
+	var stability: float = cs.get_state_for_type(challenge_type).get("stability", 0.0)
+	return ChallengeScaffold.format_for(cs.is_new(), stability)
+
+
+## A standard quiz: present the card and show `num_options` answer buttons
+## (2 = early recognition, 4 = full recall).
+func _present_quiz(card_data: CharacterData, challenge_type: String, rarity: SrsEnums.LootRarity, num_options: int) -> void:
+	_teaching = false
+	_paused = false
 	_busy = false
+	if _teach_button:
+		_teach_button.visible = false
 	_answer_input.present(card_data, challenge_type, rarity, true)
-	_populate_answers()
+	_populate_answers(num_options)
+
+
+## First-sight teaching: show the card, reveal the answer on tap, then commit an
+## honest first review and move on. Mobs hold (clock pauses); no ATB — there is
+## no recall to fuel it yet, just learning.
+func _present_teach(card_data: CharacterData, challenge_type: String) -> void:
+	_teaching = true
+	_teach_revealed = false
+	_busy = true
+	_paused = true
+	_teach_card_id = card_data.get_card_id()
+	_teach_ct = challenge_type
+	_current_loot_rarity = SrsEnums.LootRarity.NEW_CARD
+	_card_display.setup_for_challenge(card_data, challenge_type, SrsEnums.LootRarity.NEW_CARD)
+	_card_display.show_new_discovery_effect()
+	_challenge_label.text = "New character!   " + _prompt_for(challenge_type)
+	for dir in DIRECTIONS:
+		_answer_buttons[dir].visible = false
+	if _limit_button:
+		_limit_button.disabled = true   # clock paused — no unleash mid-teach
+	_teach_button.text = "Reveal answer"
+	_teach_button.disabled = false
+	_teach_button.visible = true
+
+
+func _on_teach_pressed() -> void:
+	if not _teaching:
+		return
+	AudioManager.play_sfx("button_tap")
+	if not _teach_revealed:
+		_teach_revealed = true
+		_card_display.reveal()
+		_teach_button.text = "Got it — continue"
+	else:
+		_commit_teach()
+
+
+func _commit_teach() -> void:
+	_teaching = false
+	_paused = false
+	if _teach_button:
+		_teach_button.visible = false
+	# Honest first review: a just-introduced card is weak, so it commits AGAIN
+	# (Anki-style) — it returns soon as an easy 2-option recognition.
+	var now := Time.get_unix_time_from_system()
+	GameState.review_scheduler.record_review(_teach_card_id, _teach_ct, FsrsAlgorithm.Rating.AGAIN, now)
+	GameState.binder.record_seen(_teach_card_id)
+	get_tree().create_timer(FEEDBACK_DELAY).timeout.connect(_after_answer_beat)
 
 
 func _next_card_id() -> String:
@@ -224,17 +337,36 @@ func _next_card_id() -> String:
 	return id
 
 
-func _populate_answers() -> void:
+func _populate_answers(num_options: int) -> void:
 	var answers := _answer_input.get_current_answers()
 	_challenge_label.text = _prompt_for(answers.get("challenge_type", ""))
 	var correct_dir: String = answers.get("correct_direction", "")
+	var shown := _directions_to_show(correct_dir, num_options)
 	for dir in DIRECTIONS:
 		var btn: Button = _answer_buttons[dir]
-		var label: String = answers.get(dir, "")
-		if _debug_reveal_answer and dir == correct_dir and label != "":
-			label = "★ " + label
-		btn.text = label
-		btn.disabled = false
+		if dir in shown:
+			var label: String = answers.get(dir, "")
+			if _debug_reveal_answer and dir == correct_dir and label != "":
+				label = "★ " + label
+			btn.text = label
+			btn.disabled = false
+			btn.visible = true
+		else:
+			btn.visible = false
+			btn.disabled = true
+
+
+## Which answer directions to show: always the correct one, plus random
+## distractors up to `count` (2 = recognition, 4 = all = full recall).
+func _directions_to_show(correct_dir: String, count: int) -> Array:
+	if count >= DIRECTIONS.size() or correct_dir == "":
+		return DIRECTIONS.duplicate()
+	var others := DIRECTIONS.filter(func(d: String) -> bool: return d != correct_dir)
+	others.shuffle()
+	var shown: Array = [correct_dir]
+	for i in mini(count - 1, others.size()):
+		shown.append(others[i])
+	return shown
 
 
 func _prompt_for(ct: String) -> String:
@@ -279,7 +411,12 @@ func _on_answered(card_id: String, challenge_type: String, correct: bool, rating
 	else:
 		_streak = 0
 
+	# A correct clutch (about-to-forget) recall charges the ATB normally AND feeds
+	# the separate LIMIT bar — the clutch payoff (new cards never reach here:
+	# they're taught, not answered). Clutch saves bank toward a limit-break burst.
 	_combat.answer(correct)                       # correct charges the ATB gauge
+	if correct and _current_loot_rarity == SrsEnums.LootRarity.ABOUT_TO_FORGET:
+		_combat.charge_limit()
 	if _combat.player_attack_ready():
 		var res := _combat.player_attack()        # full gauge → hop in and strike
 		if not res.is_empty():
@@ -308,6 +445,19 @@ func _on_mob_tapped(index: int) -> void:
 	_refresh_status()
 
 
+## Player-triggered limit break: spend the full LIMIT gauge for a screen-wide
+## burst. Independent of the ATB / answer flow — fire it whenever it's armed.
+## A win is detected by _process (which calls _finish), same as a normal kill.
+func _on_limit_pressed() -> void:
+	if _finished or _paused or _combat == null or not _combat.limit_ready():
+		return
+	AudioManager.play_sfx("button_tap")
+	var res := _combat.unleash_limit()
+	if not res.is_empty():
+		_animate_limit_break(res)
+	_refresh_status()
+
+
 func _finish() -> void:
 	if _finished:
 		return
@@ -316,6 +466,10 @@ func _finish() -> void:
 	for dir in DIRECTIONS:
 		if _answer_buttons.has(dir):
 			_answer_buttons[dir].disabled = true
+	if _teach_button:
+		_teach_button.visible = false
+	if _limit_button:
+		_limit_button.disabled = true
 	if _run != null:
 		_finish_run_room()
 	elif _combat.outcome() == CombatState.Outcome.LOST:
@@ -336,15 +490,22 @@ func _finish_run_room() -> void:
 	var loot: Array[CardInstance] = []
 	if won:
 		loot = _roll_loot()
+	# Persist the LIMIT charge into the run so it carries to the next encounter.
+	_run.limit = _combat.limit
 	_run.apply_room_result(_combat.player_hp, loot, _answered, _correct)
 	if _run.is_over():  # HP hit 0 → died → haul forfeit
 		_show_result("You died. Haul lost.")
 		_after_run_beat(1.6, "results", true)
 	else:
-		_run.map.mark_current_cleared()
+		# Route back to whoever launched the fight. The node-map flow tracks
+		# cleared rooms on the RunMap; the spatial crawl doesn't (it owns its own
+		# warden/door state), so only do that bookkeeping for the map flow.
+		var return_screen := RunState.combat_return_screen
+		if return_screen == "dungeon_map":
+			_run.map.mark_current_cleared()
 		var banner := "Victory!\nLoot (%d): %s" % [loot.size(), _loot_label(loot)]
 		_show_result(banner)
-		_after_run_beat(1.2, "dungeon_map", false)
+		_after_run_beat(1.2, return_screen, false)
 
 
 ## Hold the result banner for `delay` seconds, then transition. `end_run`
@@ -419,6 +580,23 @@ func _hero_strike(res: Dictionary) -> void:
 			_float_text(anchor, "-%d" % dmg, Color(1.0, 0.55, 0.3), 46)
 	else:
 		_float_text(anchor, "Miss", Color(0.72, 0.72, 0.72), 34)
+
+
+## The limit break reads as a screen-clearing burst: the hero flares and pops,
+## then every struck mob shakes, flashes, and takes a loud gold damage float.
+func _animate_limit_break(res: Dictionary) -> void:
+	_flash(_hero_body, HERO_COLOR)
+	var hero_t := _hero_view.create_tween()
+	hero_t.tween_property(_hero_view, "scale", Vector2(1.25, 1.25), 0.1).set_trans(Tween.TRANS_BACK)
+	hero_t.tween_property(_hero_view, "scale", Vector2.ONE, 0.16).set_ease(Tween.EASE_IN)
+	for hit in res.get("hits", []):
+		var idx: int = hit.get("mob_index", -1)
+		if idx < 0 or idx >= _mob_views.size():
+			continue
+		_shake(_mob_views[idx], _mob_origins[idx])
+		_flash(_mob_bodies[idx], MOB_COLOR)
+		var anchor := _mob_origins[idx] + Vector2(MOB_SIZE.x * 0.5, -8)
+		_float_text(anchor, "-%d!" % int(hit.get("damage", 0)), Color(1.0, 0.85, 0.2), 58)
 
 
 func _animate_mob_attack(ev: Dictionary) -> void:
@@ -523,6 +701,7 @@ func _build_combatants() -> void:
 	_hero_view = Control.new()
 	_hero_view.position = HERO_SLOT
 	_hero_view.size = HERO_SIZE
+	_hero_view.pivot_offset = HERO_SIZE * 0.5  # limit-break pop scales from center
 	_battlefield.add_child(_hero_view)
 
 	_hero_body = ColorRect.new()
@@ -573,6 +752,16 @@ func _build_play_area() -> void:
 		btn.pressed.connect(_on_direction.bind(dir))
 		col.add_child(btn)
 		_answer_buttons[dir] = btn
+
+	# Teach button — shown only for first-sight cards (overlays the answer area,
+	# which is hidden during a teach beat).
+	_teach_button = Button.new()
+	_teach_button.custom_minimum_size = ANSWER_BTN
+	_teach_button.position = ANSWER_START
+	_teach_button.add_theme_font_size_override("font_size", 26)
+	_teach_button.visible = false
+	_teach_button.pressed.connect(_on_teach_pressed)
+	add_child(_teach_button)
 
 	# Victory / defeat banner — centered overlay so loot never clips off-screen.
 	_result_panel = Panel.new()
@@ -627,6 +816,20 @@ func _build_info_panel() -> void:
 	_player_atb_bar = _make_bar(INFO_PANEL_SIZE.x - 44, 24, Color(0.35, 0.7, 1.0))
 	vb.add_child(_player_atb_bar)
 
+	# LIMIT gauge — charged by clutch (about-to-forget) recalls; full → unleash.
+	vb.add_child(_label("LIMIT — clutch recalls charge it"))
+	_limit_bar = _make_bar(INFO_PANEL_SIZE.x - 44, 24, Color(1.0, 0.7, 0.2))
+	_limit_bar.value = 0.0
+	vb.add_child(_limit_bar)
+
+	_limit_button = Button.new()
+	_limit_button.text = "⚡ LIMIT BREAK"
+	_limit_button.custom_minimum_size = Vector2(INFO_PANEL_SIZE.x - 44, 40)
+	_limit_button.add_theme_font_size_override("font_size", 22)
+	_limit_button.disabled = true
+	_limit_button.pressed.connect(_on_limit_pressed)
+	vb.add_child(_limit_button)
+
 
 func _refresh_status() -> void:
 	if _hero_hp_bar:
@@ -634,6 +837,13 @@ func _refresh_status() -> void:
 		_hero_hp_bar.value = _combat.player_hp
 	if _player_atb_bar:
 		_player_atb_bar.value = _combat.player_atb
+	if _limit_bar:
+		_limit_bar.value = _combat.limit
+	if _limit_button:
+		var limit_ready := _combat.limit_ready() and not _finished
+		_limit_button.disabled = not limit_ready
+		# Glow gold when armed so the payoff reads at a glance.
+		_limit_button.modulate = Color(1.0, 0.9, 0.4) if limit_ready else Color.WHITE
 	for i in _mob_views.size():
 		var mob: CombatMob = _combat.mobs[i]
 		_mob_hp_bars[i].max_value = mob.max_hp

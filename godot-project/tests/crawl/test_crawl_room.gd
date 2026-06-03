@@ -39,3 +39,63 @@ func test_scene_builds_hero_inside_room() -> void:
 	add_child(room)
 	assert_object(room._hero).is_not_null()
 	assert_bool(CrawlRoom.ROOM_RECT.has_point(room._hero.position)).is_true()
+
+
+func test_warden_present_until_defeated() -> void:
+	RunState.begin_run()
+	RunState.crawl.warden_defeated = false
+	var room: CrawlRoom = auto_free(CrawlRoom.new())
+	add_child(room)
+	assert_object(room._warden).is_not_null()
+
+
+func test_warden_absent_once_defeated() -> void:
+	RunState.begin_run()
+	RunState.crawl.warden_defeated = true
+	var room: CrawlRoom = auto_free(CrawlRoom.new())
+	add_child(room)
+	assert_object(room._warden).is_null()
+
+
+func test_returning_from_warden_fight_opens_the_door() -> void:
+	# A win is the only way back here, so a pending warden fight resolves to
+	# "defeated" on re-entry — the door opens and the warden is gone.
+	RunState.begin_run()
+	RunState.crawl.warden_fight_pending = true
+	var room: CrawlRoom = auto_free(CrawlRoom.new())
+	add_child(room)
+	assert_bool(RunState.crawl.warden_defeated).is_true()
+	assert_bool(RunState.crawl.warden_fight_pending).is_false()
+	assert_object(room._warden).is_null()
+
+
+func test_bag_overlay_is_built_and_starts_closed() -> void:
+	RunState.begin_run()
+	var room: CrawlRoom = auto_free(CrawlRoom.new())
+	add_child(room)
+	assert_object(room._bag_button).is_not_null()
+	assert_object(room._bag).is_not_null()
+	assert_bool(room._bag.is_open()).is_false()
+	assert_bool(room._bag_open).is_false()
+
+
+func test_overflowing_haul_forces_the_bag_open_on_entry() -> void:
+	RunState.begin_run()
+	var run := RunState.run
+	var loot: Array = []
+	for i in run.carry_cap + 2:                    # two more than the bag holds
+		loot.append(CardInstance.create("c%d" % i, EconomyEnums.Rarity.COMMON))
+	run.apply_room_result(25, loot, loot.size(), loot.size())
+	var room: CrawlRoom = auto_free(CrawlRoom.new())
+	add_child(room)
+	await get_tree().process_frame
+	assert_bool(room._bag_open).is_true()
+	assert_bool(room._bag.is_open()).is_true()
+
+
+func test_hero_restored_to_saved_position() -> void:
+	RunState.begin_run()
+	RunState.crawl.save_hero(Vector2(640, 600))
+	var room: CrawlRoom = auto_free(CrawlRoom.new())
+	add_child(room)
+	assert_vector(room._hero.position).is_equal(Vector2(640, 600))

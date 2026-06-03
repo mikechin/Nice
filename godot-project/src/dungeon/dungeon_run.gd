@@ -28,12 +28,14 @@ const DEFAULT_CARRY_CAP := 6
 var map: RunMap
 var max_hp: int = DEFAULT_MAX_HP
 var hp: int = DEFAULT_MAX_HP
+var limit: float = 0.0                       # LIMIT gauge, carried across encounters this run (fresh per instance)
 var carry_cap: int = DEFAULT_CARRY_CAP
 var depth: int = 0                          # deepest room reached
 var rooms_cleared: int = 0
 var answered: int = 0                        # combat answers this run (debrief only)
 var correct: int = 0
-var haul: Array[CardInstance] = []           # everything grabbed (uncapped until extract)
+var haul: Array[CardInstance] = []           # what you're carrying right now
+var dropped: Array[CardInstance] = []        # tossed mid-run via the loot bag → shards at extract
 var banked: Array[CardInstance] = []         # what came home (set at extract)
 var shattered: Array[CardInstance] = []      # triaged away → shards (set at extract)
 var outcome: DungeonEnums.RunOutcome = DungeonEnums.RunOutcome.ONGOING
@@ -96,6 +98,51 @@ func needs_triage() -> bool:
 	return haul.size() > carry_cap
 
 
+## How many instances over the bag's capacity the player is carrying (0 if it
+## fits). The loot bag uses this to gate "Done" during a forced overflow triage.
+func overflow() -> int:
+	return maxi(0, haul.size() - carry_cap)
+
+
+## Drop one carried instance mid-run (loot-bag triage). It leaves the haul and is
+## queued to shatter into shards at extraction — banked then, forfeit on death,
+## exactly like the rest of the haul, so dropping early still carries the run's
+## risk. Returns true if the instance was carried and is now dropped.
+func drop_instance(ci: CardInstance) -> bool:
+	if is_over():
+		return false
+	var idx := haul.find(ci)
+	if idx == -1:
+		return false
+	haul.remove_at(idx)
+	dropped.append(ci)
+	return true
+
+
+## Reorganize the carried haul (loot-bag drag-reorder). `order` is the desired
+## front-to-back arrangement by object reference; carried instances absent from
+## `order` keep their relative place at the tail, and anything not in the haul is
+## ignored — so a partial or stale order can't lose or duplicate a card.
+func reorder_haul(order: Array) -> void:
+	var arranged: Array[CardInstance] = []
+	for ci in order:
+		if ci is CardInstance and haul.has(ci) and not arranged.has(ci):
+			arranged.append(ci)
+	for ci in haul:
+		if not arranged.has(ci):
+			arranged.append(ci)
+	haul = arranged
+
+
+## Total shards the mid-run drops are worth — a live preview for the loot bag
+## (these credit only at extraction, so this is potential, not banked, value).
+func pending_shards() -> int:
+	var total := 0
+	for ci in dropped:
+		total += ci.shard_value()
+	return total
+
+
 ## Bank the haul and end the run alive. `keep` is the player's triage choice
 ## (a subset of the haul, by object reference); empty → auto-keep the best
 ## `carry_cap` by sort key. Kept → banked, the remainder → shattered (shards).
@@ -119,7 +166,8 @@ func _resolve_haul(keep: Array) -> void:
 			if haul.has(ci) and not kept.has(ci):
 				kept.append(ci)
 	banked = kept
-	shattered = []
+	# Mid-run drops shatter alongside whatever the gate triage leaves behind.
+	shattered = dropped.duplicate()
 	for ci in haul:
 		if not kept.has(ci):
 			shattered.append(ci)

@@ -34,6 +34,73 @@ func test_wrong_answer_does_not_charge() -> void:
 	assert_float(s.player_atb).is_equal(0.0)
 
 
+func test_default_charge_scale_is_unchanged() -> void:
+	var s := _state(10, [_mob(2, 1, 0.0)])   # atb_per_correct 0.5
+	s.answer(true)
+	assert_float(s.player_atb).is_equal(0.5)
+
+
+func test_charge_scale_boosts_the_gain() -> void:
+	var s := _state(10, [_mob(2, 1, 0.0)])   # atb_per_correct 0.5
+	s.answer(true, 1.5)                       # new-card boost
+	assert_float(s.player_atb).is_equal(0.75)
+
+
+func test_charge_limit_accumulates_below_full() -> void:
+	var s := _state(10, [_mob(2, 1, 0.0)])
+	s.limit_per_clutch = 0.3
+	s.charge_limit()                          # one clutch recall
+	assert_float(s.limit).is_equal(0.3)
+	assert_bool(s.limit_ready()).is_false()
+
+
+func test_charge_limit_clamps_to_full() -> void:
+	var s := _state(10, [_mob(2, 1, 0.0)])
+	s.charge_limit(1.5)
+	assert_float(s.limit).is_equal(1.0)
+	assert_bool(s.limit_ready()).is_true()
+
+
+func test_unleash_limit_hits_every_live_mob_and_resets() -> void:
+	var s := _state(10, [_mob(5, 1, 0.0), _mob(5, 1, 0.0)])
+	s.limit_damage = 4
+	s.charge_limit(1.0)
+	var res := s.unleash_limit()
+	assert_int(res["hits"].size()).is_equal(2)
+	assert_int(s.mobs[0].hp).is_equal(1)
+	assert_int(s.mobs[1].hp).is_equal(1)
+	assert_float(s.limit).is_equal(0.0)       # gauge spent
+	assert_bool(s.limit_ready()).is_false()
+
+
+func test_unleash_limit_is_noop_when_not_ready() -> void:
+	var s := _state(10, [_mob(5, 1, 0.0)])
+	var res := s.unleash_limit()
+	assert_bool(res.is_empty()).is_true()
+	assert_int(s.mobs[0].hp).is_equal(5)      # untouched
+
+
+func test_unleash_limit_skips_dead_mobs() -> void:
+	var s := _state(10, [_mob(2, 1, 0.0), _mob(5, 1, 0.0)])
+	s.mobs[0].take_damage(2)                  # mob 0 already dead
+	s.limit_damage = 3
+	s.charge_limit(1.0)
+	var res := s.unleash_limit()
+	assert_int(res["hits"].size()).is_equal(1)
+	assert_int(res["hits"][0]["mob_index"]).is_equal(1)
+	assert_int(s.mobs[1].hp).is_equal(2)
+
+
+func test_clutch_recall_does_not_instant_fill_atb() -> void:
+	# The retune: a clutch recall charges the ATB *normally* (no instant fill),
+	# and banks the LIMIT bar instead.
+	var s := _state(10, [_mob(2, 1, 0.0)])    # atb_per_correct 0.5
+	s.answer(true)                            # normal correct charge
+	s.charge_limit()
+	assert_float(s.player_atb).is_equal(0.5)  # NOT topped to 1.0
+	assert_float(s.limit).is_greater(0.0)
+
+
 func test_hero_attack_hits_and_resets_gauge() -> void:
 	var s := _state(10, [_mob(5, 1, 0.0)], 2, 1.0)  # hero_acc 1.0 → always hits
 	s.answer(true)

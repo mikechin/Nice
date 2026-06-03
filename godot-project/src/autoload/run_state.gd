@@ -16,12 +16,20 @@ extends Node
 var run: DungeonRun = null
 var current_room: RoomNode = null
 
+# Crawler pivot: spatial-crawl state that outlives the crawl→battle→crawl swaps,
+# and the screen combat returns to after a fight ("dungeon_map" for the node-map
+# flow, "crawl" for the spatial flow).
+var crawl: CrawlState = null
+var combat_return_screen: String = "dungeon_map"
+
 
 ## Start a fresh run on the default map at full HP. Returns the new run.
 func begin_run(max_hp: int = DungeonRun.DEFAULT_MAX_HP, carry_cap: int = DungeonRun.DEFAULT_CARRY_CAP) -> DungeonRun:
 	run = DungeonRun.create(RunMap.build_default(), max_hp, carry_cap)
 	current_room = run.map.current()
 	run.reached(current_room)
+	crawl = CrawlState.new()
+	combat_return_screen = "dungeon_map"
 	return run
 
 

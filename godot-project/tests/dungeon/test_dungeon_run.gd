@@ -28,8 +28,99 @@ func test_create_starts_full_and_alive() -> void:
 	assert_int(r.hp).is_equal(30)            # full HP at run start
 	assert_int(r.carry_cap).is_equal(6)
 	assert_bool(r.is_alive()).is_true()
+
+
+func test_create_starts_with_empty_limit_gauge() -> void:
+	# A fresh dungeon instance always starts the LIMIT gauge at 0 — it survives
+	# encounters within a run (combat seeds/writes it) but never across runs.
+	assert_float(_run().limit).is_equal(0.0)
+
+
+func test_limit_persists_across_a_room_result() -> void:
+	var r := _run(30, 6)
+	r.limit = 0.6                            # combat writes the carried charge back
+	r.apply_room_result(20, [], 3, 2)        # clearing a room doesn't touch it
+	assert_float(r.limit).is_equal(0.6)
 	assert_bool(r.is_over()).is_false()
 	assert_int(r.outcome).is_equal(DungeonEnums.RunOutcome.ONGOING)
+
+
+func test_overflow_reports_cards_beyond_cap() -> void:
+	var r := _run(30, 2)
+	assert_int(r.overflow()).is_equal(0)
+	r.apply_room_result(20, [_inst("a"), _inst("b"), _inst("c"), _inst("d")], 4, 4)
+	assert_int(r.overflow()).is_equal(2)        # 4 carried, cap 2
+	r.drop_instance(r.haul[0])
+	r.drop_instance(r.haul[0])
+	assert_int(r.overflow()).is_equal(0)        # back within the bag
+
+
+func test_drop_instance_moves_card_from_haul_to_dropped() -> void:
+	var r := _run(30, 6)
+	var a := _inst("a")
+	var b := _inst("b")
+	r.apply_room_result(20, [a, b], 2, 2)
+	assert_bool(r.drop_instance(a)).is_true()
+	assert_array(_ids(r.haul)).is_equal(["b"])
+	assert_array(_ids(r.dropped)).is_equal(["a"])
+
+
+func test_drop_instance_unknown_is_noop() -> void:
+	var r := _run(30, 6)
+	r.apply_room_result(20, [_inst("a")], 1, 1)
+	assert_bool(r.drop_instance(_inst("ghost"))).is_false()
+	assert_int(r.haul.size()).is_equal(1)
+	assert_array(r.dropped).is_empty()
+
+
+func test_drop_instance_after_run_ends_is_noop() -> void:
+	var r := _run(30, 6)
+	var a := _inst("a")
+	r.apply_room_result(20, [a], 1, 1)
+	r.extract()
+	assert_bool(r.drop_instance(a)).is_false()
+
+
+func test_reorder_haul_rearranges_by_reference() -> void:
+	var r := _run(30, 6)
+	var a := _inst("a")
+	var b := _inst("b")
+	var c := _inst("c")
+	r.apply_room_result(20, [a, b, c], 3, 3)
+	r.reorder_haul([c, a, b])
+	assert_array(_ids(r.haul)).is_equal(["c", "a", "b"])
+
+
+func test_reorder_haul_ignores_unknown_and_keeps_missing_at_tail() -> void:
+	var r := _run(30, 6)
+	var a := _inst("a")
+	var b := _inst("b")
+	var c := _inst("c")
+	r.apply_room_result(20, [a, b, c], 3, 3)
+	# c front; a foreign instance is ignored; a and b keep their order at the tail.
+	r.reorder_haul([c, _inst("foreign")])
+	assert_array(_ids(r.haul)).is_equal(["c", "a", "b"])
+
+
+func test_pending_shards_sums_dropped_values() -> void:
+	var r := _run(30, 6)
+	var a := _inst("a", EconomyEnums.Rarity.RARE)       # shard 8
+	var b := _inst("b", EconomyEnums.Rarity.COMMON)     # shard 1
+	r.apply_room_result(20, [a, b], 2, 2)
+	r.drop_instance(a)
+	r.drop_instance(b)
+	assert_int(r.pending_shards()).is_equal(9)
+
+
+func test_extract_shatters_mid_run_drops_into_shards() -> void:
+	var r := _run(30, 6)
+	var a := _inst("a", EconomyEnums.Rarity.RARE)       # dropped mid-run → shard 8
+	r.apply_room_result(20, [a, _inst("b"), _inst("c")], 3, 3)
+	r.drop_instance(a)
+	r.extract()                                          # within cap → keep b, c
+	assert_array(_ids(r.banked_haul())).contains_exactly_in_any_order(["b", "c"])
+	assert_array(_ids(r.shattered_haul())).is_equal(["a"])
+	assert_int(r.shard_gain()).is_equal(8)
 
 
 func test_room_win_carries_hp_and_haul() -> void:

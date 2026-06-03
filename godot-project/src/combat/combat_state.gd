@@ -30,6 +30,14 @@ var crit_multiplier: float = 2.0   # crit damage multiplier
 var hero_accuracy: float = 0.9     # chance a hero attack lands (cards push → 1.0)
 var hero_block_chance: float = 0.2 # chance to block an incoming mob hit (cards raise)
 
+# Limit break — a SECOND gauge, charged only by clutch (about-to-forget) recalls
+# and by less per hit than the ATB. At full it's spent for one high-damage strike
+# on every living mob. This is the clutch payoff, replacing the old instant ATB
+# fill: clutch saves no longer trivialize tempo, they bank toward a big burst.
+var limit: float = 0.0             # 0..1; at 1.0 a limit break is ready
+var limit_per_clutch: float = 0.2  # charge added per clutch recall (< atb_per_correct)
+var limit_damage: int = 1          # flat damage the break deals to ALL live mobs
+
 var mobs: Array[CombatMob] = []
 var rng: RandomNumberGenerator
 var _target_index: int = -1
@@ -81,14 +89,47 @@ func player_attack_ready() -> bool:
 	return player_atb >= 1.0
 
 
-## Apply an answer's effect on the player gauge. Correct → charge ATB; wrong
-## → nothing (lost tempo). The FSRS commit and the follow-up attack are the
-## caller's job.
-func answer(correct: bool) -> void:
+## Apply an answer's effect on the player gauge. Correct → charge ATB by
+## atb_per_correct × charge_scale; wrong → nothing (lost tempo). The scale lets
+## the caller reward special cards (e.g. a new card charges 1.5×). The FSRS
+## commit and the follow-up attack are the caller's job.
+func answer(correct: bool, charge_scale: float = 1.0) -> void:
 	if is_over():
 		return
 	if correct:
-		player_atb = minf(1.0, player_atb + atb_per_correct)
+		player_atb = minf(1.0, player_atb + atb_per_correct * maxf(0.0, charge_scale))
+
+
+func limit_ready() -> bool:
+	return limit >= 1.0
+
+
+## Charge the limit gauge — the reward for a correct clutch (about-to-forget)
+## recall. Adds limit_per_clutch (or an explicit amount), clamped to full. The
+## caller gates this on correctness + clutch; deliberately NOT an ATB fill.
+func charge_limit(amount: float = -1.0) -> void:
+	if is_over():
+		return
+	var add := limit_per_clutch if amount < 0.0 else amount
+	limit = minf(1.0, limit + maxf(0.0, add))
+
+
+## Spend a full limit gauge: one high-damage strike on EVERY living mob. Flat
+## limit_damage, no miss/crit — a guaranteed payoff. Resets the gauge and
+## retargets. Returns {hits:[{mob_index, damage, killed}]} or {} if not ready.
+func unleash_limit() -> Dictionary:
+	if is_over() or not limit_ready():
+		return {}
+	limit = 0.0
+	var hits: Array = []
+	for i in mobs.size():
+		var m: CombatMob = mobs[i]
+		if not m.is_alive():
+			continue
+		m.take_damage(limit_damage)
+		hits.append({"mob_index": i, "damage": limit_damage, "killed": not m.is_alive()})
+	_retarget()
+	return {"hits": hits}
 
 
 ## Spend a full gauge to strike the current target. Returns a result dict
