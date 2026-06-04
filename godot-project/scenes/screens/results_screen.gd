@@ -15,6 +15,7 @@ extends Control
 @onready var _main_menu_button: Button = $ButtonContainer/MainMenuButton if has_node("ButtonContainer/MainMenuButton") else null
 
 var _result_data: Dictionary = {}
+var _is_dungeon: bool = false   # dungeon runs return to the Town hub, not the menu
 
 
 func _ready() -> void:
@@ -84,6 +85,14 @@ func _display_results() -> void:
 ## — the FSRS commits already landed in combat.
 func _display_dungeon_results() -> void:
 	var extracted: bool = _result_data.get("extracted", false)
+	_is_dungeon = true
+
+	# The dungeon loop returns to the Town hub (re-equip, craft, shop) — the menu
+	# stays reachable as the secondary action.
+	if _play_again_button:
+		_play_again_button.text = "Return to Town"
+	if _main_menu_button:
+		_main_menu_button.text = "Main Menu"
 
 	if _title_label:
 		_title_label.text = "Extracted!" if extracted else "You Died"
@@ -147,7 +156,7 @@ static func _format_hand_cards(hand_cards: Array) -> String:
 
 func _on_play_again_pressed() -> void:
 	AudioManager.play_sfx("button_tap")
-	SignalBus.screen_transition_requested.emit("run_select")
+	SignalBus.screen_transition_requested.emit("town" if _is_dungeon else "run_select")
 
 
 func _on_main_menu_pressed() -> void:
