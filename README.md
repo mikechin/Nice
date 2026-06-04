@@ -5,25 +5,42 @@ An SRS-powered Chinese character flashcard app disguised as an addictive card-co
 ## Quick Start
 
 1. Install [Godot 4.3+](https://godotengine.org/download)
-2. Open `godot-project/project.godot` in the Godot editor
-3. Install GdUnit4 addon into `godot-project/addons/gdUnit4/`
-4. Run the project
+2. Clone the repo and verify your environment:
+
+   ```bash
+   git clone git@github.com:mikechin/Nice.git
+   cd Nice
+   ./setup.sh   # checks Godot, confirms the bundled GdUnit4 addon, runs the test suite
+   ```
+
+3. Open `godot-project/project.godot` in the Godot editor to play or develop.
+
+GdUnit4 (the test framework) is bundled under `godot-project/addons/gdUnit4/` — no separate install needed.
+
+## Tests
+
+Run the full suite headless from the `godot-project/` directory:
+
+```bash
+cd godot-project
+godot --headless -s addons/gdUnit4/bin/GdUnitCmdTool.gd -a tests -c --ignoreHeadlessMode
+```
+
+`setup.sh` runs exactly this after verifying your environment.
 
 ## Using Claude Code
 
 This project is structured for development with [Claude Code](https://docs.claude.com/en/docs/claude-code/overview). The `CLAUDE.md` file contains the full project context, design decisions, and conventions.
 
 ```bash
-cd chinese-card-game
+cd Nice
 claude
 ```
 
 Claude Code will read `CLAUDE.md` automatically and understand the entire project.
 
-### Suggested first commands:
-- "Port the FSRS algorithm from ts-fsrs to GDScript in src/srs/"
-- "Fill in the character database with complete HSK 2 data"
-- "Build the pack-opening loop for Phase 1"
+### Where to start
+The core systems (SRS engine, HSK data, pack-opening, economy, combat) are already built. See `docs/planning.md` for the build plan and current phase, and read `CLAUDE.md` for conventions before making changes.
 
 ## Project Structure
 
