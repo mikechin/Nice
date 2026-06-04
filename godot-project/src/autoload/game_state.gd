@@ -114,6 +114,20 @@ func bank_haul(kept: Array, shattered: Array) -> Dictionary:
 	return { "banked": banked, "shards": shards }
 
 
+## Shatter a bench instance into shards in town (the Crafter's shard service).
+## Removes it from the bench and credits the wallet. Returns the shards gained
+## (0 if the instance isn't on the bench).
+func shatter_instance(instance_id: String) -> int:
+	_ensure_economy()
+	var ci := inventory.get_instance(instance_id)
+	if ci == null:
+		return 0
+	var shards := ci.shard_value()
+	inventory.remove(instance_id)
+	wallet.add(shards)
+	return shards
+
+
 func get_today_date() -> String:
 	var dt := Time.get_datetime_dict_from_system()
 	return "%04d-%02d-%02d" % [dt["year"], dt["month"], dt["day"]]

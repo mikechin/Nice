@@ -13,12 +13,31 @@ extends Control
 func _ready() -> void:
 	_warn_missing_nodes()
 	_connect_buttons()
+	_add_town_button()
 	_add_debug_combat_button()
 	_add_debug_crawl_button()
 	_add_debug_srs_buttons()
 	_update_displays()
 	GameState.check_daily_reset()
 	AudioManager.play_music("main_menu")
+
+
+## The town hub (M4) — the between-runs home for loadout, crafting, and the shop.
+## Added in code (like the debug entries) so it doesn't disturb main_menu.tscn;
+## the dungeon is reached from inside the town. The Phase-1/2 "Play" path stays
+## untouched for now — retiring it is the deferred post-M4 structural sweep.
+func _add_town_button() -> void:
+	var vbox := get_node_or_null("VBoxContainer")
+	if vbox == null:
+		return
+	var btn := Button.new()
+	btn.text = "Town"
+	btn.pressed.connect(func() -> void:
+		AudioManager.play_sfx("button_tap")
+		SignalBus.screen_transition_requested.emit("town"))
+	# Place it just under Play so the hub reads as the primary destination.
+	vbox.add_child(btn)
+	vbox.move_child(btn, 1)
 
 
 ## DEBUG (M2): temporary entry into the dungeon run. Built in code so it
