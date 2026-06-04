@@ -4,6 +4,7 @@
     "pinyin": "a",
     "tone": 0,
     "meaning": "particle (exclamation)",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "口"
@@ -20,6 +21,7 @@
     "pinyin": "ān",
     "tone": 1,
     "meaning": "safe, peaceful",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "宀"
@@ -36,6 +38,7 @@
     "pinyin": "bǎ",
     "tone": 3,
     "meaning": "to hold, MW",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [
       "扌"
@@ -52,6 +55,7 @@
     "pinyin": "bān",
     "tone": 1,
     "meaning": "to move (objects)",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [
       "扌"
@@ -68,6 +72,7 @@
     "pinyin": "bàn",
     "tone": 4,
     "meaning": "to handle",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -79,6 +84,7 @@
     "pinyin": "bàn",
     "tone": 4,
     "meaning": "half",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -90,6 +96,7 @@
     "pinyin": "bāo",
     "tone": 1,
     "meaning": "to wrap, bag",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "勹"
@@ -106,6 +113,7 @@
     "pinyin": "běi",
     "tone": 3,
     "meaning": "north",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -117,6 +125,7 @@
     "pinyin": "bèi",
     "tone": 4,
     "meaning": "by (passive), quilt",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "衤"
@@ -133,6 +142,7 @@
     "pinyin": "bí",
     "tone": 2,
     "meaning": "nose",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -144,6 +154,7 @@
     "pinyin": "biàn",
     "tone": 4,
     "meaning": "to change",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -155,6 +166,7 @@
     "pinyin": "biǎo",
     "tone": 3,
     "meaning": "surface, watch, form",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -166,6 +178,7 @@
     "pinyin": "bīng",
     "tone": 1,
     "meaning": "ice",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "冫"
@@ -182,6 +195,7 @@
     "pinyin": "cái",
     "tone": 2,
     "meaning": "just now, talent",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -193,6 +207,7 @@
     "pinyin": "cài",
     "tone": 4,
     "meaning": "dish, vegetable",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "艹"
@@ -209,6 +224,7 @@
     "pinyin": "cǎo",
     "tone": 3,
     "meaning": "grass",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "艹"
@@ -225,6 +241,7 @@
     "pinyin": "céng",
     "tone": 2,
     "meaning": "layer, floor",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "尸"
@@ -241,6 +258,7 @@
     "pinyin": "chà",
     "tone": 4,
     "meaning": "to lack, poor",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -252,6 +270,7 @@
     "pinyin": "chāo",
     "tone": 1,
     "meaning": "to exceed, super",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [
       "走"
@@ -268,6 +287,7 @@
     "pinyin": "chéng",
     "tone": 2,
     "meaning": "to become, success",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -279,6 +299,7 @@
     "pinyin": "chéng",
     "tone": 2,
     "meaning": "city",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "土"
@@ -295,6 +316,7 @@
     "pinyin": "chí",
     "tone": 2,
     "meaning": "late",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "辶"
@@ -311,6 +333,7 @@
     "pinyin": "chú",
     "tone": 2,
     "meaning": "to remove, except",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [
       "阝"
@@ -327,6 +350,7 @@
     "pinyin": "chuán",
     "tone": 2,
     "meaning": "boat, ship",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [
       "舟"
@@ -343,6 +367,7 @@
     "pinyin": "chūn",
     "tone": 1,
     "meaning": "spring (season)",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "日"
@@ -359,6 +384,7 @@
     "pinyin": "cí",
     "tone": 2,
     "meaning": "word",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "讠"
@@ -375,6 +401,7 @@
     "pinyin": "cōng",
     "tone": 1,
     "meaning": "clever, smart",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "耳"
@@ -391,6 +418,7 @@
     "pinyin": "dá",
     "tone": 2,
     "meaning": "to answer",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "竹"
@@ -407,6 +435,7 @@
     "pinyin": "dài",
     "tone": 4,
     "meaning": "to bring, belt",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -418,6 +447,7 @@
     "pinyin": "dān",
     "tone": 1,
     "meaning": "to carry, worry",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [
       "扌"
@@ -434,6 +464,7 @@
     "pinyin": "dàn",
     "tone": 4,
     "meaning": "egg",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "虫"
@@ -450,6 +481,7 @@
     "pinyin": "dāng",
     "tone": 1,
     "meaning": "when, to serve as",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -461,6 +493,7 @@
     "pinyin": "dēng",
     "tone": 1,
     "meaning": "lamp, light",
+    "effect": "burn",
     "hsk_level": 3,
     "radicals": [
       "火"
@@ -477,6 +510,7 @@
     "pinyin": "dì",
     "tone": 4,
     "meaning": "earth, ground",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "土"
@@ -493,6 +527,7 @@
     "pinyin": "diào",
     "tone": 4,
     "meaning": "to adjust, tone",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "讠"
@@ -509,6 +544,7 @@
     "pinyin": "dōng",
     "tone": 1,
     "meaning": "east",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -520,6 +556,7 @@
     "pinyin": "dōng",
     "tone": 1,
     "meaning": "winter",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "冫"
@@ -536,6 +573,7 @@
     "pinyin": "dòng",
     "tone": 4,
     "meaning": "to move",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [
       "力"
@@ -552,6 +590,7 @@
     "pinyin": "duǎn",
     "tone": 3,
     "meaning": "short",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "矢"
@@ -568,6 +607,7 @@
     "pinyin": "duàn",
     "tone": 4,
     "meaning": "section, paragraph",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -579,6 +619,7 @@
     "pinyin": "duàn",
     "tone": 4,
     "meaning": "to forge, exercise",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [
       "钅"
@@ -595,6 +636,7 @@
     "pinyin": "duō",
     "tone": 1,
     "meaning": "many, much",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -606,6 +648,7 @@
     "pinyin": "è",
     "tone": 4,
     "meaning": "hungry",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "食"
@@ -622,6 +665,7 @@
     "pinyin": "ěr",
     "tone": 3,
     "meaning": "ear",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -633,6 +677,7 @@
     "pinyin": "fā",
     "tone": 1,
     "meaning": "to send, hair",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -644,6 +689,7 @@
     "pinyin": "fāng",
     "tone": 1,
     "meaning": "direction, square",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -655,6 +701,7 @@
     "pinyin": "fàng",
     "tone": 4,
     "meaning": "to put, to release",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [
       "攵"
@@ -671,6 +718,7 @@
     "pinyin": "fèi",
     "tone": 4,
     "meaning": "expense, fee",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "贝"
@@ -687,6 +735,7 @@
     "pinyin": "fēn",
     "tone": 1,
     "meaning": "to divide, minute",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "刂"
@@ -703,6 +752,7 @@
     "pinyin": "fù",
     "tone": 4,
     "meaning": "to attach, nearby",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "阝"
@@ -719,6 +769,7 @@
     "pinyin": "gān",
     "tone": 1,
     "meaning": "dry, to do",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -730,6 +781,7 @@
     "pinyin": "gǎn",
     "tone": 3,
     "meaning": "to feel, emotion",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "忄"
@@ -746,6 +798,7 @@
     "pinyin": "gāng",
     "tone": 1,
     "meaning": "just now, hard",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [
       "刂"
@@ -762,6 +815,7 @@
     "pinyin": "gāo",
     "tone": 1,
     "meaning": "tall, high",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -773,6 +827,7 @@
     "pinyin": "gēn",
     "tone": 1,
     "meaning": "root, MW",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "木"
@@ -789,6 +844,7 @@
     "pinyin": "gèng",
     "tone": 4,
     "meaning": "even more",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -800,6 +856,7 @@
     "pinyin": "guān",
     "tone": 1,
     "meaning": "to close, related",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -811,6 +868,7 @@
     "pinyin": "guǎn",
     "tone": 3,
     "meaning": "to manage, pipe",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "竹"
@@ -827,6 +885,7 @@
     "pinyin": "guāng",
     "tone": 1,
     "meaning": "light",
+    "effect": "burn",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -838,6 +897,7 @@
     "pinyin": "guǎng",
     "tone": 3,
     "meaning": "wide, broad",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -849,6 +909,7 @@
     "pinyin": "guǒ",
     "tone": 3,
     "meaning": "fruit, result",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "木"
@@ -865,6 +926,7 @@
     "pinyin": "hài",
     "tone": 4,
     "meaning": "to harm, scared",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [
       "宀"
@@ -881,6 +943,7 @@
     "pinyin": "hàn",
     "tone": 4,
     "meaning": "Chinese, man",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [
       "氵"
@@ -897,6 +960,7 @@
     "pinyin": "hé",
     "tone": 2,
     "meaning": "river",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "氵"
@@ -913,6 +977,7 @@
     "pinyin": "hù",
     "tone": 4,
     "meaning": "to protect",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "扌"
@@ -929,6 +994,7 @@
     "pinyin": "huà",
     "tone": 4,
     "meaning": "to draw, painting",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "田"
@@ -945,6 +1011,7 @@
     "pinyin": "huài",
     "tone": 4,
     "meaning": "bad, broken",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [
       "土"
@@ -961,6 +1028,7 @@
     "pinyin": "huàn",
     "tone": 4,
     "meaning": "to change, exchange",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [
       "扌"
@@ -977,6 +1045,7 @@
     "pinyin": "huáng",
     "tone": 2,
     "meaning": "yellow",
+    "effect": "burn",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -988,6 +1057,7 @@
     "pinyin": "huí",
     "tone": 2,
     "meaning": "to return, MW",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [
       "囗"
@@ -1004,6 +1074,7 @@
     "pinyin": "huò",
     "tone": 4,
     "meaning": "or, perhaps",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -1015,6 +1086,7 @@
     "pinyin": "jí",
     "tone": 2,
     "meaning": "extremely, pole",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [
       "木"
@@ -1031,6 +1103,7 @@
     "pinyin": "jì",
     "tone": 4,
     "meaning": "to remember, note",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "讠"
@@ -1047,6 +1120,7 @@
     "pinyin": "jì",
     "tone": 4,
     "meaning": "season",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "子"
@@ -1063,6 +1137,7 @@
     "pinyin": "jiǎn",
     "tone": 3,
     "meaning": "to inspect",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "木"
@@ -1079,6 +1154,7 @@
     "pinyin": "jiǎn",
     "tone": 3,
     "meaning": "simple",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "竹"
@@ -1095,6 +1171,7 @@
     "pinyin": "jiàn",
     "tone": 4,
     "meaning": "healthy, strong",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "亻"
@@ -1111,6 +1188,7 @@
     "pinyin": "jiàn",
     "tone": 4,
     "meaning": "to see",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -1122,6 +1200,7 @@
     "pinyin": "jiǎo",
     "tone": 3,
     "meaning": "corner, angle",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -1133,6 +1212,7 @@
     "pinyin": "jiǎo",
     "tone": 3,
     "meaning": "foot",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [
       "月"
@@ -1149,6 +1229,7 @@
     "pinyin": "jiē",
     "tone": 1,
     "meaning": "to receive, connect",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "扌"
@@ -1165,6 +1246,7 @@
     "pinyin": "jié",
     "tone": 2,
     "meaning": "festival, section",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "艹"
@@ -1181,6 +1263,7 @@
     "pinyin": "jié",
     "tone": 2,
     "meaning": "to tie, result",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "纟"
@@ -1197,6 +1280,7 @@
     "pinyin": "jiě",
     "tone": 3,
     "meaning": "to solve, explain",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "角"
@@ -1214,6 +1298,7 @@
     "pinyin": "jīng",
     "tone": 1,
     "meaning": "to pass through",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [
       "纟"
@@ -1230,6 +1315,7 @@
     "pinyin": "jiǔ",
     "tone": 3,
     "meaning": "long time",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -1241,6 +1327,7 @@
     "pinyin": "jiù",
     "tone": 4,
     "meaning": "old (things)",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "日"
@@ -1257,6 +1344,7 @@
     "pinyin": "jǔ",
     "tone": 3,
     "meaning": "to raise, to hold",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -1268,6 +1356,7 @@
     "pinyin": "jù",
     "tone": 4,
     "meaning": "sentence, MW",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "口"
@@ -1284,6 +1373,7 @@
     "pinyin": "jué",
     "tone": 2,
     "meaning": "to decide",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [
       "冫"
@@ -1300,6 +1390,7 @@
     "pinyin": "kè",
     "tone": 4,
     "meaning": "quarter hour, to carve",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "刂"
@@ -1316,6 +1407,7 @@
     "pinyin": "kè",
     "tone": 4,
     "meaning": "guest",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "宀"
@@ -1332,6 +1424,7 @@
     "pinyin": "kōng",
     "tone": 1,
     "meaning": "empty, sky",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [
       "穴"
@@ -1348,6 +1441,7 @@
     "pinyin": "kǒu",
     "tone": 3,
     "meaning": "mouth",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -1359,6 +1453,7 @@
     "pinyin": "kǔ",
     "tone": 3,
     "meaning": "bitter, hard",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "艹"
@@ -1375,6 +1470,7 @@
     "pinyin": "kù",
     "tone": 4,
     "meaning": "pants",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "衤"
@@ -1391,6 +1487,7 @@
     "pinyin": "kuài",
     "tone": 4,
     "meaning": "chopsticks",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "竹"
@@ -1407,6 +1504,7 @@
     "pinyin": "lán",
     "tone": 2,
     "meaning": "blue",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "艹"
@@ -1423,6 +1521,7 @@
     "pinyin": "lǎo",
     "tone": 3,
     "meaning": "old (people)",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -1434,6 +1533,7 @@
     "pinyin": "le",
     "tone": 0,
     "meaning": "particle (completed)",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -1445,6 +1545,7 @@
     "pinyin": "lèi",
     "tone": 4,
     "meaning": "tired",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "田"
@@ -1461,6 +1562,7 @@
     "pinyin": "lěng",
     "tone": 3,
     "meaning": "cold",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "冫"
@@ -1477,6 +1579,7 @@
     "pinyin": "lǐ",
     "tone": 3,
     "meaning": "plum, surname Li",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "木"
@@ -1493,6 +1596,7 @@
     "pinyin": "lǐ",
     "tone": 3,
     "meaning": "ceremony, gift",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "礻"
@@ -1509,6 +1613,7 @@
     "pinyin": "lì",
     "tone": 4,
     "meaning": "strength, power",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -1520,6 +1625,7 @@
     "pinyin": "lì",
     "tone": 4,
     "meaning": "history, calendar",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -1531,6 +1637,7 @@
     "pinyin": "liàn",
     "tone": 4,
     "meaning": "to practice",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [
       "纟"
@@ -1547,6 +1654,7 @@
     "pinyin": "liàng",
     "tone": 4,
     "meaning": "bright",
+    "effect": "burn",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -1558,6 +1666,7 @@
     "pinyin": "liàng",
     "tone": 4,
     "meaning": "MW for vehicles",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [
       "车"
@@ -1574,6 +1683,7 @@
     "pinyin": "lín",
     "tone": 2,
     "meaning": "forest",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "木"
@@ -1590,6 +1700,7 @@
     "pinyin": "lóu",
     "tone": 2,
     "meaning": "building, floor",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "木"
@@ -1606,6 +1717,7 @@
     "pinyin": "lǜ",
     "tone": 4,
     "meaning": "green",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "纟"
@@ -1622,6 +1734,7 @@
     "pinyin": "mǎn",
     "tone": 3,
     "meaning": "full",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "氵"
@@ -1638,6 +1751,7 @@
     "pinyin": "mào",
     "tone": 4,
     "meaning": "hat",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "巾"
@@ -1654,6 +1768,7 @@
     "pinyin": "mǐ",
     "tone": 3,
     "meaning": "rice, meter",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -1665,6 +1780,7 @@
     "pinyin": "míng",
     "tone": 2,
     "meaning": "bright, clear",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "日"
@@ -1681,6 +1797,7 @@
     "pinyin": "ná",
     "tone": 2,
     "meaning": "to take, to hold",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [
       "扌"
@@ -1697,6 +1814,7 @@
     "pinyin": "nǎi",
     "tone": 3,
     "meaning": "grandmother, milk",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "女"
@@ -1713,6 +1831,7 @@
     "pinyin": "nán",
     "tone": 2,
     "meaning": "south",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -1724,6 +1843,7 @@
     "pinyin": "nán",
     "tone": 2,
     "meaning": "difficult",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -1735,6 +1855,7 @@
     "pinyin": "nián",
     "tone": 2,
     "meaning": "year",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -1746,6 +1867,7 @@
     "pinyin": "niǎo",
     "tone": 3,
     "meaning": "bird",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -1757,6 +1879,7 @@
     "pinyin": "nǔ",
     "tone": 3,
     "meaning": "to exert",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [
       "力"
@@ -1773,6 +1896,7 @@
     "pinyin": "pá",
     "tone": 2,
     "meaning": "to climb",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [
       "爪"
@@ -1789,6 +1913,7 @@
     "pinyin": "pán",
     "tone": 2,
     "meaning": "plate, dish",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "皿"
@@ -1805,6 +1930,7 @@
     "pinyin": "pàng",
     "tone": 4,
     "meaning": "fat",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "月"
@@ -1821,6 +1947,7 @@
     "pinyin": "pí",
     "tone": 2,
     "meaning": "skin, leather",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -1832,6 +1959,7 @@
     "pinyin": "pí",
     "tone": 2,
     "meaning": "beer",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "口"
@@ -1848,6 +1976,7 @@
     "pinyin": "piàn",
     "tone": 4,
     "meaning": "piece, slice",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -1859,6 +1988,7 @@
     "pinyin": "píng",
     "tone": 2,
     "meaning": "bottle",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "瓦"
@@ -1875,6 +2005,7 @@
     "pinyin": "qí",
     "tone": 2,
     "meaning": "its, that",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -1886,6 +2017,7 @@
     "pinyin": "qí",
     "tone": 2,
     "meaning": "strange, wonderful",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "大"
@@ -1902,6 +2034,7 @@
     "pinyin": "qí",
     "tone": 2,
     "meaning": "to ride",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [
       "马"
@@ -1918,6 +2051,7 @@
     "pinyin": "qīng",
     "tone": 1,
     "meaning": "light (weight)",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [
       "车"
@@ -1934,6 +2068,7 @@
     "pinyin": "qiū",
     "tone": 1,
     "meaning": "autumn",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "禾"
@@ -1950,6 +2085,7 @@
     "pinyin": "qún",
     "tone": 2,
     "meaning": "skirt",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "衤"
@@ -1966,6 +2102,7 @@
     "pinyin": "rán",
     "tone": 2,
     "meaning": "so, like that",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "灬"
@@ -1982,6 +2119,7 @@
     "pinyin": "rè",
     "tone": 4,
     "meaning": "hot",
+    "effect": "burn",
     "hsk_level": 3,
     "radicals": [
       "灬"
@@ -1998,6 +2136,7 @@
     "pinyin": "rèn",
     "tone": 4,
     "meaning": "to recognize",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "讠"
@@ -2014,6 +2153,7 @@
     "pinyin": "róng",
     "tone": 2,
     "meaning": "to contain, face",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "宀"
@@ -2030,6 +2170,7 @@
     "pinyin": "rú",
     "tone": 2,
     "meaning": "if, like",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "女"
@@ -2046,6 +2187,7 @@
     "pinyin": "sǎn",
     "tone": 3,
     "meaning": "umbrella",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [
       "亻"
@@ -2062,6 +2204,7 @@
     "pinyin": "shēng",
     "tone": 1,
     "meaning": "sound, voice",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -2073,6 +2216,7 @@
     "pinyin": "shì",
     "tone": 4,
     "meaning": "world, era",
+    "effect": "ward",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -2084,6 +2228,7 @@
     "pinyin": "shì",
     "tone": 4,
     "meaning": "to try, test",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "讠"
@@ -2100,6 +2245,7 @@
     "pinyin": "shòu",
     "tone": 4,
     "meaning": "thin, skinny",
+    "effect": "surge",
     "hsk_level": 3,
     "radicals": [
       "疒"
@@ -2116,6 +2262,7 @@
     "pinyin": "shù",
     "tone": 4,
     "meaning": "tree",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "木"
@@ -2132,6 +2279,7 @@
     "pinyin": "shuāng",
     "tone": 1,
     "meaning": "pair, double",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [
       "又"
@@ -2148,6 +2296,7 @@
     "pinyin": "sǐ",
     "tone": 3,
     "meaning": "to die, dead",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [
       "歹"
@@ -2164,6 +2313,7 @@
     "pinyin": "suàn",
     "tone": 4,
     "meaning": "to calculate",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "竹"
@@ -2181,6 +2331,7 @@
     "pinyin": "tài",
     "tone": 4,
     "meaning": "too, very",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [],
     "components": [],
@@ -2192,6 +2343,7 @@
     "pinyin": "tè",
     "tone": 4,
     "meaning": "special",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "牛"
@@ -2208,6 +2360,7 @@
     "pinyin": "téng",
     "tone": 2,
     "meaning": "pain, to ache",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "疒"
@@ -2224,6 +2377,7 @@
     "pinyin": "tí",
     "tone": 2,
     "meaning": "to carry, raise",
+    "effect": "strike",
     "hsk_level": 3,
     "radicals": [
       "扌"
@@ -2240,6 +2394,7 @@
     "pinyin": "tián",
     "tone": 2,
     "meaning": "sweet",
+    "effect": "mend",
     "hsk_level": 3,
     "radicals": [
       "甘"
@@ -2256,6 +2411,7 @@
     "pinyin": "tīng",
     "tone": 1,
     "meaning": "to listen",
+    "effect": "focus",
     "hsk_level": 3,
     "radicals": [
       "口"
