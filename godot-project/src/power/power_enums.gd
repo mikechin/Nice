@@ -1,9 +1,12 @@
-## PowerEnums — Base-power constants for the board-game phase.
+## PowerEnums — Base-power constants for the legacy Phase-1/2 board-game phase.
 ##
-## Power is **inverted** vs. SRS mastery: cards you barely know are the
-## strongest on the board, cards you know cold are the weakest. This drives
-## the natural risk/reward — your scariest cards are the ones you understand
-## least. See planning.md "Phase 1 Draft Phase" for the rationale.
+## DEPRECATED (Phase 3, M5): this inverted curve — barely-known cards are the
+## strongest — was OVERTURNED by the design. Combat power now comes from what you
+## EARNED (rolled rarity × PSA grade), not from poor knowledge — see InstancePower
+## and the EffectEnums/EffectPalette/CombatLoadout pipeline. This table is consumed
+## only by the dying HandCard → "Run Complete!" path (challenge_presenter → run_manager
+## → session_data) and is slated for deletion with that loop in the post-M4 structural
+## sweep. Do NOT wire new power off it; left intact only so existing saves still load.
 class_name PowerEnums
 extends RefCounted
 

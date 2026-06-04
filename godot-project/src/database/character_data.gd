@@ -11,6 +11,10 @@ extends Resource
 @export var components: Array[String] = []
 @export var is_radical: bool = false
 @export var frequency_rank: int = 0
+## M5 combat ability, as a curated EffectKind name ("burn"/"mend"/…). Empty means
+## "derive from meaning" (EffectPalette). The one-time HSK 2–3 curation pass fills
+## this; until then it's blank and the palette's keyword/fallback path is used.
+@export var effect: String = ""
 
 static func from_dict(data: Dictionary) -> CharacterData:
 	var cd := CharacterData.new()
@@ -21,6 +25,7 @@ static func from_dict(data: Dictionary) -> CharacterData:
 	cd.hsk_level = data.get("hsk_level", 2)
 	cd.is_radical = data.get("is_radical", false)
 	cd.frequency_rank = data.get("frequency_rank", 0)
+	cd.effect = data.get("effect", "")
 
 	var raw_radicals: Array = data.get("radicals", [])
 	for r in raw_radicals:
@@ -43,6 +48,7 @@ func to_dict() -> Dictionary:
 		"components": Array(components),
 		"is_radical": is_radical,
 		"frequency_rank": frequency_rank,
+		"effect": effect,
 	}
 
 ## Get the base pinyin without tone marks (for comparison/grouping).

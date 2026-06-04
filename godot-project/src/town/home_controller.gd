@@ -10,6 +10,8 @@
 class_name HomeController
 extends Control
 
+const EFFECT_COLOR := Color(0.62, 0.82, 0.66)
+
 
 func _ready() -> void:
 	_ensure_economy()
@@ -34,6 +36,12 @@ func _build_loadout_panel() -> void:
 	var heading := TownUi.label("Loadout — your stake", 28)
 	heading.position = Vector2(28, 20)
 	panel.add_child(heading)
+
+	# What the whole kit grants in a fight (M5) — the sum the dungeon will apply.
+	var mods := CombatLoadout.assemble(GameState.loadout, GameState.character_db)
+	var kit := TownUi.colored_label("In combat:  " + mods.summary(), 18, EFFECT_COLOR)
+	kit.position = Vector2(28, 52)
+	panel.add_child(kit)
 
 	var list := VBoxContainer.new()
 	list.position = Vector2(28, 80)
@@ -61,9 +69,16 @@ func _slot_row(index: int, lo: Loadout) -> Control:
 		empty.custom_minimum_size = Vector2(420, 0)
 		row.add_child(empty)
 	else:
-		var lbl := TownUi.label(TownUi.instance_text(ci), 22)
-		lbl.custom_minimum_size = Vector2(420, 0)
-		row.add_child(lbl)
+		# Card identity on top, its combat effect (scaled by rarity×grade and this
+		# slot's role-match) on the line beneath — so the kit's shape is legible.
+		var cell := VBoxContainer.new()
+		cell.custom_minimum_size = Vector2(420, 0)
+		cell.add_theme_constant_override("separation", 2)
+		cell.add_child(TownUi.label(TownUi.instance_text(ci), 22))
+		var passive := lo.slot_role(index) == Loadout.SlotRole.PASSIVE
+		var eff := CombatLoadout.describe_card(ci, passive, GameState.character_db)
+		cell.add_child(TownUi.colored_label(eff, 16, EFFECT_COLOR))
+		row.add_child(cell)
 		var btn := TownUi.button("Unequip")
 		btn.pressed.connect(func() -> void:
 			AudioManager.play_sfx("button_tap")
@@ -99,8 +114,15 @@ func _bench_row(ci: CardInstance, loadout_full: bool) -> Control:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 14)
 	var lbl := TownUi.label(TownUi.instance_text(ci), 22)
-	lbl.custom_minimum_size = Vector2(560, 0)
+	lbl.custom_minimum_size = Vector2(430, 0)
 	row.add_child(lbl)
+
+	# The ability this card would grant (kind only — the role-match scaling depends
+	# on which slot you drop it into, shown on the loadout side).
+	var kind := EffectPalette.kind_for_char(ci.card_id, GameState.character_db)
+	var tag := TownUi.colored_label(EffectEnums.kind_name(kind), 18, EFFECT_COLOR)
+	tag.custom_minimum_size = Vector2(120, 0)
+	row.add_child(tag)
 
 	var btn := TownUi.button("Equip")
 	btn.disabled = loadout_full

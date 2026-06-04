@@ -57,6 +57,9 @@ var _answer_generator: AnswerGenerator
 var _answer_input: AnswerInput
 var _rng: RandomNumberGenerator
 var _combat: CombatState
+# The equipped kit's combat contribution (M5): passive bonuses folded into the
+# CombatState below, active riders (burn/heal) fired on each correct answer.
+var _mods: CombatMods
 
 # Dungeon context (null when launched standalone / from the debug button).
 # When present, HP is seeded from and written back to the run, the card queue
@@ -107,6 +110,7 @@ var _mob_origins: Array[Vector2] = []
 var _player_atb_bar: ProgressBar
 var _limit_bar: ProgressBar
 var _limit_button: Button
+var _kit_label: Label                # compact readout of the staked kit's bonuses (M5)
 var _card_display: CardDisplay
 var _challenge_label: Label
 var _answer_buttons: Dictionary = {}
@@ -133,10 +137,21 @@ func _ready() -> void:
 	_build_play_area()
 	_build_info_panel()
 	_card_queue = _build_card_queue()
-	var max_hp := _run.max_hp if _run != null else PLAYER_HP
-	_combat = CombatState.create(max_hp, _build_mobs(), ATB_PER_CORRECT, ATTACK_DAMAGE, HERO_ACCURACY, HERO_BLOCK)
+	# The kit you staked turns into combat bonuses (M5). Passive kinds raise the
+	# fight's setup stats; active kinds (burn/heal) fire per correct answer below.
+	_mods = CombatLoadout.assemble(GameState.loadout, GameState.character_db)
+	if _kit_label:
+		_kit_label.text = "Kit: " + _mods.summary()
+	var base_hp := _run.max_hp if _run != null else PLAYER_HP
+	var max_hp := base_hp + _mods.max_hp_i()
+	_combat = CombatState.create(
+		max_hp, _build_mobs(), ATB_PER_CORRECT,
+		ATTACK_DAMAGE + _mods.attack_i(),
+		HERO_ACCURACY + _mods.accuracy,
+		HERO_BLOCK + _mods.block)
 	_combat.damage_spread = DAMAGE_SPREAD
-	_combat.crit_chance = CRIT_CHANCE
+	_combat.crit_chance = clampf(CRIT_CHANCE + _mods.crit, 0.0, 1.0)
+	_combat.atb_per_correct = clampf(ATB_PER_CORRECT + _mods.atb, 0.01, 1.0)
 	_combat.crit_multiplier = CRIT_MULTIPLIER
 	_combat.limit_per_clutch = LIMIT_PER_CLUTCH
 	_combat.limit_damage = LIMIT_DAMAGE
@@ -415,6 +430,8 @@ func _on_answered(card_id: String, challenge_type: String, correct: bool, rating
 	# the separate LIMIT bar — the clutch payoff (new cards never reach here:
 	# they're taught, not answered). Clutch saves bank toward a limit-break burst.
 	_combat.answer(correct)                       # correct charges the ATB gauge
+	if correct:
+		_apply_active_riders()                    # kit burn/heal land on every correct
 	if correct and _current_loot_rarity == SrsEnums.LootRarity.ABOUT_TO_FORGET:
 		_combat.charge_limit()
 	if _combat.player_attack_ready():
@@ -427,6 +444,18 @@ func _on_answered(card_id: String, challenge_type: String, correct: bool, rating
 		_answer_buttons[dir].disabled = true
 	_refresh_status()
 	get_tree().create_timer(FEEDBACK_DELAY).timeout.connect(_after_answer_beat)
+
+
+## The active half of the kit (M5): on a correct answer, MEND cards heal the hero
+## and BURN cards chip the current target — outside the ATB gauge, so they reward
+## accuracy directly. A burn that kills is caught by the over-checks downstream.
+func _apply_active_riders() -> void:
+	if _mods == null:
+		return
+	if _mods.heal_i() > 0:
+		_combat.heal_player(_mods.heal_i())
+	if _mods.burn_i() > 0:
+		_combat.strike_target(_mods.burn_i())
 
 
 func _after_answer_beat() -> void:
@@ -807,6 +836,14 @@ func _build_info_panel() -> void:
 	var title := _label("HERO")
 	title.add_theme_font_size_override("font_size", 24)
 	vb.add_child(title)
+
+	# Staked-kit bonuses (M5). Text is set once the loadout is assembled in _ready.
+	_kit_label = _label("")
+	_kit_label.add_theme_font_size_override("font_size", 15)
+	_kit_label.add_theme_color_override("font_color", Color(0.62, 0.82, 0.66))
+	_kit_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_kit_label.custom_minimum_size = Vector2(INFO_PANEL_SIZE.x - 44, 0)
+	vb.add_child(_kit_label)
 
 	vb.add_child(_label("HP"))
 	_hero_hp_bar = _make_bar(INFO_PANEL_SIZE.x - 44, 24, Color(0.4, 0.8, 0.5))

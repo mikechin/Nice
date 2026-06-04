@@ -157,6 +157,34 @@ func player_attack() -> Dictionary:
 	return {"outcome": AttackOutcome.HIT, "mob": m, "mob_index": idx, "damage": dmg, "crit": is_crit}
 
 
+## Restore HP to the hero (the MEND active rider — fired on a correct answer).
+## Capped at player_max_hp, never heals a finished fight. Returns the HP actually
+## restored (0 if already full / over / non-positive amount).
+func heal_player(amount: int) -> int:
+	if is_over() or amount <= 0:
+		return 0
+	var before := player_hp
+	player_hp = mini(player_max_hp, player_hp + amount)
+	return player_hp - before
+
+
+## Deal flat bonus damage to the current target outside the gauge (the BURN active
+## rider — fired on a correct answer). No miss/crit; a guaranteed chip. Retargets if
+## it kills. Returns {mob, mob_index, damage, killed} or {} if not applicable.
+func strike_target(amount: int) -> Dictionary:
+	if is_over() or amount <= 0:
+		return {}
+	var m := current_mob()
+	if m == null:
+		return {}
+	var idx := _target_index
+	m.take_damage(amount)
+	var killed := not m.is_alive()
+	if killed:
+		_retarget()
+	return {"mob": m, "mob_index": idx, "damage": amount, "killed": killed}
+
+
 ## Roll a single hit's base damage: attack_damage ± damage_spread, floored at 1.
 ## With damage_spread 0 this is exactly attack_damage (the flat default).
 func _roll_attack_damage() -> int:
