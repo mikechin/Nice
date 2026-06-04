@@ -20,6 +20,14 @@ var accuracy: float = 0.0     # + hero accuracy
 var burn: float = 0.0         # bonus flat damage to the current target
 var heal: float = 0.0         # HP restored to the hero
 
+# Radical set bonus (M5): the dominant shared-radical group in the kit. The
+# amplification is ALREADY folded into the channels above by CombatLoadout.assemble;
+# these fields are kept for display — they describe what came online, not an extra
+# bonus to apply. set_radical "" / multiplier 1.0 means no set.
+var set_radical: String = ""
+var set_size: int = 0
+var set_multiplier: float = 1.0
+
 
 func add(channel: String, amount: float) -> void:
 	match channel:
@@ -31,6 +39,19 @@ func add(channel: String, amount: float) -> void:
 		"accuracy": accuracy += amount
 		"burn": burn += amount
 		"heal": heal += amount
+
+
+## Multiply every effect channel by `factor` — the radical-set amplification, applied
+## once after every card is summed. Set metadata is left untouched. factor 1.0 = no-op.
+func scale_all(factor: float) -> void:
+	attack *= factor
+	max_hp *= factor
+	block *= factor
+	crit *= factor
+	atb *= factor
+	accuracy *= factor
+	burn *= factor
+	heal *= factor
 
 
 func attack_i() -> int:
@@ -74,6 +95,8 @@ func summary() -> String:
 		parts.append("%d burn/ans" % burn_i())
 	if heal_i() != 0:
 		parts.append("%d heal/ans" % heal_i())
+	if set_radical != "":  # a real set exists (radical is "" below SET_MIN)
+		parts.append("%s set +%d%%" % [set_radical, int(round((set_multiplier - 1.0) * 100.0))])
 	if parts.is_empty():
 		return "no bonuses"
 	return "  ·  ".join(parts)

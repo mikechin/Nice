@@ -17,9 +17,19 @@ extends RefCounted
 const ROLE_MATCH := 1.0
 const ROLE_MISMATCH := 0.5   # right card, wrong slot role → still works, at half value
 
+# Radical set bonus (M5): when several equipped cards share a semantic radical, the
+# deck "comes online" and its WHOLE contribution is amplified. Only the dominant
+# (largest) shared-radical group counts, so the reward goes to a FOCUSED kit (a 氵
+# water deck, a 心 heart deck) rather than a salad of pairs. Tone is deliberately NOT
+# a set axis — only ~5 tones exist, so any two cards would trigger it (too broad).
+const SET_MIN := 2         # cards sharing a radical before any bonus
+const SET_STEP := 0.10     # each card past the first in the dominant set: +10% kit
 
-## Sum every equipped card's effect into one CombatMods. A null/empty loadout → an
-## empty CombatMods (the fight runs on its base constants alone).
+
+## Sum every equipped card's effect into one CombatMods, then amplify the whole kit by
+## its dominant radical set (M5). A null/empty loadout → an empty CombatMods (the fight
+## runs on its base constants alone). The DB resolves each card's radicals; without it
+## there is no set bonus, only the per-card sum.
 static func assemble(lo: Loadout, db: CharacterDatabase) -> CombatMods:
 	var mods := CombatMods.new()
 	if lo == null:
@@ -34,7 +44,61 @@ static func assemble(lo: Loadout, db: CharacterDatabase) -> CombatMods:
 		var scalar := InstancePower.scalar(ci.rarity, ci.grade) * role_mult
 		for channel in EffectEnums.base_for(kind):
 			mods.add(channel, float(EffectEnums.base_for(kind)[channel]) * scalar)
+
+	# Radical-deck identity: a focused kit amplifies its whole contribution.
+	var set_info := dominant_radical_set(lo, db)
+	mods.set_radical = String(set_info["radical"])
+	mods.set_size = int(set_info["size"])
+	mods.set_multiplier = float(set_info["multiplier"])
+	if mods.set_multiplier != 1.0:
+		mods.scale_all(mods.set_multiplier)
 	return mods
+
+
+## The kit's dominant radical set: the semantic radical the most equipped cards share,
+## and the whole-kit amplification it grants — 1 + SET_STEP·(size − 1). Below SET_MIN
+## shared cards there is no set (radical "", size 0, multiplier 1.0). Needs the DB to
+## resolve each card's radicals; a null DB → no set. Ties resolve to the lexicographically
+## smallest radical so the result is deterministic. Mirrors ConnectionSet's notion of
+## "shares a radical" (a radical-character contributes its own glyph).
+static func dominant_radical_set(lo: Loadout, db: CharacterDatabase) -> Dictionary:
+	var none := {"radical": "", "size": 0, "multiplier": 1.0}
+	if lo == null or db == null:
+		return none
+	var tally := {}   # radical glyph -> number of equipped cards carrying it
+	for ci in lo.equipped():
+		var cd: CharacterData = db.get_character(ci.card_id)
+		if cd == null:
+			continue
+		for r in _radical_tags(cd):
+			tally[r] = int(tally.get(r, 0)) + 1
+	var best_radical := ""
+	var best_size := 0
+	for r in tally:
+		var n := int(tally[r])
+		if n > best_size or (n == best_size and r < best_radical):
+			best_size = n
+			best_radical = r
+	if best_size < SET_MIN:
+		return none
+	return {
+		"radical": best_radical,
+		"size": best_size,
+		"multiplier": 1.0 + SET_STEP * float(best_size - 1),
+	}
+
+
+## The radical glyphs a card contributes to the set tally: its listed semantic radicals,
+## plus its own glyph when the card itself IS a radical (白 anchors the cards that list
+## it). De-duped so one card counts once per radical.
+static func _radical_tags(cd: CharacterData) -> Array:
+	var tags: Array = []
+	for r in cd.radicals:
+		if r not in tags:
+			tags.append(r)
+	if cd.is_radical and cd.character not in tags:
+		tags.append(cd.character)
+	return tags
 
 
 ## One-line description of a single card's contribution in a given slot role, for the
