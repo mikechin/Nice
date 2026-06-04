@@ -6,12 +6,24 @@
 extends GdUnitTestSuite
 
 
+# Combat now folds the equipped kit into its setup (M5), and SaveManager loads the
+# real on-disk save at boot — so a fresh, unkitted fight needs an empty loadout for
+# the base HP pool to be exact. Clear the economy here, restore the disk state after.
+func before_test() -> void:
+	GameState.load_from_dict({})
+
+
+func after_test() -> void:
+	SaveManager.load_game()
+
+
 func test_ready_builds_playable_combat() -> void:
 	var ctrl: CombatController = auto_free(CombatController.new())
 	add_child(ctrl)              # enters tree → _ready builds the stage + combat state
 	await get_tree().process_frame
 
 	assert_object(ctrl._combat).is_not_null()
+	# Empty kit → the base 30 HP pool, with no Ward bonus added.
 	assert_int(ctrl._combat.player_max_hp).is_equal(30)
 	assert_int(ctrl._combat.player_hp).is_greater(0)
 	assert_object(ctrl._combat.current_mob()).is_not_null()
