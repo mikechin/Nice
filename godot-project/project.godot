@@ -14,7 +14,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="ChineseCardGame"
+config/name="Nice"
 config/description="SRS-powered Chinese character learning game"
 run/main_scene="res://scenes/screens/main_menu.tscn"
 config/features=PackedStringArray("4.6", "Mobile")
