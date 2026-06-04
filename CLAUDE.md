@@ -29,10 +29,17 @@ Porting from ts-fsrs (TypeScript): https://github.com/open-spaced-repetition/ts-
 ## Running Tests
 
 ```bash
-# From Godot editor: install GdUnit4 addon (gitignored — user maintains locally),
-# then run via GdUnit4 panel.
-# Or via command line:
-godot --headless -s addons/gdUnit4/bin/GdUnitCmdTool.gd --run-all
+# From the Godot editor: install the GdUnit4 addon (gitignored — user maintains
+# locally under addons/gdUnit4/), then run via the GdUnit4 panel.
+
+# Command line (headless), run from the godot-project/ directory:
+godot --headless -s addons/gdUnit4/bin/GdUnitCmdTool.gd -a tests -c --ignoreHeadlessMode
+#   -a tests              run every suite under tests/
+#   -c                    continue past the first failure (disable fail-fast)
+#   --ignoreHeadlessMode  required — GdUnit4 refuses headless runs otherwise
+
+# Or just run the helper from the repo root:
+./setup.sh
 ```
 
 ## Data Pipeline

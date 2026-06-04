@@ -6,7 +6,7 @@ An SRS-powered Chinese character flashcard app disguised as an addictive card-co
 
 1. Install [Godot 4.3+](https://godotengine.org/download)
 2. Open `godot-project/project.godot` in the Godot editor
-3. Install GdUnit4 addon into `godot-project/addons/gdunit4/`
+3. Install GdUnit4 addon into `godot-project/addons/gdUnit4/`
 4. Run the project
 
 ## Using Claude Code
