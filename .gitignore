@@ -2,7 +2,8 @@
 .godot/
 *.import
 export_presets.cfg
-godot-project/addons/
+godot-project/addons/*
+!godot-project/addons/gdUnit4/
 godot-project/reports/
 
 # OS
