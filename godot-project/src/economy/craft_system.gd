@@ -9,7 +9,7 @@
 ## The roll obeys the locked two-cap band: the target's rolled RARITY caps how
 ## high it can grade, the player's MASTERY (FSRS stability) caps the reach within
 ## that, and the CONNECTION loads where in the band you land (phonetic series →
-## top, tone → bottom). "Safe within band" — you always get an in-band grade for
+## top, homophone → bottom). "Safe within band" — you always get an in-band grade for
 ## your ingredients; the gamble lives in the dungeon, not the workbench.
 ##
 ## Pure orchestration over injected economy structs (no autoload reads except the
@@ -138,7 +138,7 @@ func _validate(target_id: String, ingredient_ids: Array) -> Dictionary:
 
 ## Roll a grade inside [floor, ceiling], loaded toward `band_load` (0..1) with a
 ## little variance. Always in-band (safe). Phonetic (1.0) lands near the top;
-## tone (0.15) near the bottom.
+## homophone (0.35) near the bottom.
 func _roll_grade(floor_psa: int, ceiling: int, band_load: float) -> int:
 	if ceiling <= floor_psa:
 		return floor_psa

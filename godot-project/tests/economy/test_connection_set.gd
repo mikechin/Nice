@@ -58,25 +58,28 @@ func test_shared_radical_classifies_as_radical() -> void:
 	assert_float(res["band_load"]).is_equal(0.6)
 
 
-func test_tone_is_the_universal_floor() -> void:
-	# A target with no radicals/components: ingredients can only connect by tone.
+func test_tone_alone_is_not_a_connection() -> void:
+	# Tone is too broad to author a craft (only ~5 tones exist). A set that shares
+	# ONLY tone — same tone 4, no homophone/radical/phonetic link — is no longer
+	# assemblable; pair_axes never returns a tone axis.
 	var target := _cd("大", "dà", 4)
 	var family := [
 		_cd("看", "kàn", 4, ["目"], ["目", "看"]),
 		_cd("住", "zhù", 4, ["亻"], ["亻", "主"]),
 		_cd("路", "lù", 4, ["足"], ["足", "各"]),
 	]
+	assert_array(ConnectionSet.pair_axes(target, family[0])).is_empty()
 	var res := ConnectionSet.classify(target, family)
-	assert_bool(res["valid"]).is_true()
-	assert_int(res["axis"]).is_equal(ConnectionSet.Axis.TONE)
-	assert_float(res["band_load"]).is_equal(0.15)
+	assert_bool(res["valid"]).is_false()
+	assert_int(res["axis"]).is_equal(ConnectionSet.Axis.NONE)
+	assert_str(res["reason"]).is_not_empty()
 
 
 func test_no_common_connection_is_invalid() -> void:
 	var target := _cd("大", "dà", 4)
 	var family := [
-		_cd("看", "kàn", 4),          # shares tone 4
-		_cd("好", "hǎo", 3),          # shares nothing — breaks the common axis
+		_cd("看", "kàn", 4),          # same tone, but tone is no longer an axis
+		_cd("好", "hǎo", 3),          # shares nothing
 		_cd("学", "xué", 2),
 	]
 	var res := ConnectionSet.classify(target, family)

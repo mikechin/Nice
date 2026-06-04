@@ -8,8 +8,10 @@
 ## the set and classify its axis + band-load weight.
 ##
 ## Axes, by ascending prestige (= ascending band-load):
-##   TONE      — same tone. The universal floor: always assemblable, smallest reward.
-##   HOMOPHONE — same base pinyin (sound), tone aside.
+##   HOMOPHONE — same base pinyin (sound), tone aside. The floor: a genuine sound
+##               link, smallest reward. (Tone ALONE is intentionally not an axis —
+##               only ~5 tones exist, so it would connect almost any two cards; too
+##               broad to author a craft. Same call as the combat radical-set bonus.)
 ##   RADICAL   — share a semantic radical (氵 water-family, etc.).
 ##   PHONETIC  — share a phonetic component (声旁): 请/清/晴/情 around 青. The
 ##               prestige craft — hardest set to gather, top-of-band payoff, and
@@ -22,7 +24,7 @@
 class_name ConnectionSet
 extends RefCounted
 
-enum Axis { NONE = -1, TONE, HOMOPHONE, RADICAL, PHONETIC }
+enum Axis { NONE = -1, HOMOPHONE, RADICAL, PHONETIC }
 
 const REQUIRED_INGREDIENTS := 3
 
@@ -30,7 +32,6 @@ const REQUIRED_INGREDIENTS := 3
 ## Rarer/harder connection → loads higher (self-balancing: the scarcer set is
 ## also the better reward). CraftSystem maps this onto the actual band.
 const BAND_LOAD := {
-	Axis.TONE: 0.15,
 	Axis.HOMOPHONE: 0.35,
 	Axis.RADICAL: 0.6,
 	Axis.PHONETIC: 1.0,
@@ -48,8 +49,6 @@ static func pair_axes(target: CharacterData, ingredient: CharacterData) -> Array
 		axes.append(Axis.RADICAL)
 	if _shares_homophone(target, ingredient):
 		axes.append(Axis.HOMOPHONE)
-	if _shares_tone(target, ingredient):
-		axes.append(Axis.TONE)
 	return axes
 
 
@@ -90,15 +89,10 @@ static func axis_name(axis: int) -> String:
 		Axis.PHONETIC: return "phonetic series"
 		Axis.RADICAL: return "radical"
 		Axis.HOMOPHONE: return "homophone"
-		Axis.TONE: return "tone"
 		_: return "none"
 
 
 # -- axis predicates --------------------------------------------------------
-
-static func _shares_tone(a: CharacterData, b: CharacterData) -> bool:
-	return a.tone == b.tone
-
 
 static func _shares_homophone(a: CharacterData, b: CharacterData) -> bool:
 	var pa := a.get_base_pinyin()
