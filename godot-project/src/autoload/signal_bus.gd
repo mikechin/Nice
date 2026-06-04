@@ -24,6 +24,10 @@ signal character_mastered(character: String)
 signal character_decaying(character: String)
 signal milestone_achieved(milestone_id: String)
 
+# --- Economy / Town Signals (Phase 3) ---
+signal instance_graded(instance: CardInstance, grade: int)
+signal loadout_changed(loadout: Loadout)
+
 # --- UI Signals ---
 signal screen_transition_requested(screen_name: String)
 signal card_effect_requested(effect_type: String, card_data: Dictionary)

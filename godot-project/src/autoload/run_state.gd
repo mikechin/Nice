@@ -30,6 +30,7 @@ func begin_run(max_hp: int = DungeonRun.DEFAULT_MAX_HP, carry_cap: int = Dungeon
 	run.reached(current_room)
 	crawl = CrawlState.new()
 	combat_return_screen = "dungeon_map"
+	GameState.enter_run_stake()  # the equipped loadout goes on the line for this run
 	return run
 
 

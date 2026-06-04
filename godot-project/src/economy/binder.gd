@@ -83,6 +83,16 @@ func dropped_count() -> int:
 	return n
 
 
+## The card_ids the player has encountered — the shop's "already-met" pool, and
+## the binder screen's discovered set. (M4)
+func get_seen_ids() -> Array[String]:
+	var ids: Array[String] = []
+	for k in entries:
+		if bool(entries[k]["seen"]):
+			ids.append(k)
+	return ids
+
+
 func to_dict() -> Dictionary:
 	return { "entries": entries.duplicate(true) }
 

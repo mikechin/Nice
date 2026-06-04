@@ -14,7 +14,7 @@ extends Node
 
 const SAVE_PATH: String = "user://save_data.json"
 const SRS_SAVE_PATH: String = "user://srs_data.json"
-const SAVE_VERSION: int = 2  # v2 adds the persistent economy (inventory/wallet/binder)
+const SAVE_VERSION: int = 3  # v2 adds the economy; v3 adds the loadout (the staked kit)
 
 # Paths are instance vars (defaulting to the constants) so tests can point the
 # whole pipeline at scratch files instead of the player's real save.
@@ -162,6 +162,11 @@ func _migrate(data: Dictionary, from_version: int) -> Dictionary:
 		# GameState.load_from_dict defaults inventory/wallet/binder to empty when
 		# it's absent, so this step only needs to record the version bump.
 		v = 2
+	if v < 3:
+		# v2 → v3: loadout added. v2 saves have an "economy" block but no
+		# "loadout" key inside it; load_from_dict defaults it to an empty kit, so
+		# again only the version bump is needed.
+		v = 3
 	data["version"] = SAVE_VERSION
 	return data
 

@@ -167,6 +167,7 @@ func _do_extract(keep: Array) -> void:
 	var run := RunState.run
 	run.extract(keep)
 	GameState.bank_haul(run.banked_haul(), run.shattered_haul())
+	GameState.resolve_stake(true)  # extracted alive — the staked kit comes home
 	GameState.end_run(run.to_summary())
 	RunState.clear_run()
 	_go("results")

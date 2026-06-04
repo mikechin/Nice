@@ -30,6 +30,15 @@ var inventory: Inventory
 var wallet: Wallet
 var binder: Binder
 
+# --- Loadout (Phase 3, M4) ---
+# The 5-card kit you bring into a run (= your stake). An equipped instance is
+# moved OFF the bench and held here, so the two never double-count.
+var loadout: Loadout
+
+# Snapshot of the equipped kit taken at dungeon entry — what's on the line this
+# run. Null between runs. (See Stake.)
+var current_stake: Stake
+
 
 func _ready() -> void:
 	character_db = CharacterDatabase.new()
@@ -49,6 +58,8 @@ func _ensure_economy() -> void:
 		wallet = Wallet.new()
 	if binder == null:
 		binder = Binder.new()
+	if loadout == null:
+		loadout = Loadout.new()
 
 
 func initialize_databases() -> void:
@@ -125,12 +136,14 @@ func to_save_dict() -> Dictionary:
 		"cards_answered_today": cards_answered_today,
 		"correct_answers_today": correct_answers_today,
 		"session_history": session_history,
-		# Persistent economy (save schema v2). A v1 save lacks this key; the
-		# loader defaults to empty structures, so old saves migrate cleanly.
+		# Persistent economy (save schema v2; v3 adds loadout). A v1 save lacks
+		# this key, a v2 save lacks "loadout" — the loader defaults both to empty
+		# structures, so old saves migrate cleanly.
 		"economy": {
 			"inventory": inventory.to_dict(),
 			"wallet": wallet.to_dict(),
 			"binder": binder.to_dict(),
+			"loadout": loadout.to_dict(),
 		},
 	}
 
@@ -148,3 +161,100 @@ func load_from_dict(data: Dictionary) -> void:
 	inventory.load_from_dict(economy.get("inventory", {}))
 	wallet.load_from_dict(economy.get("wallet", {}))
 	binder.load_from_dict(economy.get("binder", {}))
+	loadout.load_from_dict(economy.get("loadout", {}))
+
+
+## Equip an inventory instance into a loadout slot. Moves it OFF the bench (a card
+## can't be both staked and benched); any card already in that slot returns to the
+## bench. Returns true if the instance was found and equipped.
+func equip(instance_id: String, slot: int) -> bool:
+	_ensure_economy()
+	if slot < 0 or slot >= loadout.capacity:
+		return false
+	var ci := inventory.remove(instance_id)
+	if ci == null:
+		return false  # not on the bench (already equipped, or unknown)
+	var displaced := loadout.set_slot(slot, ci)
+	if displaced != null:
+		inventory.add(displaced)
+	SignalBus.loadout_changed.emit(loadout)
+	return true
+
+
+## Unequip the instance in `slot` back onto the bench. Returns true if a card was
+## there to remove.
+func unequip(slot: int) -> bool:
+	_ensure_economy()
+	var ci := loadout.clear_slot(slot)
+	if ci == null:
+		return false
+	inventory.add(ci)
+	SignalBus.loadout_changed.emit(loadout)
+	return true
+
+
+## The crafting grade station (town). Lazily built so it always sees the live
+## economy + character DB. The caller (crafter screen) hands us instance ids; we
+## supply the target's mastery from the SRS layer so CraftSystem stays SRS-free.
+var _craft_system: CraftSystem
+
+func _ensure_craft_system() -> CraftSystem:
+	_ensure_economy()
+	if _craft_system == null:
+		_craft_system = CraftSystem.new(inventory, wallet, binder, character_db)
+	return _craft_system
+
+
+## Max FSRS stability across a character's challenge types — how mastery caps the
+## grade band. 0 for an unregistered/never-seen character.
+func get_mastery_stability(card_id: String) -> float:
+	if review_scheduler == null or card_id not in review_scheduler.card_states:
+		return 0.0
+	return review_scheduler.card_states[card_id].get_max_stability()
+
+
+func preview_craft(target_id: String, ingredient_ids: Array) -> Dictionary:
+	var cs := _ensure_craft_system()
+	var target := inventory.get_instance(target_id)
+	var stability := get_mastery_stability(target.card_id) if target != null else 0.0
+	return cs.preview(target_id, ingredient_ids, stability)
+
+
+func craft_grade(target_id: String, ingredient_ids: Array) -> Dictionary:
+	var cs := _ensure_craft_system()
+	var target := inventory.get_instance(target_id)
+	var stability := get_mastery_stability(target.card_id) if target != null else 0.0
+	return cs.craft(target_id, ingredient_ids, stability)
+
+
+## The town shop. Lazily built over the live economy; the shop screen restocks
+## and buys against it.
+var _shop: Shop
+
+func get_shop() -> Shop:
+	_ensure_economy()
+	if _shop == null:
+		_shop = Shop.new(inventory, wallet, binder)
+	return _shop
+
+
+## Snapshot the equipped loadout as this run's stake (called at dungeon entry).
+func enter_run_stake() -> Stake:
+	_ensure_economy()
+	current_stake = Stake.from_loadout(loadout)
+	return current_stake
+
+
+## Resolve the stake at the end of a run. Survived (extracted) → the kit comes
+## home unchanged. Died → the whole kit is FORFEIT: stripped from the loadout and
+## destroyed (NOT returned to the bench — that's the extraction stake). The binder
+## and mastery are never touched (the un-loseable north star). Clears the stake
+## either way; returns the lost instances for the debrief.
+func resolve_stake(survived: bool) -> Array:
+	_ensure_economy()
+	var lost: Array = []
+	if not survived:
+		lost = loadout.strip_all()
+		SignalBus.loadout_changed.emit(loadout)
+	current_stake = null
+	return lost
